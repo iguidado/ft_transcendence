@@ -4,9 +4,9 @@ DC=docker compose
 
 
 all:$(BUILD)
-	$(DC) up --build
+	$(DC) up -d
 
-bg:
+build:
 	$(DC) up --build -d
 
 monitoring:
@@ -18,6 +18,14 @@ log:
 down:
 	$(DC) down
 
-re: down bg
+
+clean:
+	docker compose rm #Clean stopped container
+	docker system prune #Clean all dangling entity
+
+fclean:
+	echo "need to add a full clean command to makefile. It should clean database but don't touch to website !"
+
+re: down all
 
 .PHONY: all bg monitoring log down

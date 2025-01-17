@@ -24,11 +24,23 @@ services:
     environment:
         #     - DEBUG=1
         #     - DJANGO_SETTINGS_MODULE=project.settings.development
-      - DB_HOST=db
-      - DB_NAME=pongdb
-      - DB_USER=ponguser
-      - DB_PASSWORD=pongpass
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
         #- JWT_SECRET_KEY=your-secret-key-here
     volumes:
       - ./backend/src:/app  # Mount backend code
 
+  db:
+    image: postgres:15-alpine
+    container_name: ${DB_HOST}
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
