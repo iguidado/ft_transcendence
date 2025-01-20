@@ -4,6 +4,7 @@ DC=docker compose
 
 
 all:$(BUILD)
+	cp .env.dev .env
 	$(DC) up -d
 
 build:
