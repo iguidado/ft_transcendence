@@ -3,11 +3,13 @@ BUILD=docker-compose.yml
 DC=docker compose
 
 
-all:$(BUILD)
-	cp .env.dev .env
+all:$(BUILD) .env
 	sed -i "s/\(.*=\).*/\1/" .env.dev 
 	$(DC) up -d
 
+
+.env:
+	cp .env.dev
 
 build:
 	$(DC) up --build -d
