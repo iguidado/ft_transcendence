@@ -30,8 +30,8 @@ clean:
 	docker system prune #Clean all dangling entity
 
 
-fclean:
-	echo "need to add a full clean command to makefile. It should clean database but don't touch to website !"
+fclean: down
+	docker rmi $$(docker images -aq)
 
 
 re: down all

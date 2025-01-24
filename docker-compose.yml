@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.dev
     image: nginx:alpine
     ports:
-      - "80:80"
+      - "${FRONT_PORT}:80"
     volumes:
       - ./frontend/src:/usr/share/nginx/html:ro,z  # Bind mount for development
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro,z  # Nginx configuration
@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile.dev
     command: /root/setup.sh
     ports:
-      - "8000:8000"
+      - "${BACK_PORT}:8000"
     environment:
         #     - DEBUG=1
         #     - DJANGO_SETTINGS_MODULE=project.settings.development
