@@ -33,7 +33,7 @@ clean:
 
 
 fclean: down
-	docker rmi $$(docker images -aq)
+	docker rmi frontend:local backend:local postgres:15-alpine
 
 
 re: fclean all
