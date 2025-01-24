@@ -34,7 +34,7 @@ fclean: down
 	docker rmi $$(docker images -aq)
 
 
-re: down all
+re: fclean all
 
 
 .PHONY: all bg monitoring log down

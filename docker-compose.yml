@@ -9,8 +9,8 @@ services:
     ports:
       - "${FRONT_PORT}:80"
     volumes:
-      - ./frontend/src:/usr/share/nginx/html:ro,z  # Bind mount for development
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro,z  # Nginx configuration
+      - ./frontend/src:/usr/share/nginx/html:rw,z  # Bind mount for development
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,z  # Nginx configuration
     
 # Backend service
   backend:
@@ -30,7 +30,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
         #- JWT_SECRET_KEY=your-secret-key-here
     volumes:
-      - ./backend/src:/app:ro,z  # Mount backend code
+      - ./backend/src:/app:rw,z  # Mount backend code
 
   db:
     image: postgres:15-alpine
