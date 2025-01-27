@@ -2,25 +2,28 @@
 services:
   frontend:
     container_name: frontend
+    pull_policy: never
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    image: nginx:alpine
+    image: frontend:local
     ports:
-      - "80:80"
+      - "${FRONT_PORT}:80"
     volumes:
-      - ./frontend/src:/usr/share/nginx/html  # Bind mount for development
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf  # Nginx configuration
+      - ./frontend/src:/usr/share/nginx/html:rw,z  # Bind mount for development
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,z  # Nginx configuration
     
 # Backend service
   backend:
     container_name: backend
+    pull_policy: never
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
+    image: backend:local
     command: /root/setup.sh
     ports:
-      - "8000:8000"
+      - "${BACK_PORT}:8000"
     environment:
         #     - DEBUG=1
         #     - DJANGO_SETTINGS_MODULE=project.settings.development
@@ -30,7 +33,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
         #- JWT_SECRET_KEY=your-secret-key-here
     volumes:
-      - ./backend/src:/app  # Mount backend code
+      - ./backend/src:/app:rw,z  # Mount backend code
 
   db:
     image: postgres:15-alpine
