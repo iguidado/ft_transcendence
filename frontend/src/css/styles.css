@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+    background: url("../rsc/city.gif") no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+
+  .connect-btn {
+    background-color: #7c69e9; /* Couleur de fond perso */
+    border: none;                /* Enlève la bordure */
+    color: rgb(142, 166, 219); /* Couleur du texte */
+    padding: 1rem 2rem;          /* De l’espace autour du texte */
+    font-size: 1.2rem;           /* Taille du texte */
+    border-radius: 8px;          /* Coins arrondis */
+  }
+  
+  .connect-btn:hover {
+    background-color: #4f4391;
+    color: rgb(142, 166, 219); /* Couleur au survol */
+  }
