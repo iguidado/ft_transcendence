@@ -9,7 +9,7 @@ all:$(BUILD) .env
 
 
 .env:
-	cp .env.dev
+	cp .env.dev .env
 
 build:
 	$(DC) up --build -d
