@@ -1,1 +1,5 @@
 FROM nginx:alpine
+
+COPY default.conf /tmp/default.conf
+
+RUN envsubst < /tmp/conf.d/nginx.conf > /etc/nginx/conf.d/nginx.conf

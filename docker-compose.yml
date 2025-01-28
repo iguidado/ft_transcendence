@@ -1,17 +1,52 @@
 
 services:
-  frontend:
+
+  frontend-prod:
+    container_name: frontend
+    pull_policy: never
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+      args:
+        - HTTPS_PORT=${HTTPS_PORT}
+    image: frontend:local
+    ports:
+      - "${FRONT_PORT}:80"
+      - "${HTTPS_PORT}:443"
+    volumes:
+      - ./frontend/src:/usr/share/nginx/html:rw,z  # Bind mount for development
+        #      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,z  # Nginx configuration
+      - ./nginx/ssl:/etc/nginx/ssl:rw,z  # ssl certificate
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - prod   # Profiles are here to separate container needed in prod and in dev environment
+
+  frontend-dev:
     container_name: frontend
     pull_policy: never
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
+      args:
+        - HTTPS_PORT=${HTTPS_PORT}
     image: frontend:local
     ports:
-      - "${FRONT_PORT}:80"
+      - "${FRONT_PORT}:5173"
     volumes:
-      - ./frontend/src:/usr/share/nginx/html:rw,z  # Bind mount for development
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,z  # Nginx configuration
+      - ./frontend/src:/app:rw,z  # Bind mount for development
+        #      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,z  # Nginx configuration
+      - ./nginx/ssl:/etc/nginx/ssl:rw,z  # ssl certificate
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - prod   # Profiles are here to separate container needed in prod and in dev environment
     
 # Backend service
   backend:
