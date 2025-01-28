@@ -46,7 +46,7 @@ services:
       timeout: 10s
       retries: 3
     profiles:
-      - prod   # Profiles are here to separate container needed in prod and in dev environment
+      - dev   # Profiles are here to separate container needed in prod and in dev environment
     
 # Backend service
   backend:
@@ -69,6 +69,9 @@ services:
         #- JWT_SECRET_KEY=your-secret-key-here
     volumes:
       - ./backend/src:/app:rw,z  # Mount backend code
+    profiles:
+      - prod
+      - dev
 
   db:
     image: postgres:15-alpine
@@ -79,6 +82,9 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    profiles:
+      - prod
+      - dev
 
 volumes:
   postgres_data:
