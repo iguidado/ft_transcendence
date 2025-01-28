@@ -27,6 +27,8 @@ build:
 $(DEV_DIR)$(PKG_FILE): $(DEV_DIR)
 	npm create vite@latest frontend/dev -- --template vanilla -y \
 		&& cd $(DEV_DIR) && npm install
+	rm -f $(DEV_DIR)index.html
+	rm -rf $(DEV_DIR)src $(DEV_DIR)public
 
 
 
