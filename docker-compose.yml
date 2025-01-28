@@ -1,6 +1,7 @@
-
 services:
 
+# Frontend production container: Enforced Nginx server with healthcheck
+# -----------------------------------------------------------------------------------------------------------
   frontend-prod:
     container_name: frontend
     pull_policy: never
@@ -8,11 +9,11 @@ services:
       context: ./nginx
       dockerfile: Dockerfile.dev
       args:
-        - HTTPS_PORT=${HTTPS_PORT}
+        - HTTPS_PORT=${HTTPS_PORT}     # Needed to adapt nginx redirection
     image: frontend:local
     ports:
-      - "${FRONT_PORT}:80"
-      - "${HTTPS_PORT}:443"
+      - "${FRONT_PORT}:80"          # Port exposing HTTP scheme
+      - "${HTTPS_PORT}:443"         # Port exposing HTTPS scheme
     volumes:
       - ./frontend/src:/usr/share/nginx/html:rw,z  # Bind mount for development
         #      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,z  # Nginx configuration
@@ -25,6 +26,9 @@ services:
     profiles:
       - prod   # Profiles are here to separate container needed in prod and in dev environment
 
+
+# Frontend dev container: run with Vite and Node for Hot reloading option, Easy installation and Dev Tool
+# --------------------------------------------------------------------------------------------------------------------
   frontend-dev:
     container_name: frontend
     pull_policy: never
@@ -52,7 +56,9 @@ services:
     profiles:
       - dev   # Profiles are here to separate container needed in prod and in dev environment
 
-# Backend service
+
+# Backend service: Run with django. Provide API for user management and data retrieval. Also Socket for pong game
+# --------------------------------------------------------------------------------------------------------------------
   backend:
     container_name: backend
     pull_policy: never
@@ -77,6 +83,8 @@ services:
       - prod
       - dev
 
+# Database service: Provide user management databases for authentication and user metrics
+# --------------------------------------------------------------------------------------------------------------------
   db:
     image: postgres:15-alpine
     container_name: ${DB_HOST}

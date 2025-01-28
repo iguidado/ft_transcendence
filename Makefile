@@ -31,9 +31,8 @@ VITE_CFG=vite.config.js
 # make prod-down: Stops production environment
 # make clean    : Removes stopped containers and dangling resources
 # make fclean   : Complete cleanup (stops containers, removes images and dev folder)
-# make re       : Full rebuild (fclean + all)
+# make re       : Full rebuild (fclean + all) : Delete everything but the site
 # make monitoring: Starts monitoring services
-# make log      : Alias for monitoring
 #
 
 # Frontend dev environment Setup:
@@ -64,23 +63,19 @@ down:
 
 
 build:
-	$(DC) up --build -d
+	$(DC) --profile=dev up --build -d
 
 
 monitoring:
 	$(DC) --profile=monitoring up
 
 
-log:
-	$(DC) --profile=monitoring up
-
- 
 # Prod environment Setup:
 # ------------------------------------
 
 prod: $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) 
 	cp .env.prod .env
-	$(DC) --profile prod up -d
+	$(DC) --profile prod up --build -d
 
 
 $(CERT_DIR):
@@ -103,6 +98,8 @@ prod-down:
 
 clean:
 	$(DC) rm #Clean stopped container
+	sed -i "s/\(.*=\).*/\1/" .env.dev 
+	sed -i "s/\(.*=\).*/\1/" .env.prod
 	docker system prune #Clean all dangling entity
 
 
