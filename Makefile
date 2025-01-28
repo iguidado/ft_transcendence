@@ -63,6 +63,7 @@ clean:
 
 fclean: down prod-down
 	-docker rmi frontend:local backend:local postgres:15-alpine
+	-rm -rf frontend/dev
 
 
 re: fclean all
