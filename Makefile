@@ -6,17 +6,32 @@ CERT_DIR=nginx/ssl/
 KEY_FILE=privkey.pem
 CERT_FILE=fullchain.pem
 
+DEV_DIR=frontend/dev/
+PKG_FILE=package-lock.json
 
-all: $(BUILD_FILE) $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) .env
+VITE_CFG=vite.config.js
+
+all: $(BUILD_FILE) $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) $(DEV_DIR)$(PKG_FILE) .env
 	sed -i "s/\(.*=\).*/\1/" .env.dev 
-	$(DC) up -d
+	$(DC) --profile dev up -d
 
 
 .env:
 	cp .env.dev .env
 
+
 build:
 	$(DC) up --build -d
+
+
+$(DEV_DIR)$(PKG_FILE): $(DEV_DIR)
+	npm create vite@latest frontend/dev -- --template vanilla -y \
+		&& cd $(DEV_DIR) && npm install
+
+
+
+$(DEV_DIR):
+	mkdir -p $(DEV_DIR)
 
 
 monitoring:
@@ -28,15 +43,23 @@ log:
 
 
 down:
-	$(DC) down
+	-$(DC) --profile=dev down
+
+prod: 
+	cp .env.prod .env
+#	sed -i "s/\(.*=\).*/\1/" .env.prod 
+	$(DC) --profile prod up -d
+
+prod-down:
+	-$(DC) --profile=prod down
 
 
 clean:
-	docker compose rm #Clean stopped container
+	$(DC) rm #Clean stopped container
 	docker system prune #Clean all dangling entity
 
 
-fclean: down
+fclean: down prod-down
 	-docker rmi frontend:local backend:local postgres:15-alpine
 
 

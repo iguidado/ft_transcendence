@@ -31,23 +31,27 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-      args:
-        - HTTPS_PORT=${HTTPS_PORT}
     image: frontend:local
     ports:
-      - "${FRONT_PORT}:5173"
+      - "${FRONT_PORT}:3000"
     volumes:
-      - ./frontend/src:/app:rw,z  # Bind mount for development
-        #      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,z  # Nginx configuration
-      - ./nginx/ssl:/etc/nginx/ssl:rw,z  # ssl certificate
-    healthcheck:
-      test: ["CMD", "nginx", "-t"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - ./frontend/src:/app/src:rw,z  # Bind mount for development
+        #      - ./frontend/public:/app/public:rw,z  # Public assets
+      - ./frontend/dev/node_modules:/app/node_modules:rw,z  # Dev dependencies
+      - ./frontend/dev/package.json:/app/package.json:rw,z  # Package management
+      - ./frontend/dev/package-lock.json:/app/package-lock.json:rw,z  # Package management
+      - ./frontend/cfg/vite.config.js:/app/vite.config.js:rw,z
+        #    - ./frontend/dev/vite.config.js:/app/vite.config.js:rw,z  # Vite config
+        #    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,z  # Nginx configuration
+        #    - ./nginx/ssl:/etc/nginx/ssl:rw,z  # ssl certificate
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://backend:${BACK_PORT}
+    working_dir: /app
+    command: npm run dev
     profiles:
       - dev   # Profiles are here to separate container needed in prod and in dev environment
-    
+
 # Backend service
   backend:
     container_name: backend
