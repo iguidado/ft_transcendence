@@ -1,9 +1,23 @@
-  /* Thème 1 */
+/* Bouton Surprise */
+
+  .my-button {
+    color : transparent;
+    /* background-color: #feffa9; */
+    font-size: x-large;
+    border-radius: 8px;
+    padding: 1rem 2rem;
+    border: none;
+  }
+ .my-button:hover {
+    color: #FFFEEB;
+  }
+
+/* Thème FUTUR */
   .theme1{
     margin: 0;
+    background-attachment: fixed;
     background: url("../rsc/futurdeer.gif") no-repeat center center;
     background-size: cover;
-    background-attachment: fixed;
   }
 
   .theme1 .connect-btn {
@@ -12,7 +26,7 @@
     border: none;                /* Enlève la bordure */
     color: #FFFEEB;             /* Couleur du texte */
     padding: 1rem 2rem;          /* De l’espace autour du texte */
-    font-size: 1.2rem;           /* Taille du texte */
+    font-size: 90%;           /* Taille du texte */
     border-radius: 8px;          /* Coins arrondis */
   }
 
@@ -26,10 +40,12 @@
   }
 
 
-  /* Thème 2 */
+  /* Thème TRAIN */
 .theme2 {
   background: url("../rsc/city.gif") no-repeat center center fixed;
   background-size: cover;
+  margin: 0;
+  background-attachment: fixed;
 }
 .theme2 .connect-btn {
   background-color: #504FB1;
@@ -37,7 +53,7 @@
   border: none;
   font-family: "Tiny5";
   padding: 1rem 2rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   border-radius: 8px;
 }
 .theme2 .connect-btn:hover {
@@ -49,10 +65,12 @@
   background-color: #FF82A2;
 }
 
-/* Thème 3 */
+/* Thème PLUIE */
 .theme3 {
   background: url("../rsc/rain.gif") no-repeat center center fixed;
   background-size: cover;
+  margin: 0;
+  background-attachment: fixed;
 }
 .theme3 .connect-btn {
   background-color: #0B6F86;
@@ -60,7 +78,7 @@
   border: none;
   font-family: "Jacquard 12";
   padding: 1rem 2rem;
-  font-size: 1.2rem;
+  font-size: x-large;
   border-radius: 8px;
 }
 .theme3 .connect-btn:hover {
@@ -72,10 +90,12 @@
   background-color: #E6CC59;
 }
 
-/* Thème 4 */
+/* Thème ROSE */
 .theme4 {
   background: url("../rsc/pinkcity.gif") no-repeat center center fixed;
   background-size: cover;
+  margin: 0;
+  background-attachment: fixed;
 }
 .theme4 .connect-btn {
   background-color: #BD4882;

@@ -18,10 +18,13 @@ function setNewTheme() {
 function loadLoginPage() {
   const app = document.getElementById("app");
   app.innerHTML = `
-    <div class="container d-flex flex-column justify-content-center align-items-center" style="height:100vh;">
-      <button class="btn connect-btn mb-3" id="connectButton">CONNECT WITH 42</button>
-      <button class="btn btn-warning" id="themeButton">Surprise</button>
-    </div>
+<div class="container d-flex justify-content-center align-items-center" style="height:100vh;">
+  <button class="btn connect-btn mb-3" id="connectButton">CONNECT WITH 42</button>
+</div>
+
+<div class="position-fixed bottom-0 end-0 m-4">
+  <button class="btn my-button" id="themeButton">Surprise</button>
+</div>
   `;
   document.getElementById("themeButton").addEventListener("click", () => {
     setNewTheme();
