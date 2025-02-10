@@ -1,4 +1,2 @@
 .env
-.env.dev
-__pycache__/
-*.pyc
+backend/src/ft_transcendence/billpong/__pycache__/
