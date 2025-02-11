@@ -1,16 +1,22 @@
 /* Bouton Surprise */
 
-  .my-button {
-    color : transparent;
-    /* background-color: #feffa9; */
-    font-size: x-large;
-    border-radius: 8px;
-    padding: 1rem 2rem;
-    border: none;
-  }
- .my-button:hover {
-    color: #FFFEEB;
-  }
+.my-button {
+  background: url("../rsc/pear.png") no-repeat center center;
+  background-size: cover;
+
+  width: 64px;
+  height: 64px;
+
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: transparent; 
+  background-color: transparent;
+}
+
+.my-button:hover {
+  transform: scale(1.05); 
+}
 
 /* Thème FUTUR */
   .theme1{

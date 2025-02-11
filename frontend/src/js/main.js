@@ -66,9 +66,7 @@ function loadLoginPage() {
 
     <!-- Bouton “Surprise” en bas à droite -->
     <div class="position-fixed bottom-0 end-0 m-4">
-      <button class="btn my-button" id="themeButton">
-        Surprise
-      </button>
+      <button class="btn my-button" id="themeButton"></button>
     </div>
   `;
 
