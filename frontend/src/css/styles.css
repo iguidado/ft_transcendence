@@ -1,5 +1,19 @@
 /* Bouton Surprise */
 
+@font-face {
+  font-family: 'Pixelade';
+  src: url('../rsc/Pixelade.woff2') format('woff2'),
+      url('../rsc/Pixelade.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+body {
+  font-family: "Pixelade", sans-serif;
+}
+
 .my-button {
   background: url("../rsc/pear.png") no-repeat center center;
   background-size: cover;
@@ -27,7 +41,6 @@
   }
 
   .theme1 .connect-btn {
-    font-family: "Pixelify Sans";
     background-color: #30546E; /* Couleur de fond perso */
     border: none;                /* Enlève la bordure */
     color: #FFFEEB;             /* Couleur du texte */
@@ -57,7 +70,6 @@
   background-color: #504FB1;
   color: #FF82A2;
   border: none;
-  font-family: "Tiny5";
   padding: 1rem 2rem;
   font-size: 1.3rem;
   border-radius: 8px;
@@ -82,7 +94,6 @@
   background-color: #0B6F86;
   color: #E6CC59;
   border: none;
-  font-family: "Jacquard 12";
   padding: 1rem 2rem;
   font-size: x-large;
   border-radius: 8px;
@@ -107,7 +118,6 @@
   background-color: #BD4882;
   color: #F2A65E;
   border: none;
-  font-family: "Micro 5";
   padding: 1rem 2rem;
   font-size: 1.2rem;
   border-radius: 8px;
