@@ -1,5 +1,9 @@
 # Ft-transcendence makefile
 
+# NPM Dependencies
+# ------------------------
+
+NPM_DEPS=three
 
 # Build configuration
 # ------------------------
@@ -52,7 +56,7 @@ all: $(BUILD_FILE) $(DEV_DIR)$(PKG_FILE) .env
 
 $(DEV_DIR)$(PKG_FILE): $(DEV_DIR)
 	npm create vite@latest frontend/dev -- --template vanilla -y \
-		&& cd $(DEV_DIR) && npm install
+		&& cd $(DEV_DIR) && npm install && npm install --save $(NPM_DEPS)
 	rm -f $(DEV_DIR)index.html
 	rm -rf $(DEV_DIR)src $(DEV_DIR)public
 
