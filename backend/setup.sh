@@ -25,8 +25,9 @@ fi
 
 python /app/ft_transcendence/manage.py runserver 0.0.0.0:8000
 
+python /app/ft_transcendenc/manage.py makemigrations
+
 python /app/ft_transcendence/manage.py migrate
 
-python /app/ft_transcendenc/manage.py makemigrations api
 
 # python manage.py createsuperuser
