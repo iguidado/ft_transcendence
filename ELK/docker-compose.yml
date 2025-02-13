@@ -45,7 +45,7 @@ services:
         #    - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
         #    - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
         #    - xpack.security.transport.ssl.verification_mode=certificate
-    mem_limit: ${ES_MEM_LIMIT}
+        #    mem_limit: ${ES_MEM_LIMIT}
       #ulimits:
       #  memlock:
       #    soft: -1
@@ -63,12 +63,47 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -s https://localhost:9200 | grep -q 'ElasticSearch is down'",
+          "curl -s https://localhost:9200 | grep -q 'missing authentication credentials'",
         ]
       interval: 10s
       timeout: 10s
       retries: 120
 
+
+  kibana:
+     depends_on:
+       es01:
+         condition: service_started
+     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+     container_name: kibana
+     labels:
+       co.elastic.logs/module: kibana
+     volumes:
+       - kibanadata:/usr/share/kibana/data
+     ports:
+       - ${KIBANA_PORT}:5601
+     environment:
+       - SERVERNAME=kibana
+       - ELASTICSEARCH_HOSTS=http://es01:9200  # Change to HTTP-only
+       - ELASTICSEARCH_USERNAME=kibana_system
+       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+       - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+     mem_limit: ${KB_MEM_LIMIT}
+     networks:
+       - elk-network
+     profiles:
+       - prod
+     healthcheck:
+       test:
+         [
+           "CMD-SHELL",
+           "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",  # Adjusted for HTTP protocol
+         ]
+       interval: 10s
+       timeout: 10s
+       retries: 120
 
 volumes:
   #certs:
