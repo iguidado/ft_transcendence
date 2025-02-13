@@ -90,7 +90,7 @@ services:
        - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
        - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
        - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-     mem_limit: ${KB_MEM_LIMIT}
+  #   mem_limit: ${KB_MEM_LIMIT}
      networks:
        - elk-network
      profiles:

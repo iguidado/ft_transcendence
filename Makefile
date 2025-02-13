@@ -41,7 +41,7 @@ VITE_CFG=vite.config.js
 
 all: $(BUILD_FILE) $(DEV_DIR)$(PKG_FILE) .env
 	sed -i "s/\(.*=\).*/\1/" .env.dev 
-	$(DC) --profile dev up -d
+	$(DC) --profile=dev up -d
 
 .env:
 	cp .env.dev .env
@@ -76,7 +76,7 @@ monitoring:
 # ------------------------------------
 
 prod: $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) .env
-	$(DC) --profile prod up --build -d
+	$(DC) --profile=prod up --build -d
 
 
 $(CERT_DIR):
