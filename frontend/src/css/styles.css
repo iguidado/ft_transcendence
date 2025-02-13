@@ -1,0 +1,128 @@
+/* Bouton Surprise */
+
+@font-face {
+  font-family: 'Pixelade';
+  src: url('../rsc/Pixelade.woff2') format('woff2'),
+      url('../rsc/Pixelade.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+body {
+  font-family: "Pixelade", sans-serif;
+}
+
+.my-button {
+  background: url("../rsc/pear.png") no-repeat center center;
+  background-size: cover;
+
+  width: 64px;
+  height: 64px;
+
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: transparent; 
+  background-color: transparent;
+}
+
+.my-button:hover {
+  transform: scale(1.05); 
+}
+
+/* Thème FUTUR */
+  .theme1{
+    margin: 0;
+    background-attachment: fixed;
+    background: url("../rsc/futurdeer.gif") no-repeat center center;
+    background-size: cover;
+  }
+
+  .theme1 .connect-btn {
+    background-color: #30546E; /* Couleur de fond perso */
+    border: none;                /* Enlève la bordure */
+    color: #FFFEEB;             /* Couleur du texte */
+    padding: 1rem 2rem;          /* De l’espace autour du texte */
+    font-size: 90%;           /* Taille du texte */
+    border-radius: 8px;          /* Coins arrondis */
+  }
+
+  .theme1 .connect-btn:hover {
+    background-color: #316595;
+    color: #FFFEEB;
+  }
+  .theme1 .connect-btn:active {
+    color: #316595;
+    background-color: #FFFEEB;
+  }
+
+
+  /* Thème TRAIN */
+.theme2 {
+  background: url("../rsc/city.gif") no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  background-attachment: fixed;
+}
+.theme2 .connect-btn {
+  background-color: #504FB1;
+  color: #FF82A2;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.3rem;
+  border-radius: 8px;
+}
+.theme2 .connect-btn:hover {
+  background-color: #537DFB;
+  color: #FF82A2;
+}
+.theme2 .connect-btn:active {
+  color: #537DFB;
+  background-color: #FF82A2;
+}
+
+/* Thème PLUIE */
+.theme3 {
+  background: url("../rsc/rain.gif") no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  background-attachment: fixed;
+}
+.theme3 .connect-btn {
+  background-color: #0B6F86;
+  color: #E6CC59;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: x-large;
+  border-radius: 8px;
+}
+.theme3 .connect-btn:hover {
+  background-color: #2C8EA1;
+  color: #E6CC59;
+}
+.theme3 .connect-btn:active {
+  color: #2C8EA1;
+  background-color: #E6CC59;
+}
+
+/* Thème ROSE */
+.theme4 {
+  background: url("../rsc/pinkcity.gif") no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  background-attachment: fixed;
+}
+.theme4 .connect-btn {
+  background-color: #BD4882;
+  color: #F2A65E;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+}
+.theme4 .connect-btn:hover {
+  background-color: #FF6B97;
+  color: #F2A65E;
+}
