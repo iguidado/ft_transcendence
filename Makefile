@@ -29,6 +29,7 @@ VITE_CFG=vite.config.js
 # make prod     : Starts production environment with prod profile
 # make down     : Stops development environment
 # make prod-down: Stops production environment
+# make prod-re  : Restart production environment
 # make clean    : Removes stopped containers and dangling resources
 # make fclean   : Complete cleanup (stops containers, removes images and dev folder)
 # make re       : Full rebuild (fclean + all) : Delete everything but the site
@@ -44,6 +45,7 @@ all: $(BUILD_FILE) $(DEV_DIR)$(PKG_FILE) .env
 
 .env:
 	cp .env.dev .env
+
 
 # Dev environment Setup:
 # ------------------------------------
@@ -73,8 +75,7 @@ monitoring:
 # Prod environment Setup:
 # ------------------------------------
 
-prod: $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) 
-	cp .env.prod .env
+prod: $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) .env
 	$(DC) --profile prod up --build -d
 
 
@@ -92,6 +93,7 @@ $(CERT_DIR)$(CERT_FILE)  $(CERT_DIR)$(KEY_FILE): $(CERT_DIR)
 prod-down:
 	-$(DC) --profile=prod down
 
+prod-re: prod-down prod
 
 # Cleaning command
 # ----------------------------------------
@@ -111,4 +113,4 @@ fclean: down prod-down
 re: fclean all
 
 
-.PHONY: all bg monitoring log down
+.PHONY: all bg monitoring log down prod prod-down prod-re
