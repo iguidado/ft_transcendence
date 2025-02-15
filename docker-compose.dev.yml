@@ -1,0 +1,93 @@
+services:
+# Frontend dev container: run with Vite and Node for Hot reloading option, Easy installation and Dev Tool
+# --------------------------------------------------------------------------------------------------------------------
+  frontend-dev:
+    container_name: frontend
+    pull_policy: never
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    image: frontend:dev
+    ports:
+      - "${FRONT_PORT}:3000"
+    volumes:
+      - ./frontend/src:/app/src:rw,z  # Bind mount for development
+        #      - ./frontend/public:/app/public:rw,z  # Public assets
+      - ./frontend/dev/node_modules:/app/node_modules:rw,z  # Dev dependencies
+      - ./frontend/dev/package.json:/app/package.json:rw,z  # Package management
+      - ./frontend/dev/package-lock.json:/app/package-lock.json:rw,z  # Package management
+      - ./frontend/cfg/vite.config.js:/app/vite.config.js:rw,z
+        #    - ./frontend/dev/vite.config.js:/app/vite.config.js:rw,z  # Vite config
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://backend:${BACK_PORT}
+    working_dir: /app
+    command: npm run dev
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - web_networks
+
+
+# Backend service: Run with django. Provide API for user management and data retrieval. Also Socket for pong game
+# --------------------------------------------------------------------------------------------------------------------
+  backend:
+    container_name: backend
+    pull_policy: never
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    image: backend:local
+    command: /root/setup.sh
+    ports:
+      - "${BACK_PORT}:8000"
+    environment:
+        #     - DEBUG=1
+        #     - DJANGO_SETTINGS_MODULE=project.settings.development
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+        #- JWT_SECRET_KEY=your-secret-key-here
+    volumes:
+      - ./backend/src:/app:rw,z  # Mount backend code
+    networks:
+      - web_networks
+        #   logging:
+        #     driver: gelf
+        #     options:
+        #       gelf-address: "udp://logstash:12201"
+        #       tag: "django"
+
+# Database service: Provide user management databases for authentication and user metrics
+# --------------------------------------------------------------------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    container_name: ${DB_HOST}
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - web_networks
+        #   logging:
+        #     driver: gelf
+        #     options:
+        #       gelf-address: "udp://logstash:12201"
+        #       tag: "postgres"
+
+volumes:
+  postgres_data:
+    name: postgres_data
+
+
+networks:
+  web_networks:
+    driver: bridge
+    name: web
+  ELK_elk-network:
+    external: true # Defined in ELK/docker-compose.yml
+    name: elk
