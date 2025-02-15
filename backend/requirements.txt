@@ -2,7 +2,7 @@
 Django==5.0
 djangorestframework==3.14.0
 django-cors-headers==4.3.1
-
+drf-yasg<1.22
 
 # Database
 psycopg2-binary==2.9.9
@@ -11,3 +11,10 @@ psycopg2-binary==2.9.9
 # Test
 pytest==7.4.3
 pytest-django==4.7.0
+
+# CoreAPI
+coreapi==2.3.1
+
+#utils
+setuptools
+wheel		
