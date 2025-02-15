@@ -49,7 +49,7 @@ all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) .env
 	$(DC) -f docker-compose.dev.yml up -d
 
 .env:
-	cp .env.dev.yml .env
+	cp .env.dev .env
 
 
 # Dev environment Setup:
