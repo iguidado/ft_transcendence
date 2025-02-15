@@ -35,7 +35,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "udp://logstash:12201"
+        gelf-address: "udp://172.18.0.2:12201"
         tag: "nginx"
 
 
@@ -71,7 +71,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "udp://logstash:12201"
+        gelf-address: "udp://172.18.0.2:12201"
         tag: "django"
 
 # Database service: Provide user management databases for authentication and user metrics
@@ -93,7 +93,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "udp://logstash:12201"
+        gelf-address: "udp://172.18.0.2:12201"
         tag: "postgres"
 
 volumes:
@@ -102,8 +102,8 @@ volumes:
 
 
 networks:
-  web-network:
-    driver: bridge
+  ELK_web-network:
+    external: true
     name: web
   ELK_elk-network:
     external: true # Defined in ELK/docker-compose.yml

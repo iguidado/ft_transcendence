@@ -15,6 +15,7 @@ services:
   #   networks:
   #     - elk_network
 
+
   es01:
      #  depends_on:
      #    setup:
@@ -125,8 +126,8 @@ services:
     ports:
       - "12201:12201/udp"
     networks:
-      - elk-network
       - web-network
+        #      - elk-network
     healthcheck:
       test:
         [
@@ -149,6 +150,9 @@ volumes:
    driver: local
 
 networks:
+  web-network:
+    driver: bridge
+    name: web
   elk-network:
     driver: bridge
     name: elk
