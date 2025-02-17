@@ -1,9 +1,8 @@
-/* Bouton Surprise */
 
 @font-face {
   font-family: 'Pixelade';
   src: url('../rsc/Pixelade.woff2') format('woff2'),
-      url('../rsc/Pixelade.woff') format('woff');
+  url('../rsc/Pixelade.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -12,10 +11,33 @@
 
 body {
   font-family: "Pixelade", sans-serif;
+  font-size: x-large;
 }
 
+.semi-transparent-table thead,
+.semi-transparent-table tbody,
+.semi-transparent-table tr,
+.semi-transparent-table th,
+.semi-transparent-table td{
+  background-color: rgba(255, 107, 151, 0.1) !important;
+}
+
+.semi-transparent-card {
+  background-color: rgba(255, 107, 151, 0.7);
+
+  border-radius: 8px;
+
+}
+
+/* Bouton Surprise */
 .my-button {
-  background: url("../rsc/pear.png") no-repeat center center;
+  background-color: #FF6B97;
+  color: #F2A65E;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  /* background: url("../rsc/pear.png") no-repeat center center;
   background-size: cover;
 
   width: 64px;
@@ -25,15 +47,17 @@ body {
   cursor: pointer;
   padding: 0;
   color: transparent; 
-  background-color: transparent;
+  background-color: transparent; */
 }
 
 .my-button:hover {
-  transform: scale(1.05); 
+  transform: scale(1.05);
+  background-color: #FF6B97;
+  color: #F2A65E;
 }
 
 /* Thème FUTUR */
-  .theme1{
+  /* .theme1{
     margin: 0;
     background-attachment: fixed;
     background: url("../rsc/futurdeer.gif") no-repeat center center;
@@ -41,12 +65,12 @@ body {
   }
 
   .theme1 .connect-btn {
-    background-color: #30546E; /* Couleur de fond perso */
-    border: none;                /* Enlève la bordure */
-    color: #FFFEEB;             /* Couleur du texte */
-    padding: 1rem 2rem;          /* De l’espace autour du texte */
-    font-size: 90%;           /* Taille du texte */
-    border-radius: 8px;          /* Coins arrondis */
+    background-color: #30546E;
+    border: none;
+    color: #FFFEEB;
+    padding: 1rem 2rem;
+    font-size: 90%;
+    border-radius: 8px;
   }
 
   .theme1 .connect-btn:hover {
@@ -57,10 +81,10 @@ body {
     color: #316595;
     background-color: #FFFEEB;
   }
-
+ */
 
   /* Thème TRAIN */
-.theme2 {
+/* .theme2 {
   background: url("../rsc/city.gif") no-repeat center center fixed;
   background-size: cover;
   margin: 0;
@@ -81,10 +105,10 @@ body {
 .theme2 .connect-btn:active {
   color: #537DFB;
   background-color: #FF82A2;
-}
+} */
 
 /* Thème PLUIE */
-.theme3 {
+/* .theme3 {
   background: url("../rsc/rain.gif") no-repeat center center fixed;
   background-size: cover;
   margin: 0;
@@ -105,7 +129,7 @@ body {
 .theme3 .connect-btn:active {
   color: #2C8EA1;
   background-color: #E6CC59;
-}
+} */
 
 /* Thème ROSE */
 .theme4 {
@@ -114,7 +138,7 @@ body {
   margin: 0;
   background-attachment: fixed;
 }
-.theme4 .connect-btn {
+/* .theme4 .connect-btn {
   background-color: #BD4882;
   color: #F2A65E;
   border: none;
@@ -125,4 +149,4 @@ body {
 .theme4 .connect-btn:hover {
   background-color: #FF6B97;
   color: #F2A65E;
-}
+} */
