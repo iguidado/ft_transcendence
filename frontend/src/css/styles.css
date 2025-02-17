@@ -31,12 +31,16 @@ body {
 
 /* Bouton Surprise */
 .my-button {
-  background-color: #FF6B97;
+  background-color: #422445;
   color: #F2A65E;
   border: none;
   padding: 1rem 2rem;
   font-size: 1.2rem;
   border-radius: 8px;
+  border-style: outset;
+  border-style: inset;
+  box-shadow:rgba(255, 107, 151, 0.7);
+  text-shadow:rgba(255, 190, 91, 0.959);
   /* background: url("../rsc/pear.png") no-repeat center center;
   background-size: cover;
 
@@ -52,8 +56,17 @@ body {
 
 .my-button:hover {
   transform: scale(1.05);
-  background-color: #FF6B97;
+  background-color: #422445;
   color: #F2A65E;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  border-style: outset;
+  border-style: inset;
+  box-shadow:rgba(255, 107, 151, 0.7);
+  text-shadow:rgba(255, 190, 91, 0.959);
+  
 }
 
 /* Thème FUTUR */

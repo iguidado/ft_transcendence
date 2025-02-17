@@ -67,13 +67,13 @@ function loadLoginPage() {
   </button>
   </div>
   
+  // Ajout du bouton "Dashboard" en haut à droite
   <!-- Bouton “Dashboard” -->
     <div class="position-fixed top-0 end-0 m-4">
       <button class="btn my-button" id="dashboardButton">Dashboard</button>
     </div>
   
   `;
-  // Ajout du bouton "Dashboard" en haut à droite
   const dashBtn = document.getElementById("dashboardButton");
   dashBtn.addEventListener("click", () => {
     // On appelle la fonction loadDashboard() du fichier dashboard.js
