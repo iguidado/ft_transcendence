@@ -1,0 +1,64 @@
+
+@font-face {
+  font-family: 'Pixelade';
+  src: url('../rsc/Pixelade.woff2') format('woff2'),
+  url('../rsc/Pixelade.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+body {
+  font-family: "Pixelade", sans-serif;
+  font-size: x-large;
+}
+
+
+/* Bouton Surprise */
+.my-button {
+  background-color: #422445;
+  color: #F2A65E;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  border-style: outset;
+  border-style: inset;
+  box-shadow:#ff6b97b3;
+  text-shadow:rgba(255, 190, 91, 0.959);
+  /* background: url("../rsc/pear.png") no-repeat center center;
+  background-size: cover;
+
+  width: 64px;
+  height: 64px;
+
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: transparent; 
+  background-color: transparent; */
+}
+
+.my-button:hover {
+  transform: scale(1.05);
+  background-color: #422445;
+  color: #F2A65E;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  border-style: outset;
+  border-style: inset;
+  box-shadow:#ff6b97b3;
+  text-shadow:rgba(255, 190, 91, 0.959);
+  
+}
+
+
+.themePink {
+  background: url("../rsc/pinkcity.gif") no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  background-attachment: fixed;
+}
