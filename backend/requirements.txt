@@ -17,4 +17,5 @@ coreapi==2.3.1
 
 #utils
 setuptools
-wheel		
+wheel
+Pillow		

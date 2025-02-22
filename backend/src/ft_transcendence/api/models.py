@@ -26,16 +26,35 @@ class CustomeUserManager(UserManager):
 	
 class User(AbstractBaseUser, PermissionsMixin):
 	username = models.CharField(max_length=150, unique=True)
+	displayName = models.CharField(max_length=150, unique=False)
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
 
+	avatar = models.ImageField(upload_to='avatars/', default='avatars/defaults.jpg', null=True, blank=True)
+
 	date_joined = models.DateTimeField(default=timezone.now)
+
+	friends = models.ManyToManyField('self', blank=True, related_name='friends_list', symmetrical=False)
+
+	wins = models.IntegerField(default=0)
+	looses = models.IntegerField(default=0)
 
 	objects = CustomeUserManager()
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = []
+
+	def	UpdateUserStats(self, boolean : bool):
+		if (isinstance(boolean, bool)==False):
+			print("c'est pas bon et j'ai pas encore gerer les logs erreurs")
+		else:
+			if(boolean==True):
+				self.wins += 1
+			else:
+				self.looses += 1
+			self.save()
+
 
 	class Meta:
 		verbose_name = 'User'
