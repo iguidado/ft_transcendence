@@ -88,6 +88,3 @@ networks:
   web_networks:
     driver: bridge
     name: web
-  ELK_elk-network:
-    external: true # Defined in ELK/docker-compose.yml
-    name: elk

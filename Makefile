@@ -46,6 +46,8 @@ VITE_CFG=vite.config.js
 
 all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) .env
 	sed -i "s/\(.*=\).*/\1/" .env.dev
+
+dev:
 	$(DC) -f docker-compose.dev.yml up -d
 
 .env:
@@ -104,18 +106,17 @@ prod-re: prod-down prod
 # ----------------------------------------
 
 clean:
-	$(DC) rm #Clean stopped container
-	sed -i "s/\(.*=\).*/\1/" .env.dev 
-	sed -i "s/\(.*=\).*/\1/" .env.prod
-	docker system prune #Clean all dangling entity
+	$(DC) -f docker-compose.dev.yml rm -f  #Clean stopped container
+	@sed -i "s/\(.*=\).*/\1/" .env.dev 
+	@sed -i "s/\(.*=\).*/\1/" .env.prod
+	echo "Cleaned .env.{dev;prod} files"
+	@docker system prune #Clean all dangling entity
 
 
 fclean: down prod-down
-	-docker rmi frontend backend:local postgres:15-alpine
-	-rm -rf frontend/dev
-
+	-docker rmi frontend:dev backend:local postgres:15-alpine
+	-sudo rm -rf frontend/dev
 
 re: fclean all
 
-
-.PHONY: all bg monitoring log down prod prod-down prod-re
+.PHONY: all dev down prod prod-down prod-re clean fclean re
