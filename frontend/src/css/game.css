@@ -1,0 +1,8 @@
+#gameContainer {
+    width: 80%;
+    max-width: 800px;
+    height: 500px;
+    margin: 0 auto;
+    border: 5px dashed #422445;
+    position: relative;
+  }
