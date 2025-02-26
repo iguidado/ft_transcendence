@@ -2,7 +2,7 @@ function loadGame(){
     const app = document.getElementById("app");
     app.innerHTML = `
     <div class="container d-flex flex-column justify-content-start align-items-center" style="height:100vh; padding-top: 50px;">
-    <h1 class="mb-4" style="font-size: 2.5rem;">Pongopolys</h1>
+    <h1 class="mb-4" style="font-size: 2.5rem;">PONGOPOLYS</h1>
     <div id="gameContainer"></div>
     </div>
 
@@ -24,7 +24,7 @@ function loadGame(){
     let scene, camera, renderer, cube, material;
     let leftPaddle, rightPaddle, ball;
     let ballSpeedX = 0.05, ballSpeedY = 0.05;
-    let paddleSpeed = 0.1;
+    let paddleSpeed = 0.5;
     
     initScene();
     createObjects();
@@ -66,14 +66,31 @@ function loadGame(){
         
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
-        camera.position.z = 5;
+        camera.position.set(0, 2, 5);
+        camera.lookAt(0, 0, 0);
         // animate();
     }
+
+    // const loader = new THREE.TextureLoader();
+    // loader.load(
+    //     'rsc/pink.png', (texture) => {
+    //         const material = new THREE.MeshBasicMaterial({ map: texture });
+    //         raquette.mesh.material = material;
+    //     },
+    //     undefined,
+    //     (err) => {
+    //         console.error('Erreur chargement texture', err);
+    //     }
+    // );
     
     function createObjects(){
         //creation raquette 1 (gauche)
-        const geomPaddle = new THREE.BoxGeometry(0.2, 1, 0.1);
-        const matPaddle = new THREE.MeshBasicMaterial({color: 0xFEB486});
+        const light = new THREE.DirectionalLight(0xFFFFFF, 1.8);
+        light.position.set(5, 5, 1);
+        scene.add(light);
+
+        const geomPaddle = new THREE.BoxGeometry(0.3, 2, 1.5);
+        const matPaddle = new THREE.MeshLambertMaterial({color: 0x422445});
         paddleLeft = new THREE.Mesh(geomPaddle, matPaddle);
         paddleLeft.position.set(-2, 0, 0);
         scene.add(paddleLeft);
@@ -84,8 +101,8 @@ function loadGame(){
         scene.add(paddleRight);
 
         //creation balle
-        const geomBall = new THREE.SphereGeometry(0.1, 16, 16);
-        const matBall = new THREE.MeshBasicMaterial({color:0xfa75b1});
+        const geomBall = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+        const matBall = new THREE.MeshLambertMaterial({color: 0xFEB486});
         ball = new THREE.Mesh(geomBall, matBall);
         scene.add(ball);
     }
@@ -93,8 +110,14 @@ function loadGame(){
     function addControls(){
         document.addEventListener('keydown', (e) => {
             if(e.key === 'w'){
-                paddleRight.position.y += paddleSpeed;
+                paddleLeft.position.y += paddleSpeed;
             } else if (e.key === 's'){
+                paddleLeft.position.y -= paddleSpeed;
+            }
+            else if(e.key === 'ArrowUp'){
+                paddleRight.position.y += paddleSpeed;
+            }
+            else if(e.key === 'ArrowDown'){
                 paddleRight.position.y -= paddleSpeed;
             }
         });

@@ -72,6 +72,9 @@ function loadDashboard() {
         loadGame();
       });
     }
-
-    
   }
+
+  // === Au f5, on revient sur la meme page parce que flemme de cliquer ===
+window.addEventListener("DOMContentLoaded", () => {
+  loadDashboard();
+});

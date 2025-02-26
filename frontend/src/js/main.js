@@ -9,7 +9,7 @@ function loadLoginPage() {
   <!-- Conteneur principal (hauteur max pour centrer verticalement) -->
   <div class="container d-flex flex-column justify-content-start align-items-center" style="height:100vh; padding-top: 50px;">
   <!-- Titre -->
-  <h1 class="mb-4" style="font-size: 2.5rem;">Connexion</h1>
+  <h1 class="mb-4" style="font-size: 2.5rem;">CONNECTION</h1>
   
   <!-- Formulaire -->
   <form id="loginForm" style="max-width: 400px; width: 100%;">
@@ -40,6 +40,12 @@ function loadLoginPage() {
   Connect
   </button>
   </form>
+
+    <!-- Bouton “REGISTER” -->
+  <button class="btn my-button btn-lg mt-4 w-80" id="registerButton">
+  REGISTER
+  </button>
+
   
   <!-- Bouton “CONNECT WITH 42” -->
   <button class="btn my-button btn-lg mt-4 w-80" id="connectButton">
@@ -58,10 +64,18 @@ function loadLoginPage() {
     </div>
   
   `;
-  const dashBtn = document.getElementById("dashboardButton");
-  dashBtn.addEventListener("click", () => {
+
+
+  const dashboardBtn = document.getElementById("dashboardButton");
+  dashboardBtn.addEventListener("click", () => {
     // On appelle la fonction loadDashboard() du fichier dashboard.js
     loadDashboard();
+  });
+
+  const registerBtn = document.getElementById("registerButton");
+  registerBtn.addEventListener("click", () => {
+    // On appelle la fonction loadDashboard() du fichier dashboard.js
+    loadRegister();
   });
 
   const gameBtn = document.getElementById("gameButton");
