@@ -2,8 +2,8 @@ ARG STACK_VERSION
 
 FROM docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
 
-COPY ./entrypoint.sh /root/entrypoint.sh
+COPY ./setup.sh /root/setup.sh
 
-#RUN chmod +x /root/entrypoint.sh
+#RUN chmod +x /root/setup.sh
 
-CMD /root/entrypoint.sh
+CMD /root/setup.sh

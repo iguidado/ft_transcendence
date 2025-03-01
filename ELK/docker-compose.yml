@@ -11,7 +11,7 @@ services:
     user: root
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
-    command: /root/entrypoint.sh
+    command: /root/setup.sh
     environment:
      - xpack.security.enabled=false
      - xpack.security.http.ssl.enabled=false
@@ -36,12 +36,14 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
+      - ./Elasticsearch/policy_scripts/:/usr/share/elasticsearch/policy_scripts/
     ports:
       - ${ES_PORT}:9200
     environment:
       - node.name=es01
       - cluster.name=${CLUSTER_NAME}
       - discovery.type=single-node
+      - ELASTIC_USER=${ELASTIC_USER}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
