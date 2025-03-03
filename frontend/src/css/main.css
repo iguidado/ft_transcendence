@@ -8,6 +8,16 @@
   font-display: swap;
 }
 
+#building {
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction:column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin: 1rem;
+}
 
 body {
   font-family: "Pixelade", sans-serif;
