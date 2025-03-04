@@ -2,7 +2,7 @@
 set -e
 
 REPO_NAME="archive"
-REPO_FILE="/usr/share/elasticsearch/policy_scripts/snapshoy_repository/archive_repository.json"
+REPO_FILE="/usr/share/elasticsearch/config/policy_scripts/snapshot_repository/archive_repository.json"
 
 echo "🔎 Checking if snapshot repository '$REPO_NAME' already exists..."
 
@@ -24,3 +24,4 @@ else
         -d @"$REPO_FILE"
     echo "✅ Snapshot repository registered."
 fi
+echo -e "\n--------------------------"

@@ -109,12 +109,15 @@ clean:
 	$(DC) -f docker-compose.dev.yml rm -f  #Clean stopped container
 	@sed -i "s/\(.*=\).*/\1/" .env.dev 
 	@sed -i "s/\(.*=\).*/\1/" .env.prod
-	echo "Cleaned .env.{dev;prod} files"
+	@echo "Cleaned .env.{dev;prod} files"
 	@docker system prune #Clean all dangling entity
 
 
 fclean: down prod-down
-	-docker rmi frontend:dev backend:local postgres:15-alpine
+	-@docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine docker.elastic.co/kibana/kibana
+	@Deleted every images
+	@Deleting every volumes
+	-@docker volume rm $$(docker volume ls -q)
 	-sudo rm -rf frontend/dev
 
 re: fclean all

@@ -1,16 +1,11 @@
 {
-  "policy": {
-    "phases": {
-      "delete": {
-        "min_age": "30d",
-        "actions": {
-	  "snapshot": {
-		  "repository": "archive",
-		  "name": "archive-%{now/d+1d}"
-	  },
-          "delete": {}
-        }
-      }
-    }
-  }
+	"policy": {
+		"phases": {
+			"delete": {
+				"min_age": "30d",
+					"delete": {}
+				}
+			}
+		}
+	}
 }

@@ -1,6 +1,8 @@
 {
 	"index_patterns": ["docker-logs-*"],
-	"settings": {
-		"index.lifecycle.name": "archive_policy"
+	"template": {
+		"settings": {
+			"index.lifecycle.name": "archive_policy"
+		}
 	}
 }

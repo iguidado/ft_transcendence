@@ -2,7 +2,7 @@
 set -e
 
 TEMPLATE_NAME="archive-template"
-TEMPLATE_FILE="/usr/share/elasticsearch/policy_scripts/index_template/archive_template.json"
+TEMPLATE_FILE="/usr/share/elasticsearch/config/policy_scripts/index_template/archive_template.json"
 
 echo "🔎 Checking if index template '$TEMPLATE_NAME' already exists..."
 
@@ -24,3 +24,4 @@ else
         -d @"$TEMPLATE_FILE"
     echo "✅ Index template applied."
 fi
+echo -e "\n--------------------------"

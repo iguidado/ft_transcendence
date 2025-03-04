@@ -2,7 +2,7 @@
 set -e
 
 POLICY_NAME="archive_policy"
-POLICY_FILE="/usr/share/elasticsearch/policy_scripts/ilm_policy/ilm_policy.json"
+POLICY_FILE="/usr/share/elasticsearch/config/policy_scripts/ilm_policy/ilm_policy.json"
 
 echo "🔎 Checking if ILM policy '$POLICY_NAME' already exists..."
 
@@ -25,3 +25,4 @@ else
     echo "✅ ILM policy applied."
 fi
 
+echo -e "\n--------------------------"

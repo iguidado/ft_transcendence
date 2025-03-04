@@ -36,9 +36,19 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
-      - ./Elasticsearch/policy_scripts/:/usr/share/elasticsearch/policy_scripts/
+      - ./Elasticsearch/policy_scripts/:/usr/share/elasticsearch/config/policy_scripts/:rw
+      - ./Elasticsearch/snapshot/:/usr/share/elasticsearch/snapshot/:rw
+      - ./Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - ${ES_PORT}:9200
+    entrypoint: >  # Command here is a quick wrapper around native entrypoint to append our script (wrapper is now PID 1)
+      /bin/tini -- /bin/bash -c "
+        /usr/local/bin/docker-entrypoint.sh &
+        export PID=\$!;
+        /usr/share/elasticsearch/config/policy_scripts/main.sh;
+        wait  \$PID;
+      "
+    # Command here is a quick wrapper around native entrypoint to append our script (wrapper is now PID 1)
     environment:
       - node.name=es01
       - cluster.name=${CLUSTER_NAME}

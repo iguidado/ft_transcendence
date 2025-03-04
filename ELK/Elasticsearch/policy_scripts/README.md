@@ -139,3 +139,8 @@ This ensures:
 - ILM only handles **deletion and pre-deletion snapshots**.
 
 ---
+
+## To-do
+
+- [ ] Replace all absolute path in script by relative path
+- [ ] When implementing vault replace ElasticSearch credential env variable by secret retrieval

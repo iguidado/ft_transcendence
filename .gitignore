@@ -1,5 +1,6 @@
 .env
 backend/src/ft_transcendence/billpong/__pycache__/
+ELK/Elasticsearch/snapshot/
 *.sw*
 nginx/ssl
 frontend/dev
