@@ -1,6 +1,6 @@
 import * as THREE from "three"
 import { addLine } from "./tools.js"
-import { scene } from "./globals.js"
+import { scene } from "./scene.js"
 
 export class Ball {
 	displayDirectionVectorLength=5
@@ -21,6 +21,14 @@ export class Ball {
 	}
 
 	move() {
+		let hit = this.raycaster()
+		if (hit) {
+			if (Math.abs(hit.face.normal.x) > Math.abs(hit.face.normal.y)) {
+				this.direction.x = -this.direction.x;
+			} else {
+				this.direction.y = -this.direction.y;
+			}
+		}
 		this.ball.position.x += this.direction.x * this.speed
 		this.ball.position.y += this.direction.y * this.speed
 	}
@@ -39,41 +47,10 @@ export class Ball {
 		addLine([rayOrigin, rayEnd])
 	}
 
-	displayShapeProjection() {
-		let firstRayOrigin = new THREE.Vector3(
-			this.direction.x,
-			this.direction.y,
-			this.direction.z
-		)
-		let lastRayOrigin = new THREE.Vector3(
-			this.direction.x,
-			this.direction.y,
-			this.direction.z
-		)
-		for (let i=0; i <= this.radius*2; i++) {
-			let rayOrigin = new THREE.Vector3(
-				this.ball.position.x + this.radius * this.direction.x,
-				this.ball.position.y + this.radius * this.direction.y,
-				this.ball.position.z + this.radius * this.direction.z
-			)
-			let rayEnd = new THREE.Vector3(
-				this.direction.x * this.displayDirectionVectorLength + this.ball.position.x,
-				this.direction.y * this.displayDirectionVectorLength + this.ball.position.y,
-				this.direction.y * this.displayDirectionVectorLength + this.ball.position.z
-			)
-			const points = [rayOrigin, rayEnd]
-	
-			const geometry = new THREE.BufferGeometry().setFromPoints(points);
-	
-			const material = new THREE.LineBasicMaterial({ color: 0x0000ff });
-	
-			const line = new THREE.Line(geometry, material);
-	
-			scene.add(line)
-		}
-	}
+	debugObjects = []
 
 	raycaster() {
+		this.debugObjects.forEach(obj => scene.remove(obj))
 		const startPos = this.ball.position.clone();
 		const normalizedDir = this.direction.clone().normalize();
 		const radius = this.ball.geometry.parameters.radius;
@@ -85,7 +62,7 @@ export class Ball {
 		const meshes = scene.children.filter(obj => 
 			obj.type === 'Mesh' && obj !== this.ball
 		);
-
+		let hits = []
 		// Force update des matrices
 		meshes.forEach(mesh => {
 			mesh.updateMatrixWorld(true);
@@ -112,7 +89,7 @@ export class Ball {
 			const rayDirection = normalizedDir;
 
 			const raycaster = new THREE.Raycaster();
-			raycaster.near = 0.1; // Ignorer les intersections trop proches
+			raycaster.near = 0; // Ignorer les intersections trop proches
 			raycaster.far = 20;   // Limiter la distance de détection
 			raycaster.set(rayStart, rayDirection);
 
@@ -126,15 +103,15 @@ export class Ball {
 
 			if (validIntersects.length > 0) {
 				const hit = validIntersects[0];
-				console.log(`Ray ${i}: angle=${(rayAngle * 180 / Math.PI).toFixed(2)}°, distance=${hit.distance.toFixed(2)}`);
-				
-				// Debug: marquer le point d'intersection
+				// console.log(`Ray ${i}: angle=${(rayAngle * 180 / Math.PI).toFixed(2)}°, distance=${hit.distance.toFixed(2)}`);
+
 				const hitPoint = new THREE.Vector3().copy(hit.point);
 				const debugSphere = new THREE.Mesh(
 					new THREE.SphereGeometry(0.1),
 					new THREE.MeshBasicMaterial({color: 0xff0000})
 				);
 				debugSphere.position.copy(hitPoint);
+				this.debugObjects.push(debugSphere)
 				scene.add(debugSphere);
 			}
 
@@ -147,15 +124,15 @@ export class Ball {
 			);
 
 			const rayColor = validIntersects.length > 0 ? 0xff0000 : 0x00ff00;
-			addLine([rayStart, rayEnd], rayColor);
+			this.debugObjects.push(addLine([rayStart, rayEnd], rayColor));
 
+			
 			// Mise à jour de la collision la plus proche
 			if (validIntersects.length > 0 && validIntersects[0].distance < closestDistance) {
 				closestDistance = validIntersects[0].distance;
 				closestIntersection = validIntersects[0];
 			}
 		}
-
-		return closestIntersection?.object || null;
+		return closestDistance < this.speed ? closestIntersection : null;
 	}
 }

@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { scene } from "./globals.js"
+import { scene } from "./scene.js"
 
 export function addLine(points, color = 0xffffff) {
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
