@@ -11,8 +11,8 @@ function loadGame(){
     <div class="position-fixed top-0 start-0 m-4">
       <button class="btn my-button" id="dashboardButton">Dashboard</button>
     </div>
-
-    <!-- Un bouton pour revenir à la page de log-->
+    
+    <!--Boton pour revenir a la page log in-->
     <div class="position-fixed top-0 end-0 m-4">
     <button id="backToLogin" class="btn my-button">
         Back to Login
@@ -45,7 +45,7 @@ function loadGame(){
         camera.updateProjectionMatrix();
     }
 
-    //faire que tout bouge
+    //faire que tout bouge, a remplacer par algo Leon /!\
     function animate(){
         requestAnimationFrame(animate);
         update();
@@ -55,7 +55,9 @@ function loadGame(){
     //creation du canva/scene etc
     function initScene(){
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        //modifier pour changer angle camera
+        camera = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
+        //permet voir fond en transparence
         renderer = new THREE.WebGLRenderer({alpha: true});
         const width = container.clientWidth;
         const height = container.clientHeight;
@@ -68,20 +70,7 @@ function loadGame(){
         camera.updateProjectionMatrix();
         camera.position.set(0, 2, 5);
         camera.lookAt(0, 0, 0);
-        // animate();
     }
-
-    // const loader = new THREE.TextureLoader();
-    // loader.load(
-    //     'rsc/pink.png', (texture) => {
-    //         const material = new THREE.MeshBasicMaterial({ map: texture });
-    //         raquette.mesh.material = material;
-    //     },
-    //     undefined,
-    //     (err) => {
-    //         console.error('Erreur chargement texture', err);
-    //     }
-    // );
     
     function createObjects(){
         //creation raquette 1 (gauche)
@@ -92,12 +81,12 @@ function loadGame(){
         const geomPaddle = new THREE.BoxGeometry(0.3, 2, 1.5);
         const matPaddle = new THREE.MeshLambertMaterial({color: 0x422445});
         paddleLeft = new THREE.Mesh(geomPaddle, matPaddle);
-        paddleLeft.position.set(-2, 0, 0);
+        paddleLeft.position.set(-3, 0, 0);
         scene.add(paddleLeft);
 
         //creation raquette 2 (droite)
         paddleRight = new THREE.Mesh(geomPaddle, matPaddle.clone());
-        paddleRight.position.set(+2, 0, 0);
+        paddleRight.position.set(+3, 0, 0);
         scene.add(paddleRight);
 
         //creation balle
@@ -107,11 +96,13 @@ function loadGame(){
         scene.add(ball);
     }
 
+
+    //Gestion touches (ajouter espace pour lancer balle)
     function addControls(){
         document.addEventListener('keydown', (e) => {
-            if(e.key === 'w'){
+            if(e.key === 'w' || e.key === 'W'){
                 paddleLeft.position.y += paddleSpeed;
-            } else if (e.key === 's'){
+            } else if (e.key === 's' || e.key === 'S'){
                 paddleLeft.position.y -= paddleSpeed;
             }
             else if(e.key === 'ArrowUp'){
@@ -123,23 +114,25 @@ function loadGame(){
         });
     }
 
+
+    //PSEUDO PONG, mouvements de la balle simulés
     function update(){
         ball.position.x += ballSpeedX;
         ball.position.y += ballSpeedY;
 
-        if(ball.position.y >= 2 || ball.position.y <= -2){
+        if(ball.position.y >= 3 || ball.position.y <= -3){
             ballSpeedY = -ballSpeedY;
         }
 
-        if(ball.position.x >= 2 || ball.position.x <= -2){
+        if(ball.position.x >= 3 || ball.position.x <= -3){
             ballSpeedX = -ballSpeedX;
         }
 
-        if(ball.position.x >= 1.8 && ball.position.x <= 2 && ball.position.y <= paddleRight.position.y + 0.5 && ball.position.y >= paddleRight.position.y - 0.5){
+        if(ball.position.x >= 1.8 && ball.position.x <= 3 && ball.position.y <= paddleRight.position.y + 0.5 && ball.position.y >= paddleRight.position.y - 0.5){
             ballSpeedX = -ballSpeedX;
         }
 
-        if(ball.position.x <= -1.8 && ball.position.x >= -2 && ball.position.y <= paddleLeft.position.y + 0.5 && ball.position.y >= paddleLeft.position.y - 0.5){
+        if(ball.position.x <= -1.8 && ball.position.x >= -3 && ball.position.y <= paddleLeft.position.y + 0.5 && ball.position.y >= paddleLeft.position.y - 0.5){
             ballSpeedX = -ballSpeedX;
         }
     }
