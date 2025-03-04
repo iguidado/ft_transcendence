@@ -1,25 +1,6 @@
 function loadGame(){
     const app = document.getElementById("app");
-    app.innerHTML = `
-    <div class="container d-flex flex-column justify-content-start align-items-center" style="height:100vh; padding-top: 50px;">
-    <h1 class="mb-4" style="font-size: 2.5rem;">PONGOPOLYS</h1>
-    <div id="gameContainer"></div>
-    </div>
 
-
-      <!-- Bouton “Dashboard” -->
-    <div class="position-fixed top-0 start-0 m-4">
-      <button class="btn my-button" id="dashboardButton">Dashboard</button>
-    </div>
-    
-    <!--Boton pour revenir a la page log in-->
-    <div class="position-fixed top-0 end-0 m-4">
-    <button id="backToLogin" class="btn my-button">
-        Back to Login
-        </button>
-        </div>
-        `;
-    
     const container = document.getElementById("gameContainer");
     let scene, camera, renderer, cube, material;
     let leftPaddle, rightPaddle, ball;
@@ -153,7 +134,3 @@ function loadGame(){
 }
 
 
-// === Au f5, on revient sur la meme page parce que flemme de cliquer ===
-window.addEventListener("DOMContentLoaded", () => {
-    loadGame();
-  });
