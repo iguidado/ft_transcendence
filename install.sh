@@ -1,3 +1,7 @@
+#!/bin/bash
+
+## Installation and configuration of docker, only use on personnal computer with sudo capability
+
 # Add Docker's official GPG key:
 
 OS=$(sudo cat /etc/os-release | grep PRETTY | cut -d'"' -f2 | cut -d' ' -f1 | tr [:upper:] [:lower:])
@@ -13,7 +17,11 @@ echo   "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download
 sudo apt-get update
 
 
+# Docker installation
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin git make -y
+
+
+#Add user to docker groups to use docker rootless
 
 USER=$(whoami)
 
