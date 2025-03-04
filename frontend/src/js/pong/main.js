@@ -3,6 +3,8 @@ import { game_loop } from './game_loop.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { camera } from "./camera.js";
 import { scene } from './scene.js';
+// import "./keybinds.js"
+import { handleKeyPress } from './keybinds.js';
 
 export const renderer = new THREE.WebGLRenderer()
 renderer.setSize( window.innerWidth, window.innerHeight )
@@ -18,6 +20,7 @@ camera_controls.screenSpacePanning = false; // Empêche le pan dans l'espace éc
 
 function animate() {
 	game_loop()
+	handleKeyPress()
 	camera_controls.update();
 	renderer.render( scene, camera )
 }

@@ -1,6 +1,7 @@
 import * as THREE from "three"
 import { addLine } from "./tools.js"
 import { scene } from "./scene.js"
+import { paddleLeft, paddleRight } from "./objects.js"
 
 export class Ball {
 	displayDirectionVectorLength=5
@@ -22,15 +23,51 @@ export class Ball {
 
 	move() {
 		let hit = this.raycaster()
+		
 		if (hit) {
-			if (Math.abs(hit.face.normal.x) > Math.abs(hit.face.normal.y)) {
-				this.direction.x = -this.direction.x;
+			// Get the object that was hit
+			const hitObject = hit.object;
+
+			// Handle paddle collisions
+			console.log(paddleLeft.mesh)
+			if (hitObject === paddleLeft.mesh || hitObject === paddleRight.mesh) {
+				console.log("TOTO")
+				// Calculate relative hit position on paddle (-1 to 1, from bottom to top)
+				const paddleHeight = hitObject.geometry.parameters.height;
+				const relativeHitY = (hit.point.y - hitObject.position.y) / (paddleHeight / 2);
+				
+				// Bounce angle based on where the ball hits the paddle
+				// Maximum angle of 60 degrees (π/3 radians)
+				const maxBounceAngle = Math.PI / 3;
+				const bounceAngle = relativeHitY * maxBounceAngle;
+				
+				// Set new direction based on which paddle was hit
+				if (hitObject === paddleLeft.mesh) {
+					this.direction.x = Math.cos(bounceAngle);
+					this.direction.y = Math.sin(bounceAngle);
+				} else { // paddleRight.mesh
+					this.direction.x = -Math.cos(bounceAngle);
+					this.direction.y = Math.sin(bounceAngle);
+				}
+				
+				// Normalize the direction vector
+				this.direction.normalize();
+				
+				// Optionally increase speed slightly on paddle hits
+				this.speed *= 1.05;
 			} else {
-				this.direction.y = -this.direction.y;
+				// Handle other collisions (walls, etc.)
+				if (Math.abs(hit.face.normal.x) > Math.abs(hit.face.normal.y)) {
+					this.direction.x = -this.direction.x;
+				} else {
+					this.direction.y = -this.direction.y;
+				}
 			}
 		}
-		this.ball.position.x += this.direction.x * this.speed
-		this.ball.position.y += this.direction.y * this.speed
+
+		// Update ball position
+		this.ball.position.x += this.direction.x * this.speed;
+		this.ball.position.y += this.direction.y * this.speed;
 	}
 
 	displayDirectionVector() {
