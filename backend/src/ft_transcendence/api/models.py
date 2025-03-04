@@ -9,6 +9,8 @@ class CustomeUserManager(UserManager):
 	def _create_user(self, username, password, **extra_fields):
 		if not username:
 			raise ValueError("You have not provided a valid username")
+		if not password:
+			raise ValueError("You must provide a password")
 		user = self.model(username=username, **extra_fields)
 		user.set_password(password)
 		user.save(using=self._db)
@@ -26,7 +28,7 @@ class CustomeUserManager(UserManager):
 	
 class User(AbstractBaseUser, PermissionsMixin):
 	username = models.CharField(max_length=150, unique=True)
-	displayName = models.CharField(max_length=150, unique=False)
+	displayName = models.CharField(max_length=150, unique=False, blank=True)
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
@@ -59,3 +61,25 @@ class User(AbstractBaseUser, PermissionsMixin):
 	class Meta:
 		verbose_name = 'User'
 		verbose_name_plural = 'Users'
+
+class Match(models.Model):
+	player_one = models.ForeignKey('User', on_delete=models.CASCADE, related_name='p1_match_history')
+	player_two = models.ForeignKey('User', on_delete=models.CASCADE, related_name='p2_match_history')
+	winner = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True, related_name='winner')
+	date = models.DateTimeField(default=timezone.now)
+	
+	score_p1 = models.IntegerField(default=0)
+	score_p2 = models.IntegerField(default=0)
+
+	def set_winner(self):
+		if self.score_p1 > self.score_p2:
+			self.winner = self.player_one
+		elif self.score_p2 > self.score_p1:
+			self.winner = self.player_two
+		else:
+			self.winner = None  # Match nul
+		self.save()
+
+	class Meta:
+		verbose_name = 'Match'
+		verbose_name_plural = 'Matchs'

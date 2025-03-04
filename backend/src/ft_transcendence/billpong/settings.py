@@ -43,10 +43,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'drf_yasg',
 	'rest_framework',
-	'rest_framework_simplejwt'
+	'rest_framework_simplejwt',
+	'channels'
 ]
 
 AUTH_USER_MODEL = 'api.User'
+
+ASGI_APPLICATION = 'billpong.asgi.application'
+
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+# #         'CONFIG': {
+# #             "hosts": [('127.0.0.1', 6379)],
+# #         },
+#     },
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -55,6 +67,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+	'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
 SIMPLE_JWT = {
@@ -63,6 +76,18 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+}
+
+SWAGGER_SETTINGS = {
+	'SECURITY_DEFINITIONS': {
+		'Bearer': {
+			'type': 'apiKey',
+			'name': 'Authorization',
+			'in': 'header',
+			'description': "Enter JWT token on the format : Bearer <token>"
+        }
+    },
+	'USE_SESSION_AUTH': False,
 }
 
 MIDDLEWARE = [

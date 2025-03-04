@@ -1,7 +1,95 @@
-from .models import User
+from .models import User, Match
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class MatchSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Match
+		fields = ['player_one', 'player_two', 'score_p1', 'score_p2', 'winner','date']
+
+class UserProfileSerializer(serializers.ModelSerializer):
+	match_history = serializers.SerializerMethodField()
+
+	class Meta:
+		model = get_user_model()
+		fields = ['id', 'username', 'displayName', 'avatar', 'date_joined', 'wins', 'looses', 'match_history']
+
+	def get_match_history(seld, obj):
+		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
+		return MatchSerializer(matchs, many=True).data
+
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+	confirm_password = serializers.CharField(write_only=True)
+
+	class Meta:
+		model = get_user_model()
+		fields = ['id', 'username','password', 'confirm_password']
+		extra_kwargs = {
+			'password' : {'write_only': True}
+		}
+
+	def	validate(self, data):
+		if data['password'] != data['confirm_password']:
+			raise serializers.ValidationError({"Password does not match"})
+		return data
+
+	def create(self, validated_data):
+		username = validated_data["username"]
+		password = validated_data["password"]
+
+		validated_data.pop('confirm_password')
+		user = get_user_model().objects.create_user(**validated_data)
+		return user
+
+class UpdateDisplayNameSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = get_user_model()
+		fields = ['displayName']
+
+	def validate_diplayName(self, value):
+		if len(value) < 3:
+			raise serializers.ValidationError("Displayname must at least have 3 characters")
+		return value
+	
+class UpdateAvatarSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = get_user_model()
+		fields = ['avatar']
+
+class UpdateUserHistoricSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = Match
+		fields = ['player_one', 'player_two', 'score_p1', 'score_p2','date']
+
+
+	def create(self, validated_data):
+		match = Match.objects.create(**validated_data)
+
+		match.set_winner()
+
+		if match.winner == match.player_one:
+			match.player_one.UpdateUserStats(True)
+			match.player_two.UpdateUserStats(False)
+		elif match.winner == match.player_two:
+			match.player_one.UpdateUserStats(False)
+			match.player_two.UpdateUserStats(True)
+		else:
+			match.player_one.UpdateUserStats(False)
+			match.player_two.UpdateUserStats(False)
+		return match
+
+class FriendSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ['url', 'username', 'displayName', 'avatar', 'date_joined', 'wins', 'looses']
+		fields = ['username', 'is_active', 'avatar']
+		
+class AddFriendSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ['username']

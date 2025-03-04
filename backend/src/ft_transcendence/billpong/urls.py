@@ -15,41 +15,64 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import path, re_path, include
-from rest_framework import permissions, routers
+from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from api.views import UserViewSet
+from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView
+
 
 
 schema_view = get_schema_view(
 	openapi.Info(
 	    title="Snippets API",
 	    default_version='v1',
-	    description="Test descirption",
+	    description="API doc",
 	    terms_of_service="https://www.google.com/policies/terms/",
 	    contact=openapi.Contact(email="contact@snippets.local"),
 	    license=openapi.License(name="BSD Liscense"),
     ),
-	public=False,
+	public=True,
 	permission_classes=(permissions.AllowAny,),
 )
 
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
-
 urlpatterns = [
 	# API doc with Swagger and ReDoc
-	path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+	# path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
 	path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-	path('swagger/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+	path('swagger-redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
 	# Administration Django
     path('admin/', admin.site.urls),
 
 	# API roads
-	path('api/', include(router.urls)),
+    
+	#REGISTER
+	path('api/register/', RegisterView.as_view(), name="register"),
+    
+	#LOGIN
 	path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),    
+	
+	#GET
+    path('api/user/profile/', UserProfileView.as_view(), name='user_profile'),
+    path('api/users/', UserListView.as_view(), name='users_list'),
+    path('api/user/<str:username>/profile/', UserProfileByUserNameView.as_view(), name='user_profile_by_id'),
+    path('api/user/friends/', FriendListView.as_view(), name='friend-list'),
+	
+	#PATCH
+	path('api/user/profile/update_displayname/', UserDisplayNameUpdateView.as_view(), name='user-diplayname-update'),
+	path('api/user/profile/update_avatar/', UserAvatarUpdateView.as_view(), name='user-avatar-update'),	
+    
+	#POST
+    path('api/user/friends/add/', AddFriendView.as_view(), name='add-friend'),
+    path('api/users/create-match-history', CreateMatchHistoricView.as_view(), name='user-stats-update'),
+
+    
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,35 @@
+[
+	{
+		"model": "api.User",
+		"pk": 1,
+		"fields":{
+			"username": "spongebob",
+			"displayName": "SpongeBob SquarePants",
+			"avatar": "avatars/spongebob.jpg",
+			"wins": 10,
+			"looses": 5
+		}
+	},
+	{
+		"model": "api.User",
+		"pk": 2,
+		"fields":{
+			"username": "patrick",
+			"displayName": "Patrick Star",
+			"avatar": "avatars/patrick.jpg",
+			"wins": 3,
+			"looses": 5
+		}
+	},
+	{
+		"model": "api.User",
+		"pk": 3,
+		"fields":{
+			"username": "squidward",
+			"displayName": "Squidward Q. Tentacles",
+			"avatar": "avatars/squidward.jpg",
+			"wins": 23,
+			"looses": 0
+		}
+	}
+]
