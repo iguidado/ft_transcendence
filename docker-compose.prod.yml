@@ -29,8 +29,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-        #   networks:
-        #     - web-network
+    networks:
+      - web-network
     logging:
       driver: gelf
       options:
@@ -49,8 +49,8 @@ services:
     depends_on:
       db:
         condition: service_started
-          #     logstash:
-          #       condition: service_healthy
+      logstash:
+        condition: service_healthy
     image: backend:local
     command: /root/setup.sh
     ports:
@@ -87,8 +87,8 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-        #   networks:
-        #     - web-network
+    networks:
+      - web-network
     logging:
       driver: gelf
       options:
@@ -100,10 +100,10 @@ volumes:
     name: postgres_data
 
 
-      # networks:
-      #   ELK_web-network:
-      #     external: true
-      #     name: web
-      #   ELK_elk-network:
-      #     external: true # Defined in ELK/docker-compose.yml
-      #     name: elk
+networks:
+  ELK_web-network:
+    external: true
+    name: web
+  ELK_elk-network:
+    external: true # Defined in ELK/docker-compose.yml
+    name: elk
