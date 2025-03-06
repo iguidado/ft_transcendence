@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { Ball } from "./Ball.js"
 import { CollitionBox } from './CollitionBox.js';
-import { config } from './config.js';
-import { Paddle } from './Paddle.js';
+import { config } from './src/utils/config.js';
+import { Paddle } from './src/components/Paddle.js';
 
 
 export const walls = [

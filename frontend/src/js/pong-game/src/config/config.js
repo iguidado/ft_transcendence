@@ -10,7 +10,6 @@ export const config = {
 	ball: {
 		debugRayCaster: false,
 		speed: 1,
-		direction: Math.random() > 0.5 ? new THREE.Vector3(-1, 0, 0) : new THREE.Vector3(1, 0, 0),
 		radius: 1,
 		color: 0x00ff00,
 		paddleBoncingSpeedMultiplicator: 1.05,
@@ -22,9 +21,12 @@ export const config = {
 		length: 10,
 		depth: 1,
 		width: 1,
-		maxBounceAngle: Math.PI / 3
+		maxBounceAngle: Math.PI / 3,
+		speed: 0.7
 	},
 	camera: {
-		z: 30
+		z: 40,
+		y: 0,
+		x: 0
 	}
 }

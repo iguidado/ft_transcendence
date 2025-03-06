@@ -1,8 +1,9 @@
 import * as THREE from "three"
-import { scene } from "./scene.js"
+import { contextRegistry } from "../core/ContextRegistry";
 
 export class CollitionBox {
 	constructor({height, width, depth, x, y, color} = {}) {
+		const context = contextRegistry.getCurrentContext();
 		this.height = height || 0
 		this.width = width || 0
 		this.depth = depth || 0
@@ -14,6 +15,6 @@ export class CollitionBox {
 			this.mesh.position.x = x
 		if (y)
 			this.mesh.position.y = y
-		scene.add(this.mesh)
+		context.scene.add(this.mesh)
 	}
 }

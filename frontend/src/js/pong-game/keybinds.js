@@ -1,4 +1,4 @@
-import { config } from "./config.js";
+import { config } from "./src/utils/config.js";
 import { ball, paddleLeft, paddleRight } from "./objects.js";
 
 const keyState = {}

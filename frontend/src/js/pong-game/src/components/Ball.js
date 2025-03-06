@@ -1,12 +1,11 @@
 import * as THREE from "three"
-import { addLine } from "./tools.js"
-import { scene } from "./scene.js"
-import { paddleLeft, paddleRight } from "./objects.js"
-import { config } from "./config.js"
+import { addLine } from "../utils/tools.js"
+import {contextRegistry} from "../core/ContextRegistry.js"
 
 export class Ball {
-	displayDirectionVectorLength=5
 	constructor({x, y, radius, direction, speed, color, paddleBoncingSpeedMultiplicator} = {}) {
+		const context = contextRegistry.getCurrentContext();
+        const config = context.config;
 		this.direction = direction || config.ball.direction
 		this.speed = speed || config.ball.speed
 		this.radius = radius || config.ball.radius
@@ -24,7 +23,7 @@ export class Ball {
 		this.defaultSpeed = this.speed
 		this.defaultPosition = this.ball.position.clone()
 
-		scene.add( this.ball );
+		context.scene.add( this.ball );
 	}
 	reset() {
 		this.direction = this.defaultDirection
@@ -33,16 +32,18 @@ export class Ball {
 	}
 
 	bounceOnObject() {
+		const context = contextRegistry.getCurrentContext();
+        const config = context.config;
 		let hit = this.scanForObstacles()
 		if (hit) {
 			const hitObject = hit.object;
-			if (hitObject === paddleLeft.mesh || hitObject === paddleRight.mesh) {
+			if (hitObject === context.paddleLeft.mesh || hitObject === context.paddleRight.mesh) {
 				const paddleHeight = hitObject.geometry.parameters.height;
 				const relativeHitY = (hit.point.y - hitObject.position.y) / (paddleHeight / 2);
 
 				const bounceAngle = relativeHitY * config.paddles.maxBounceAngle;
 				
-				if (hitObject === paddleLeft.mesh) {
+				if (hitObject === context.paddleLeft.mesh) {
 					this.direction.x = Math.cos(bounceAngle);
 					this.direction.y = Math.sin(bounceAngle);
 				} else { // paddleRight.mesh
@@ -77,8 +78,10 @@ export class Ball {
 	debugObjects = []
 
 	scanForObstacles() {
+		const context = contextRegistry.getCurrentContext();
+        const config = context.config;
 		if (config.ball.debugRayCaster)
-			this.debugObjects.forEach(obj => scene.remove(obj))
+			this.debugObjects.forEach(obj => context.scene.remove(obj))
 		const startPos = this.ball.position.clone();
 		const normalizedDir = this.direction.clone().normalize();
 		const radius = this.ball.geometry.parameters.radius;
@@ -87,7 +90,7 @@ export class Ball {
 		const arcAngle = Math.PI;
 		
 		// Récupérer et mettre à jour les meshes
-		const meshes = scene.children.filter(obj => 
+		const meshes = context.scene.children.filter(obj => 
 			obj.type === 'Mesh' && obj !== this.ball
 		);
 		// Force update des matrices
@@ -140,7 +143,7 @@ export class Ball {
 					);
 					debugSphere.position.copy(hitPoint);
 					this.debugObjects.push(debugSphere)
-					scene.add(debugSphere);
+					context.scene.add(debugSphere);
 				}
 			}
 
