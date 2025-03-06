@@ -9,7 +9,13 @@ import { handleKeyPress } from './keybinds.js';
 export const renderer = new THREE.WebGLRenderer()
 renderer.setSize( window.innerWidth, window.innerHeight )
 renderer.setAnimationLoop( animate )
-document.body.appendChild( renderer.domElement )
+
+const gameContainer = document.getElementById('game_vue')
+if (!gameContainer) {
+    console.error('Could not find element with id "game_vue"')
+} else {
+    gameContainer.appendChild(renderer.domElement)
+}
 
 // Ajouter les contrôles de la caméra (OrbitControls)
 const camera_controls = new OrbitControls(camera, renderer.domElement);

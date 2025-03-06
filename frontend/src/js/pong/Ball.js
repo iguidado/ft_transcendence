@@ -2,46 +2,46 @@ import * as THREE from "three"
 import { addLine } from "./tools.js"
 import { scene } from "./scene.js"
 import { paddleLeft, paddleRight } from "./objects.js"
+import { config } from "./config.js"
 
 export class Ball {
 	displayDirectionVectorLength=5
-	constructor({x, y, radius, direction, speed, color} = {}) {
-		this.direction = direction?.normalize() || new THREE.Vector3(0, 0, 0)
-		this.speed = speed || 0
-		this.color = color || 0x00ff00
-		this.radius = radius || 1
+	constructor({x, y, radius, direction, speed, color, paddleBoncingSpeedMultiplicator} = {}) {
+		this.direction = direction || config.ball.direction
+		this.speed = speed || config.ball.speed
+		this.radius = radius || config.ball.radius
+		this.color = color || config.ball.color
 		this.geometry = new THREE.SphereGeometry(this.radius)
 		this.material = new THREE.MeshBasicMaterial( { color: this.color } );
 		this.ball = new THREE.Mesh( this.geometry, this.material );
-		if (x)
-			this.ball.position.x = x
-		if (y)
-			this.ball.position.y = y
+		this.paddleBoncingSpeedMultiplicator = paddleBoncingSpeedMultiplicator || config.ball.paddleBoncingSpeedMultiplicator
+
+		
+		this.ball.position.x = x || config.ball.x
+		this.ball.position.y = y || config.ball.y
+		
+		this.defaultDirection = this.direction
+		this.defaultSpeed = this.speed
+		this.defaultPosition = this.ball.position.clone()
+
 		scene.add( this.ball );
-		// console.log("Ball constructor:", this)
+	}
+	reset() {
+		this.direction = this.defaultDirection
+		this.speed = this.defaultSpeed
+		this.ball.position.set(this.defaultPosition.x, this.defaultPosition.y, this.defaultPosition.z)
 	}
 
-	move() {
-		let hit = this.raycaster()
-		
+	bounceOnObject() {
+		let hit = this.scanForObstacles()
 		if (hit) {
-			// Get the object that was hit
 			const hitObject = hit.object;
-
-			// Handle paddle collisions
-			console.log(paddleLeft.mesh)
 			if (hitObject === paddleLeft.mesh || hitObject === paddleRight.mesh) {
-				console.log("TOTO")
-				// Calculate relative hit position on paddle (-1 to 1, from bottom to top)
 				const paddleHeight = hitObject.geometry.parameters.height;
 				const relativeHitY = (hit.point.y - hitObject.position.y) / (paddleHeight / 2);
+
+				const bounceAngle = relativeHitY * config.paddles.maxBounceAngle;
 				
-				// Bounce angle based on where the ball hits the paddle
-				// Maximum angle of 60 degrees (π/3 radians)
-				const maxBounceAngle = Math.PI / 3;
-				const bounceAngle = relativeHitY * maxBounceAngle;
-				
-				// Set new direction based on which paddle was hit
 				if (hitObject === paddleLeft.mesh) {
 					this.direction.x = Math.cos(bounceAngle);
 					this.direction.y = Math.sin(bounceAngle);
@@ -50,11 +50,13 @@ export class Ball {
 					this.direction.y = Math.sin(bounceAngle);
 				}
 				
-				// Normalize the direction vector
 				this.direction.normalize();
 				
-				// Optionally increase speed slightly on paddle hits
-				this.speed *= 1.05;
+				if (this.speed * this.paddleBoncingSpeedMultiplicator < config.ball.maxSpeed)
+					this.speed *= this.paddleBoncingSpeedMultiplicator
+				else if (this.speed != config.ball.maxSpeed)
+					this.speed = config.ball.maxSpeed
+				console.log(this.speed)
 			} else {
 				// Handle other collisions (walls, etc.)
 				if (Math.abs(hit.face.normal.x) > Math.abs(hit.face.normal.y)) {
@@ -64,30 +66,19 @@ export class Ball {
 				}
 			}
 		}
+	}
 
-		// Update ball position
+	move() {
+		this.bounceOnObject()
 		this.ball.position.x += this.direction.x * this.speed;
 		this.ball.position.y += this.direction.y * this.speed;
 	}
 
-	displayDirectionVector() {
-		let rayOrigin = new THREE.Vector3(
-			this.ball.position.x + this.radius * this.direction.x,
-			this.ball.position.y + this.radius * this.direction.y,
-			this.ball.position.z + this.radius * this.direction.z
-		)
-		let rayEnd = new THREE.Vector3(
-			this.direction.x * this.displayDirectionVectorLength + this.ball.position.x,
-			this.direction.y * this.displayDirectionVectorLength + this.ball.position.y,
-			this.direction.y * this.displayDirectionVectorLength + this.ball.position.z
-		)
-		addLine([rayOrigin, rayEnd])
-	}
-
 	debugObjects = []
 
-	raycaster() {
-		this.debugObjects.forEach(obj => scene.remove(obj))
+	scanForObstacles() {
+		if (config.ball.debugRayCaster)
+			this.debugObjects.forEach(obj => scene.remove(obj))
 		const startPos = this.ball.position.clone();
 		const normalizedDir = this.direction.clone().normalize();
 		const radius = this.ball.geometry.parameters.radius;
@@ -99,7 +90,6 @@ export class Ball {
 		const meshes = scene.children.filter(obj => 
 			obj.type === 'Mesh' && obj !== this.ball
 		);
-		let hits = []
 		// Force update des matrices
 		meshes.forEach(mesh => {
 			mesh.updateMatrixWorld(true);
@@ -127,7 +117,7 @@ export class Ball {
 
 			const raycaster = new THREE.Raycaster();
 			raycaster.near = 0; // Ignorer les intersections trop proches
-			raycaster.far = 20;   // Limiter la distance de détection
+			raycaster.far = config.board.width;   // Limiter la distance de détection
 			raycaster.set(rayStart, rayDirection);
 
 			const intersects = raycaster.intersectObjects(meshes, false);
@@ -143,26 +133,27 @@ export class Ball {
 				// console.log(`Ray ${i}: angle=${(rayAngle * 180 / Math.PI).toFixed(2)}°, distance=${hit.distance.toFixed(2)}`);
 
 				const hitPoint = new THREE.Vector3().copy(hit.point);
-				const debugSphere = new THREE.Mesh(
-					new THREE.SphereGeometry(0.1),
-					new THREE.MeshBasicMaterial({color: 0xff0000})
-				);
-				debugSphere.position.copy(hitPoint);
-				this.debugObjects.push(debugSphere)
-				scene.add(debugSphere);
+				if (config.ball.debugRayCaster) {
+					const debugSphere = new THREE.Mesh(
+						new THREE.SphereGeometry(0.1),
+						new THREE.MeshBasicMaterial({color: 0xff0000})
+					);
+					debugSphere.position.copy(hitPoint);
+					this.debugObjects.push(debugSphere)
+					scene.add(debugSphere);
+				}
 			}
 
-			// Visualisation du rayon
-			const rayLength = validIntersects.length > 0 ? validIntersects[0].distance : 10;
-			const rayEnd = new THREE.Vector3(
-				rayStart.x + rayDirection.x * rayLength,
-				rayStart.y + rayDirection.y * rayLength,
-				0
-			);
-
-			const rayColor = validIntersects.length > 0 ? 0xff0000 : 0x00ff00;
-			this.debugObjects.push(addLine([rayStart, rayEnd], rayColor));
-
+			if (config.ball.debugRayCaster) { // Visualisation du rayon
+				const rayLength = validIntersects.length > 0 ? validIntersects[0].distance : config.board.width;
+				const rayEnd = new THREE.Vector3(
+					rayStart.x + rayDirection.x * rayLength,
+					rayStart.y + rayDirection.y * rayLength,
+					0
+				);
+				const rayColor = validIntersects.length > 0 ? 0xff0000 : 0x00ff00;
+				this.debugObjects.push(addLine([rayStart, rayEnd], rayColor));
+			}
 			
 			// Mise à jour de la collision la plus proche
 			if (validIntersects.length > 0 && validIntersects[0].distance < closestDistance) {

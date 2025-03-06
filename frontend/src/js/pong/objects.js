@@ -19,8 +19,8 @@ export const walls = [
 		y: -config.board.height/2
 	}), // bottom
 ]
-		
+
 export const paddleRight = new Paddle()
 export const paddleLeft = new Paddle({isLeft:true, color: 0x0000ff})
 
-export const ball = new Ball({speed: 0.5, direction: new THREE.Vector3(1, 0, 0)})
+export const ball = new Ball()
