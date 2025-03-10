@@ -1,55 +1,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Conteneur principal (hauteur max pour centrer verticalement) -->
-<div class="container d-flex flex-column justify-content-start align-items-center" style="height:100vh; padding-top: 50px;">
-<!-- Titre -->
-<h1 class="mb-4" style="font-size: 2.5rem;">CONNECTION</h1>
+<div class="container d-flex flex-column justify-content-start align-items-center"
+  style="height:100vh; padding-top: 50px;">
+  <!-- Titre -->
+  <h1 class="mb-4" style="font-size: 2.5rem;">CONNECTION</h1>
 
-<!-- Formulaire -->
-<form id="loginForm" style="max-width: 400px; width: 100%;">
-<!-- Champ identifiant -->
-<div class="mb-3">
-<label for="loginInput" class="form-label" style="font-size: 1.25rem;">Login</label>
-<input 
-type="text" 
-class="form-control form-control-lg" 
-id="loginInput" 
-placeholder="Enter your login" 
-/>
-</div>
+  <!-- Formulaire -->
+  <form id="loginForm" style="max-width: 400px; width: 100%;">
+    <!-- Champ identifiant -->
+    <div class="mb-3">
+      <label for="loginInput" class="form-label" style="font-size: 1.25rem;">Login</label>
+      <input type="text" class="form-control form-control-lg" id="loginInput" placeholder="Enter your login" />
+    </div>
 
-<!-- Password -->
-<div class="mb-3">
-<label for="passwordInput" class="form-label" style="font-size: 1.25rem;">Password</label>
-<input 
-type="password" 
-class="form-control form-control-lg" 
-id="passwordInput" 
-placeholder="Enter your password"
-/>
-</div>
+    <!-- Password -->
+    <div class="mb-3">
+      <label for="passwordInput" class="form-label" style="font-size: 1.25rem;">Password</label>
+      <input type="password" class="form-control form-control-lg" id="passwordInput"
+        placeholder="Enter your password" />
+    </div>
 
-<!-- Bouton “Connect” -->
-<button type="submit" class="btn my-button btn-lg mt-4 w-100">
-CONNECT
-</button>
-</form>
+    <!-- Bouton “Connect” -->
+    <button type="submit" class="btn my-button btn-lg mt-4 w-100">
+      CONNECT
+    </button>
+  </form>
 
   <!-- Bouton “REGISTER” -->
-<button onclick="load_page('register')" class="btn my-button btn-lg mt-4 w-80" id="registerButton">
-REGISTER
-</button>
+  <button onclick="load_page('register')" class="btn my-button btn-lg mt-4 w-80" id="registerButton">
+    REGISTER
+  </button>
 
 
-<!-- Bouton “CONNECT WITH 42” -->
-<button class="btn my-button btn-lg mt-4 w-80" id="connectButton">
-CONNECT WITH 42
-</button>
+  <!-- Bouton “CONNECT WITH 42” -->
+  <button class="btn my-button btn-lg mt-4 w-80" id="connectButton">
+    CONNECT WITH 42
+  </button>
 </div>
 
-<!-- Boutons Game Dasboard Profile ensembles
-            VOIR SI ON SUPPRIME tant que pas co-->
-  <div id="building">
-    <button onclick="load_page('pong')" class="btn my-button" id="gameButton">GAME</button>
-    <button onclick="load_page('profile')" class="btn my-button" id="profileButton">PROFILE</button>
-    <button onclick="load_page('dashboard')" class="btn my-button" id="dashboardButton">DASHBOARD</button>
-  </div>
