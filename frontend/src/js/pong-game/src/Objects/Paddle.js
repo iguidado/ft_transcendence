@@ -1,10 +1,9 @@
 import * as THREE from 'three';
-import { contextRegistry } from '../core/ContextRegistry.js';
+import { gameRegistry } from '../core/GameRegistry.js';
 
 export class Paddle {
     constructor({color=0xff0000, isLeft=false}={}) {
-        const context = contextRegistry.getCurrentContext();
-		console.log(context)
+        const context = gameRegistry.getCurrentContext();
         const config = context.config;
         const height = config.paddles.length;
         const width = config.paddles.width;

@@ -1,12 +1,12 @@
-import { Vector3 } from "three/src/Three.Core.js"
-import { contextRegistry } from "./ContextRegistry";
-
+import { gameRegistry } from "./GameRegistry";
+import * as THREE from "three"
 export function scoreMonitor() {
-	const context = contextRegistry.getCurrentContext();
+	const context = gameRegistry.getCurrentContext();
 	const ball = context.ball
 	const config = context.config
-	if (ball.ball.position.x > config.board.width/2 +20 || ball.ball.position.x < -config.board.width/2 -20) {
+	if (ball.mesh.position.x > config.board.width/2 +20 || ball.mesh.position.x < -config.board.width/2 -20) {
 		ball.reset()
-		ball.direction = Math.random() > 0.5 ? new Vector3(-1, 0, 0) : new Vector3(1, 0, 0)
+		// ball.direction = Math.random() > 0.5 ? new THREE.Vector2(-1, 0) : new THREE.Vector2(1, 0)
+		ball.direction = new THREE.Vector3(1, -1, 0)
 	}
 } 

@@ -1,13 +1,13 @@
-class ContextRegistry {
+class GameRegistry {
     static instance = null;
     contexts = new Map();
     currentContextId = null;
 
     static getInstance() {
-        if (!ContextRegistry.instance) {
-            ContextRegistry.instance = new ContextRegistry();
+        if (!GameRegistry.instance) {
+            GameRegistry.instance = new GameRegistry();
         }
-        return ContextRegistry.instance;
+        return GameRegistry.instance;
     }
 
     registerContext(gameId, context) {
@@ -29,4 +29,4 @@ class ContextRegistry {
     }
 }
 
-export const contextRegistry = ContextRegistry.getInstance();
+export const gameRegistry = GameRegistry.getInstance();

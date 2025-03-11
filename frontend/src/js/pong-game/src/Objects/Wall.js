@@ -1,9 +1,9 @@
 import * as THREE from "three"
-import { contextRegistry } from "../core/ContextRegistry";
+import { gameRegistry } from "../core/GameRegistry";
 
-export class CollitionBox {
+export class Wall {
 	constructor({height, width, depth, x, y, color} = {}) {
-		const context = contextRegistry.getCurrentContext();
+		const context = gameRegistry.getCurrentContext();
 		this.height = height || 0
 		this.width = width || 0
 		this.depth = depth || 0
