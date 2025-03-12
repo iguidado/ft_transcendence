@@ -114,7 +114,7 @@ clean:
 
 
 fclean: down prod-down
-	-@docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine docker.elastic.co/kibana/kibana
+	@-docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine docker.elastic.co/kibana/kibana
 	@Deleted every images
 	@Deleting every volumes
 	-@docker volume rm $$(docker volume ls -q)
