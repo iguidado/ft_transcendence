@@ -1,5 +1,5 @@
 from .models import User
-from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyOtpSerializer
+from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyOtpSerializer, TwoFAUpdateSerializer
 from datetime import timedelta
 from django.utils import timezone
 from rest_framework import permissions, viewsets, status
@@ -15,6 +15,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
 import random
+import os
 
 class OTPService:
 	@staticmethod
@@ -23,9 +24,11 @@ class OTPService:
 	
 	@staticmethod
 	def send_otp_email(email, otp):
+		admin_email = os.getenv('DB_USER_EMAIL')
+
 		send_mail('Verification Code',
             f'Your verification code is: {otp}',
-            'from@example.com',  #! Remplacer par email admin
+            admin_email,
             [email],
             fail_silently=False,
         )
@@ -49,14 +52,26 @@ class LoginView(APIView):
 		if user is not None:
 			user_profile = User.objects.get(user=user)
 
-			verification_code = OTPService.generate_otp() 
-			user_profile.otp = verification_code
-			user_profile.otp_expiry_time = timezone.now() + timedelta(minutes=15)
-			user_profile.save()
+			if user.is_2fa_enabled:
+				verification_code = OTPService.generate_otp() 
+				user_profile.otp = verification_code
+				user_profile.otp_expiry_time = timezone.now() + timedelta(minutes=15)
+				user_profile.save()
 
-			OTPService.send_otp_email(email, verification_code)
+				OTPService.send_otp_email(email, verification_code)
 
-			return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
+				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
+
+			django_login(request, user)
+
+			refresh = RefreshToken.for_user(user)
+			access_token = str(refresh.access_token)
+
+			return Response({
+                    'access_token': access_token,
+                    'refresh_token': str(refresh),
+                    'detail': 'Login successful.'
+                }, status=status.HTTP_200_OK)
 	
 		return Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -160,6 +175,21 @@ class UserDisplayNameUpdateView(APIView):
 			return Response(serializer.data)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class TwoFAUpdateView(APIView):
+	permission_classes = [IsAuthenticated]
+	serializer_class = TwoFAUpdateSerializer
+
+	@swagger_auto_schema(request_body=UpdateDisplayNameSerializer)
+
+	def patch(self, request, *args, **kwargs):
+		user = request.user
+		serializer = self.serializer_class(user, data=request.data, partial=True)
+
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserAvatarUpdateView(APIView):
 	permission_classes = [IsAuthenticated]

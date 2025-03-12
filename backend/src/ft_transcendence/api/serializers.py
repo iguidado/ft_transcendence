@@ -23,7 +23,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','displayName', 'avatar', 'date_joined', 'wins', 'looses', 'match_history', 'otp', 'otp_expiry_time']
+		fields = ['id', 'username', 'email','displayName', 'avatar', 'date_joined', 'wins', 'looses', 'match_history', 'otp', 'otp_expiry_time', 'is_2fa_enabled']
 
 	def get_match_history(seld, obj):
 		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
@@ -68,6 +68,11 @@ class UpdateDisplayNameSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError("Displayname must at least have 3 characters")
 		return value
 	
+class TwoFAUpdateSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = get_user_model()
+		fields = ['is_2fa_enabled']
+
 class UpdateAvatarSerializer(serializers.ModelSerializer):
 
 	class Meta:
