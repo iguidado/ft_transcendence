@@ -26,12 +26,12 @@ export const defaultConfig = {
 		controls: {
 			speed: 0.5, // Vitesse relative à la balle
 			leftBot: true,  // false = joueur humain, true = bot
-			rightBot: true, // false = joueur humain, true = bot
+			rightBot: false, // false = joueur humain, true = bot
 			keys: {
 				leftUp: 'w',
 				leftDown: 's',
-				rightUp: 'ArrowUp',
-				rightDown: 'ArrowDown'
+				rightUp: 'ArrowRight',
+				rightDown: 'ArrowLeft'
 			},
 			bots: {
 				reactionDelay: 0,  // Délai de réaction (secondes)
