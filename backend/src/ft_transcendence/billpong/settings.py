@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	'drf_yasg',
 	'rest_framework',
 	'rest_framework_simplejwt',
+	'django_crontab',
 	'channels'
 ]
 
