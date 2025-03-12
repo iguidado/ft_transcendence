@@ -193,7 +193,7 @@ class TwoFAUpdateView(APIView):
 
 class UserAvatarUpdateView(APIView):
 	permission_classes = [IsAuthenticated]
-	serializer_class = UpdateDisplayNameSerializer
+	serializer_class = UpdateAvatarSerializer
 
 
 	# @swagger_auto_schema(request_body=UpdateDisplayNameSerializer)
