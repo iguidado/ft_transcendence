@@ -1,0 +1,15 @@
+{
+    "schedule": "0 0 0 ? * SUN", 
+    "name": "<weekly-backup-{now/d{yyyy-MM-dd}}>",
+    "repository": "archive",
+    "config": {
+        "indices": ["docker-logs-*"],
+        "ignore_unavailable": false,
+        "include_global_state": false
+    },
+    "retention": {
+        "expire_after": "30d",   
+        "min_count": 1,         
+        "max_count": 10         
+    }
+}

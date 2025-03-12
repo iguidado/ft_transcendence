@@ -1,121 +1,187 @@
 # ELK stack compose file
 
 services:
-  # setup:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
-  #     #   volumes:
-  #     #     certs: /usr/share/elasticsearch/config/certs
-  #   command: ./Elasticsearch/entrypoint.sh
-  #   environment:
-  #    - xpack.security.enabled=false
-  #    - xpack.security.http.ssl.enabled=false
-  #    - xpack.security.transport.ssl.enabled=false
-  #   profiles:
-  #     - prod
-  #   networks:
-  #     - elk_network
+  setup:
+    container_name: es_setup
+    pull_policy: never
+    build:
+      context: ./Elasticsearch/
+      args:
+        - STACK_VERSION=${STACK_VERSION}
+    user: root
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+    command: /root/setup.sh
+    environment:
+     - xpack.security.enabled=false
+     - xpack.security.http.ssl.enabled=false
+     - xpack.security.transport.ssl.enabled=false
+     - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+     - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+
 
   es01:
-     #  depends_on:
-     #    setup:
-     #      condition: service_healthy
+    depends_on:
+      setup:
+        condition: service_healthy
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     container_name: es01
     labels:
       co.elastic.logs/module: elasticsearch
     volumes:
-      #    - certs:/usr/share/elasticsearch/config/certs
+      - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
+      - ./Elasticsearch/policy_scripts/:/usr/share/elasticsearch/config/policy_scripts/:rw
+      - ./Elasticsearch/snapshot/:/usr/share/elasticsearch/snapshot/:rw
+      - ./Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    networks:
+      - elk-network
     ports:
       - ${ES_PORT}:9200
+    entrypoint: >  # Command here is a quick wrapper around native entrypoint to append our script (wrapper is now PID 1)
+      /bin/tini -- /bin/bash -c "
+        /usr/local/bin/docker-entrypoint.sh &
+        export PID=\$!;
+        /usr/share/elasticsearch/config/policy_scripts/main.sh;
+        wait  \$PID;
+      "
+    # Command here is a quick wrapper around native entrypoint to append our script (wrapper is now PID 1)
     environment:
       - node.name=es01
       - cluster.name=${CLUSTER_NAME}
       - discovery.type=single-node
+      - ELASTIC_USER=${ELASTIC_USER}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
-        #    - xpack.security.http.ssl.key=certs/es01/es01.key
-        #    - xpack.security.http.ssl.certificate=certs/es01/es01.crt
-        #    - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
-      - xpack.security.transport.ssl.enabled=false
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es01/es01.key
+      - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.enabled=true
       - xpack.license.self_generated.type=${LICENSE}
-        #    - xpack.security.transport.ssl.key=certs/es01/es01.key
-        #    - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
-        #    - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
-        #    - xpack.security.transport.ssl.verification_mode=certificate
-        #    mem_limit: ${ES_MEM_LIMIT}
+      - xpack.security.transport.ssl.key=certs/es01/es01.key
+      - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.verification_mode=certificate
+    mem_limit: ${ES_MEM_LIMIT}
       #ulimits:
       #  memlock:
       #    soft: -1
       #    hard: -1
-    profiles:
-      - prod
-    networks:
-      - elk-network
+      #   networks:
+      #     - elk-network
     healthcheck:
-      #test:
-      #  [
-      #    "CMD-SHELL",
-      #    "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
-      #  ]
       test:
         [
           "CMD-SHELL",
-          "curl -s https://localhost:9200 | grep -q 'missing authentication credentials'",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  kibana:
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    container_name: kibana
+    labels:
+      co.elastic.logs/module: kibana
+    volumes:
+      - certs:/usr/share/kibana/config/certs
+      - kibanadata:/usr/share/kibana/data
+    networks:
+      - elk-network
+    ports:
+      - ${KIBANA_PORT}:5601
+    environment:
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=https://es01:9200  # Change to HTTP-only
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+      - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+    mem_limit: ${KB_MEM_LIMIT}
+       #    networks:
+       #      - elk-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",  # Adjusted for HTTP protocol
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  logstash:
+    depends_on:
+     es01:
+       condition: service_healthy
+     kibana:
+       condition: service_healthy
+    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    container_name: logstash
+    labels:
+      co.elastic.logs/module: logstash
+    user: root
+    volumes:
+      - certs:/usr/share/logstash/certs
+      - logstashdata01:/usr/share/logstash/data
+      - "./Logstash/logstash_ingest_data/:/usr/share/logstash/ingest_data/"
+      - "./Logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
+    environment:
+      - xpack.monitoring.enabled=false
+      - ELASTIC_USER=${ELASTIC_USER}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://es01:9200
+      - LOGSTASH_LOG_LEVEL=debug
+    ports:
+      - "12201:12201/udp"
+      - "9600:9600"
+    networks:
+      - elk-network
+      - web-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:9600",  # Adjusted for HTTP protocol
         ]
       interval: 10s
       timeout: 10s
       retries: 120
 
 
-  kibana:
-     depends_on:
-       es01:
-         condition: service_started
-     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
-     container_name: kibana
-     labels:
-       co.elastic.logs/module: kibana
-     volumes:
-       - kibanadata:/usr/share/kibana/data
-     ports:
-       - ${KIBANA_PORT}:5601
-     environment:
-       - SERVERNAME=kibana
-       - ELASTICSEARCH_HOSTS=http://es01:9200  # Change to HTTP-only
-       - ELASTICSEARCH_USERNAME=kibana_system
-       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
-       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-       - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-  #   mem_limit: ${KB_MEM_LIMIT}
-     networks:
-       - elk-network
-     profiles:
-       - prod
-     healthcheck:
-       test:
-         [
-           "CMD-SHELL",
-           "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",  # Adjusted for HTTP protocol
-         ]
-       interval: 10s
-       timeout: 10s
-       retries: 120
-
 volumes:
-  #certs:
-  #  driver: local
- esdata01:
-   driver: local
- kibanadata:
-   driver: local
- logstashdata01:
-   driver: local
+  certs:
+    driver: local
+  esdata01:
+    driver: local
+  kibanadata:
+    driver: local
+  logstashdata01:
+    driver: local
+
+
+          # networks:
+          #   default:
+          #     name: elastic
+          #     external: false
 
 networks:
+  web-network:
+    driver: bridge
+    name: web
   elk-network:
     driver: bridge
     name: elk

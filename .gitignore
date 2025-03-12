@@ -4,6 +4,7 @@ backend/src/ft_transcendence/api/__pycache__/
 __pycache__/
 db.sqlite3
 snapshot/
+ELK/Elasticsearch/snapshot/
 *.sw*
 nginx/ssl
 frontend/dev
