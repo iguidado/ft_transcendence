@@ -12,6 +12,7 @@ export class CameraManager {
 			1000
 		)
 	}
+
 	init() {
 		this.updateAspectRatio();
         const radius = this.calculateRadius();
@@ -30,7 +31,6 @@ export class CameraManager {
 		if (!this.config.camera.polar.useCalculatedRadius) {
             return this.config.camera.polar.radius;
         }
-
         const box = this.createGameBoundingBox();
         const rotatedBox = this.getRotatedBoundingBox(box);
         return this.calculateOptimalRadius(rotatedBox);

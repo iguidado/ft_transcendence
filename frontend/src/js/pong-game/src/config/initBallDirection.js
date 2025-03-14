@@ -6,8 +6,7 @@ export function initBallDirection(config=undefined) {
 		const context = gameRegistry.getCurrentContext()
 		config = context.config
 	}
-	// config.ball.direction = Math.random() > 0.5
-	// 	? new THREE.Vector3(-1, 0, 0) 
-	// 	: new THREE.Vector3(1, 0, 0)
-	config.ball.direction = new THREE.Vector3(0, 1, 0)
+	config.ball.direction = Math.random() > 0.5
+		? new THREE.Vector3(-1, 0, 0)
+		: new THREE.Vector3(1, 0, 0)
 }

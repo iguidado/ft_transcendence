@@ -28,8 +28,6 @@ export class Ball {
 		this.defaultDirection = this.direction.clone();
 		this.defaultSpeed = this.speed;
 		this.defaultPosition = this.mesh.position.clone();
-
-		context.boardGroup.add( this.mesh );
 	}
 	reset() {
 		const context = gameRegistry.getCurrentContext();
@@ -47,8 +45,8 @@ export class Ball {
 		let hit = this.scanForObstacles()
 		if (hit) {
 			const hitObject = hit.object;
-			const paddleRight = context.paddleRight
-			const paddleLeft = context.paddleLeft
+			const paddleRight = context.boardManager.paddleRight
+			const paddleLeft = context.boardManager.paddleLeft
 			if (hitObject === paddleLeft.mesh || hitObject === paddleRight.mesh) {
 				const paddleHeight = hitObject.geometry.parameters.height;
 				const relativeHitY = (hit.point.y - hitObject.position.y) / (paddleHeight / 2);
@@ -67,13 +65,13 @@ export class Ball {
 				
 				if (this.speed * this.paddleBoncingSpeedMultiplicator < config.ball.maxSpeed) {
 					this.speed *= this.paddleBoncingSpeedMultiplicator
-					context.paddleLeft.speed *= this.paddleBoncingSpeedMultiplicator
-					context.paddleRight.speed *= this.paddleBoncingSpeedMultiplicator
+					context.boardManager.paddleLeft.speed *= this.paddleBoncingSpeedMultiplicator
+					context.boardManager.paddleRight.speed *= this.paddleBoncingSpeedMultiplicator
 				}
 				else if (this.speed != config.ball.maxSpeed) {
 					this.speed = config.ball.maxSpeed
-					context.paddleLeft.speed = config.ball.maxSpeed
-					context.paddleRight.speed = config.ball.maxSpeed
+					context.boardManager.paddleLeft.speed = config.ball.maxSpeed
+					context.boardManager.paddleRight.speed = config.ball.maxSpeed
 				}
 			} else {
 				// Handle other collisions (walls, etc.)
@@ -109,7 +107,7 @@ export class Ball {
 		const arcAngle = Math.PI;
 		
 		// Récupérer et mettre à jour les meshes
-		const meshes = context.boardGroup.children.filter(obj => 
+		const meshes = context.boardManager.boardGroup.children.filter(obj => 
 			obj.type === 'Mesh' && obj !== this.mesh
 		);
 		// Force update des matrices

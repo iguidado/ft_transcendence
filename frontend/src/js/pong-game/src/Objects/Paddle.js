@@ -5,6 +5,10 @@ export class Paddle {
     constructor({color=0xff0000, isLeft=false}={}) {
         const context = gameRegistry.getCurrentContext();
         const config = context.config;
+        this.config = config;
+        this.isLeft = isLeft;
+        this.isBot = isLeft ? config.paddles.controls.leftBot : config.paddles.controls.rightBot;
+
         const height = config.paddles.length;
         const width = config.paddles.width;
         const depth = config.paddles.depth;
@@ -14,5 +18,69 @@ export class Paddle {
         this.mesh.position.x = config.board.width/2 * (isLeft ? -1 : 1);
         this.mesh.position.y = 0;
         context.scene.add(this.mesh);
+    }
+
+    get maxY() {
+        return this.config.board.height/2 - this.config.paddles.length/2 - this.config.board.wallWidth;
+    }
+
+    get minY() {
+        return -this.config.board.height/2 + this.config.paddles.length/2 + this.config.board.wallWidth;
+    }
+
+    moveUp(speed) {
+        if (this.mesh.position.y < this.maxY) {
+            this.mesh.position.y += speed;
+        }
+    }
+
+    moveDown(speed) {
+        if (this.mesh.position.y > this.minY) {
+            this.mesh.position.y -= speed;
+        }
+    }
+
+    updateBot(ball, botConfig) {
+        const ballDirection = ball.direction;
+        const ballSpeed = ball.speed;
+        const paddleSpeed = ballSpeed * this.config.paddles.controls.speed;
+        
+        // Calculer le temps jusqu'à l'impact
+        const distanceX = this.isLeft ? 
+            (this.mesh.position.x - ball.mesh.position.x) : 
+            (ball.mesh.position.x - this.mesh.position.x);
+        const timeToImpact = Math.abs(distanceX / (ballSpeed * ballDirection.x));
+
+        // Si la balle se dirige vers le paddle
+        if ((this.isLeft && ballDirection.x < 0) || (!this.isLeft && ballDirection.x > 0)) {
+            const predictionError = (Math.random() - 0.5) * 2 * botConfig.predictionError;
+            
+            const predictedY = ball.mesh.position.y + 
+                             ballDirection.y * ballSpeed * timeToImpact * 
+                             (1 + predictionError);
+
+            const targetY = THREE.MathUtils.lerp(
+                this.mesh.position.y,
+                predictedY,
+                0.1
+            );
+
+            if (Math.random() > botConfig.reactionDelay) {
+                const movement = Math.min(
+                    paddleSpeed,
+                    Math.abs(targetY - this.mesh.position.y)
+                ) * Math.sign(targetY - this.mesh.position.y);
+
+                const newY = this.mesh.position.y + movement;
+                this.mesh.position.y = THREE.MathUtils.clamp(newY, this.minY, this.maxY);
+            }
+        } else {
+            const centerY = 0;
+            this.mesh.position.y = THREE.MathUtils.lerp(
+                this.mesh.position.y,
+                centerY,
+                0.05
+            );
+        }
     }
 }

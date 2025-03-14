@@ -11,7 +11,7 @@ export class ScoreMonitor {
     }
 
     update() {
-        const ball = this.context.ball;
+        const ball = this.context.boardManager.ball;
         const config = this.context.config;
         const boundaryX = config.board.width/2 + 20;
 
@@ -27,9 +27,9 @@ export class ScoreMonitor {
         this.scores[scoringSide]++;
 
         // Reset ball with random direction
-        this.context.ball.reset();
+        this.context.boardManager.ball.reset();
         const randomY = (Math.random() - 0.5) * 0.5; // Random Y component between -0.25 and 0.25
-        this.context.ball.direction = new THREE.Vector3(
+        this.context.boardManager.ball.direction = new THREE.Vector3(
             scoringSide === 'left' ? 1 : -1,
             randomY,
             0
