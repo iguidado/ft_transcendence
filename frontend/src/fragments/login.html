@@ -1,40 +1,159 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Conteneur principal (hauteur max pour centrer verticalement) -->
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <div class="container d-flex flex-column justify-content-start align-items-center"
   style="height:100vh; padding-top: 50px;">
-  <!-- Titre -->
+
   <h1 class="mb-4" style="font-size: 2.5rem;">CONNECTION</h1>
 
-  <!-- Formulaire -->
+
   <form id="loginForm" style="max-width: 400px; width: 100%;">
-    <!-- Champ identifiant -->
+
     <div class="mb-3">
       <label for="loginInput" class="form-label" style="font-size: 1.25rem;">Login</label>
       <input type="text" class="form-control form-control-lg" id="loginInput" placeholder="Enter your login" />
     </div>
 
-    <!-- Password -->
+    <div class="mb-3">
+      <label for="loginInput" class="form-label" style="font-size: 1.25rem;">Mail</label>
+      <input type="text" class="form-control form-control-lg" id="loginInput" placeholder="Enter your mail" />
+    </div>
+
+
     <div class="mb-3">
       <label for="passwordInput" class="form-label" style="font-size: 1.25rem;">Password</label>
       <input type="password" class="form-control form-control-lg" id="passwordInput"
         placeholder="Enter your password" />
     </div>
 
-    <!-- Bouton “Connect” -->
+
     <button type="submit" class="btn my-button btn-lg mt-4 w-100">
       CONNECT
     </button>
+
+    <button onclick="load_page('register')" class="btn my-button btn-lg mt-4 w-80" id="registerButton">
+      REGISTER
+    </button>
+  
+  
+
+    <button class="btn my-button btn-lg mt-4 w-80" id="connectButton">
+      CONNECT WITH 42
+    </button>
   </form>
 
-  <!-- Bouton “REGISTER” -->
-  <button onclick="load_page('register')" class="btn my-button btn-lg mt-4 w-80" id="registerButton">
-    REGISTER
-  </button>
-
-
-  <!-- Bouton “CONNECT WITH 42” -->
-  <button class="btn my-button btn-lg mt-4 w-80" id="connectButton">
-    CONNECT WITH 42
-  </button>
 </div>
 
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<div class="container d-flex flex-column justify-content-start align-items-center" style="height:100vh; padding-top: 50px;">
+
+<h1 class="mb-4" style="font-size: 2.5rem;">REGISTER</h1>
+
+
+<form id="loginForm" style="max-width: 400px; width: 100%;">
+
+<div class="mb-3">
+<label for="loginInput" class="form-label" style="font-size: 1.25rem;">Login</label>
+<input 
+type="text" 
+class="form-control form-control-lg" 
+id="loginInput" 
+placeholder="Choose your login" 
+/>
+</div>
+
+
+<div class="mb-3">
+<label for="passwordInput" class="form-label" style="font-size: 1.25rem;">Password</label>
+<input 
+type="password" 
+class="form-control form-control-lg" 
+id="passwordInput" 
+placeholder="Choose your password"
+/>
+</div>
+<div class="mb-3">
+<label for="passwordInput" class="form-label" style="font-size: 1.25rem;">Password again</label>
+<input 
+type="password" 
+class="form-control form-control-lg" 
+id="passwordInput" 
+placeholder="Confirm your password"
+/>
+</div>
+
+
+<button type="submit" class="btn my-button btn-lg mt-4 w-100">
+CREATE ACCOUNT
+</button>
+</form>
+
+
+<button onclick="load_page('login')" class="btn my-button btn-lg mt-4 w-80" id="backButton">
+BACK TO LOGIN
+</button>
+
+ -->
+
+<!-- Conteneur principal -->
+<div class="container d-flex flex-column justify-content-start align-items-center" style="height:100vh; padding-top: 50px;">
+
+  <!-- Titre / Sous-titre éventuel -->
+  <h1 class="mb-4" style="font-size: 2.5rem;">AUTHENTIFICATION</h1>
+
+  <!-- SECTION LOGIN -->
+  <div id="loginSection" style="width: 100%; max-width: 400px;">
+    <form id="loginForm">
+      <div class="mb-3">
+        <label for="loginInput" class="form-label" style="font-size: 1.25rem;">Login</label>
+        <input type="text" class="form-control form-control-lg" id="loginInput" placeholder="Enter your login" />
+      </div>
+
+      <div class="mb-3">
+        <label for="passwordInput" class="form-label" style="font-size: 1.25rem;">Password</label>
+        <input type="password" class="form-control form-control-lg" id="passwordInput" placeholder="Enter your password" />
+      </div>
+
+      <button type="submit" class="btn my-button btn-lg mt-4 w-100">CONNECT</button>
+
+      <button type="button" class="btn my-button btn-lg mt-4 w-80" onclick="showRegister()">
+        REGISTER
+      </button>
+
+      <button class="btn my-button btn-lg mt-4 w-80" id="connectButton">
+        CONNECT WITH 42
+      </button>
+    </form>
+  </div>
+
+  <!-- SECTION REGISTER (cachée par défaut) -->
+  <div id="registerSection" style="display: none; width: 100%; max-width: 400px;">
+    <form id="registerForm">
+      <div class="mb-3">
+        <label class="form-label" style="font-size: 1.25rem;">Login</label>
+        <input type="text" class="form-control form-control-lg" placeholder="Choose your login" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" style="font-size: 1.25rem;">Password</label>
+        <input type="password" class="form-control form-control-lg" placeholder="Choose your password" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" style="font-size: 1.25rem;">Confirm Password</label>
+        <input type="password" class="form-control form-control-lg" placeholder="Confirm your password" />
+      </div>
+
+      <button type="submit" class="btn my-button btn-lg mt-4 w-100">
+        CREATE ACCOUNT
+      </button>
+    </form>
+
+    <button type="button" class="btn my-button btn-lg mt-4 w-80" onclick="showLogin()">
+      BACK TO LOGIN
+    </button>
+  </div>
+
+</div>
