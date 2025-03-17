@@ -45,7 +45,7 @@ VITE_CFG=vite.config.js
 # Frontend dev environment Setup:
 # ------------------------------------
 
-all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) .env
+all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) dev .env
 	sed -i "s/\(.*=\).*/\1/" .env.dev
 
 dev:
