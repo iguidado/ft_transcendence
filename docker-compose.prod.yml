@@ -4,6 +4,7 @@ include:
 services:
 # Frontend production container: Enforced Nginx server with healthcheck
 # -----------------------------------------------------------------------------------------------------------
+
   frontend-prod:
     container_name: frontend
     pull_policy: never
@@ -53,6 +54,8 @@ services:
         condition: service_healthy
     image: backend:local
     command: /root/setup.sh
+    networks:
+      - web-network
     ports:
       - "${BACK_PORT}:8000"
     environment:

@@ -4,6 +4,7 @@
 # ------------------------
 
 NPM_DEPS=three
+STACK_V=8.7.1
 
 # Build configuration
 # ------------------------
@@ -58,10 +59,10 @@ dev:
 # ------------------------------------
 
 $(DEV_DIR)$(PKG_FILE): $(DEV_DIR)
-	npm create vite@latest frontend/dev -- --template vanilla -y \
-		&& cd $(DEV_DIR) && npm install && npm install --save $(NPM_DEPS)
-	rm -f $(DEV_DIR)index.html
-	rm -rf $(DEV_DIR)src $(DEV_DIR)public
+	sudo npm create vite@latest frontend/dev -- --template vanilla -y \
+		&& cd $(DEV_DIR) && sudo npm install && sudo npm install --save $(NPM_DEPS)
+	sudo rm -f $(DEV_DIR)index.html
+	sudo rm -rf $(DEV_DIR)src $(DEV_DIR)public
 
 
 $(DEV_DIR):
@@ -114,7 +115,8 @@ clean:
 
 
 fclean: down prod-down
-	@-docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine docker.elastic.co/kibana/kibana
+	@-docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine
+	@-docker rmi -f docker.elastic.co/kibana/kibana:$(STACK_V)  docker.elastic.co/logstash/logstash:$(STACK_V) docker.elastic.co/elasticsearch/elasticsearch:$(STACK_V) ft_transcendence-setup
 	@Deleted every images
 	@Deleting every volumes
 	-@docker volume rm $$(docker volume ls -q)
