@@ -4,6 +4,9 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 class LoginSerializer(serializers.Serializer):
+	email = serializers.EmailField(required=True, help_text="Email de l'utilisateur.")
+	password = serializers.CharField(write_only=True, required=True, help_text="Mot de passe de l'utilisateur.")
+	
 	class Meta:
 		model = get_user_model()
 		fields = ['email', 'password']
@@ -23,7 +26,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','displayName', 'avatar', 'date_joined', 'wins', 'looses', 'match_history', 'otp', 'otp_expiry_time', 'is_2fa_enabled']
+		fields = ['id', 'username', 'email','displayName', 'avatar', 'date_joined', 'wins', 'looses', 'match_history', 'otp', 'otp_expiry_time', 'is_2fa_enabled', 'jwt_token']
 
 	def get_match_history(seld, obj):
 		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
