@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { addLine } from "../utils/tools.js"
+import { addLine } from "../utils/addLine.js"
 import {gameRegistry} from "../core/GameRegistry.js"
 
 export class Ball {
@@ -65,13 +65,9 @@ export class Ball {
 				
 				if (this.speed * this.paddleBoncingSpeedMultiplicator < config.ball.maxSpeed) {
 					this.speed *= this.paddleBoncingSpeedMultiplicator
-					context.boardManager.paddleLeft.speed *= this.paddleBoncingSpeedMultiplicator
-					context.boardManager.paddleRight.speed *= this.paddleBoncingSpeedMultiplicator
 				}
 				else if (this.speed != config.ball.maxSpeed) {
 					this.speed = config.ball.maxSpeed
-					context.boardManager.paddleLeft.speed = config.ball.maxSpeed
-					context.boardManager.paddleRight.speed = config.ball.maxSpeed
 				}
 			} else {
 				// Handle other collisions (walls, etc.)

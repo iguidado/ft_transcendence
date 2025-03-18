@@ -3,21 +3,20 @@ import { gameRegistry } from '../core/GameRegistry.js';
 
 export class Paddle {
     constructor({color=0xff0000, isLeft=false}={}) {
-        const context = gameRegistry.getCurrentContext();
-        const config = context.config;
-        this.config = config;
+        this.context = gameRegistry.getCurrentContext();
+        this.config = this.context.config;
         this.isLeft = isLeft;
-        this.isBot = isLeft ? config.paddles.controls.leftBot : config.paddles.controls.rightBot;
+        this.isBot = isLeft ? this.config.paddles.controls.leftBot : this.config.paddles.controls.rightBot;
 
-        const height = config.paddles.length;
-        const width = config.paddles.width;
-        const depth = config.paddles.depth;
+        const height = this.config.paddles.length;
+        const width = this.config.paddles.width;
+        const depth = this.config.paddles.depth;
         const geometry = new THREE.BoxGeometry(width, height, depth);
         const material = new THREE.MeshBasicMaterial({ color: color });
         this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.position.x = config.board.width/2 * (isLeft ? -1 : 1);
+        this.mesh.position.x = this.config.board.width/2 * (isLeft ? -1 : 1);
         this.mesh.position.y = 0;
-        context.scene.add(this.mesh);
+        this.context.scene.add(this.mesh);
     }
 
     get maxY() {
@@ -28,15 +27,20 @@ export class Paddle {
         return -this.config.board.height/2 + this.config.paddles.length/2 + this.config.board.wallWidth;
     }
 
-    moveUp(speed) {
+	get speed() {
+		const { ball } = this.context.boardManager;
+		return ball.speed * this.config.paddles.controls.speed;
+	}
+
+    moveUp() {
         if (this.mesh.position.y < this.maxY) {
-            this.mesh.position.y += speed;
+            this.mesh.position.y += this.speed;
         }
     }
 
-    moveDown(speed) {
+    moveDown() {
         if (this.mesh.position.y > this.minY) {
-            this.mesh.position.y -= speed;
+            this.mesh.position.y -= this.speed;
         }
     }
 

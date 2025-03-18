@@ -3,68 +3,86 @@ import { gameRegistry } from './GameRegistry.js'
 import { initConfig } from '../config/initConfig.js'
 import { initScene } from './sceneUtils.js'
 import { BoardManager } from './BoardManager.js'
-import { CameraManager } from './CameraManager.js'
-import { RendererManager } from './RendererManager.js'
-import { InputManager } from './InputManager.js'
+import { ViewManager } from './ViewManager.js'
+import { InputManager } from '../inputs/InputManager.js'
 
 let currId = 1
 
 export class Game {
-    constructor(container, config_edits = {}) {
-        if (!container)
-            throw new Error(`Container not found`)
-        this.gameId = currId++
-        this.container = container
-        this.isRunning = false
-        
-        gameRegistry.registerContext(this.gameId, this)
-        gameRegistry.setCurrentContext(this.gameId)
-        
-        this.config = initConfig(config_edits)
-        this.scene = initScene()
+    constructor(config_custom = {}) {
+        this.gameId = currId++;
+        this.isRunning = false;
+        this.container = null; // Will be created by ViewManager if needed
 
-        // Initialize board and get game objects
-        this.boardManager = new BoardManager()
-        this.cameraManager = new CameraManager()
-        this.rendererManager = new RendererManager()
-        this.handleResize()
-        this.inputManager = new InputManager(this)
+        gameRegistry.registerContext(this.gameId, this);
+        gameRegistry.setCurrentContext(this.gameId);
 
-        this.container.style.backgroundColor = '#000'
-        this.container.style.overflow = 'hidden'
+        this.config = initConfig(config_custom);
+        this.scene = initScene();
+
+        // Initialize board and game objects
+        this.boardManager = new BoardManager();
+        this.inputManager = new InputManager();
+        this.viewManager = new ViewManager();
+        
+        // Set up resize handler with bound context
+        this._handleResizeBound = this.handleResize.bind(this);
+        window.addEventListener('resize', this._handleResizeBound);
     }
-	handleResize() {
-		this.rendererManager.handleResize()
-		this.cameraManager.init()
-	}
+
+    addView(container, cameraConfig = {}) {
+        return this.viewManager.createView(container, cameraConfig);
+    }
+    
+    handleResize() {
+        if (this.viewManager) {
+            this.viewManager.handleResize();
+        }
+    }
+    
     animate() {
-        if (!this.isRunning) return
-        this.update()
-        this.rendererManager.render()
-        requestAnimationFrame(() => this.animate())
+        if (!this.isRunning) return;
+        
+        this.update();
+        this.viewManager.render();
+        
+        this._animationFrame = requestAnimationFrame(() => this.animate());
     }
 
     start() {
-        if (this.isRunning) return
-        this.isRunning = true
-        this.animate()
+        if (this.isRunning) return;
+        this.isRunning = true;
+        this.animate();
     }
 
     stop() {
-        this.isRunning = false
+        this.isRunning = false;
+        if (this._animationFrame) {
+            cancelAnimationFrame(this._animationFrame);
+            this._animationFrame = null;
+        }
     }
 
     update() {
         this.inputManager.update();
-        this.updateBots()
-        this.boardManager.ball.move()
+        this.updateBots();
+        this.boardManager.ball.move();
     }
 
-    // Cleanup method to remove listeners
     cleanup() {
-        window.removeEventListener('resize', this.resizeDebounce)
-        window.removeEventListener('orientationchange', this.resizeDebounce)
-        this.resizeObserver.disconnect()
+        this.stop();
+        window.removeEventListener('resize', this._handleResizeBound);
+        
+        if (this.inputManager) {
+            this.inputManager.cleanup();
+        }
+        
+        if (this.viewManager) {
+            this.viewManager.cleanup();
+        }
+        
+        // Remove game from registry
+        gameRegistry.contexts.delete(this.gameId);
     }
 
     updateBots() {
