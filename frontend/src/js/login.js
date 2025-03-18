@@ -5,31 +5,6 @@ function loadLoginPage() {
   document.body.classList.add("themePink");
   
 
-  const dashboardBtn = document.getElementById("dashboardButton");
-  dashboardBtn.addEventListener("click", () => {
-    // On appelle la fonction loadDashboard() du fichier dashboard.js
-    loadDashboard();
-  });
-
-  const profileBtn = document.getElementById("profileButton");
-  profileBtn.addEventListener("click", () => {
-    // On appelle la fonction loadProfile() du fichier profil.js
-    loadProfile();
-  });
-
-  const registerBtn = document.getElementById("registerButton");
-  registerBtn.addEventListener("click", () => {
-    // On appelle la fonction loadRegister() du fichier register.js
-    loadRegister();
-  });
-
-  const gameBtn = document.getElementById("gameButton");
-  gameBtn.addEventListener("click", () => {
-    // On appelle la fonction loadGame du fichier game.js
-    loadGame();
-  });
-
-  
     
     // -- Écouteur sur le formulaire de login --
     const loginForm = document.getElementById("loginForm");
@@ -49,7 +24,31 @@ function loadLoginPage() {
   });
 }
 
-// === Au chargement, on lance loadLoginPage ===
-window.addEventListener("DOMContentLoaded", () => {
-  loadLoginPage();
-});
+
+
+function showRegister() {
+  document.getElementById("loginSection").style.display = "none";
+  document.getElementById("registerSection").style.display = "block";
+}
+
+function showLogin() {
+  document.getElementById("loginSection").style.display = "block";
+  document.getElementById("registerSection").style.display = "none";
+}
+
+
+function validate2FA() {
+  const twoFACode = document.getElementById('twoFACodeInput').value;
+
+  // Par exemple, tu fais un fetch vers le back
+  console.log("2FA code saisi:", twoFACode);
+
+  // Si tu veux fermer le modal après validation manuelle
+  // 1) Récupérer l'instance du modal
+  const myModal = document.getElementById('twoFAModal');
+  const modalInstance = bootstrap.Modal.getInstance(myModal);
+  // 2) on le ferme
+  modalInstance.hide();
+
+  // suite: rediriger ou activer la 2FA etc.
+}

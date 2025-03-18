@@ -1,5 +1,8 @@
 .env
 backend/src/ft_transcendence/billpong/__pycache__/
+__pycache__/
+db.sqlite3
+snapshot/
 *.sw*
 nginx/ssl
 frontend/dev
