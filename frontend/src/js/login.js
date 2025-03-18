@@ -5,31 +5,6 @@ function loadLoginPage() {
   document.body.classList.add("themePink");
   
 
-  const dashboardBtn = document.getElementById("dashboardButton");
-  dashboardBtn.addEventListener("click", () => {
-    // On appelle la fonction loadDashboard() du fichier dashboard.js
-    loadDashboard();
-  });
-
-  const profileBtn = document.getElementById("profileButton");
-  profileBtn.addEventListener("click", () => {
-    // On appelle la fonction loadProfile() du fichier profil.js
-    loadProfile();
-  });
-
-  const registerBtn = document.getElementById("registerButton");
-  registerBtn.addEventListener("click", () => {
-    // On appelle la fonction loadRegister() du fichier register.js
-    loadRegister();
-  });
-
-  const gameBtn = document.getElementById("gameButton");
-  gameBtn.addEventListener("click", () => {
-    // On appelle la fonction loadGame du fichier game.js
-    loadGame();
-  });
-
-  
     
     // -- Écouteur sur le formulaire de login --
     const loginForm = document.getElementById("loginForm");
@@ -53,3 +28,14 @@ function loadLoginPage() {
 window.addEventListener("DOMContentLoaded", () => {
   loadLoginPage();
 });
+
+
+function showRegister() {
+  document.getElementById("loginSection").style.display = "none";
+  document.getElementById("registerSection").style.display = "block";
+}
+
+function showLogin() {
+  document.getElementById("loginSection").style.display = "block";
+  document.getElementById("registerSection").style.display = "none";
+}
