@@ -1,5 +1,5 @@
 
-function loadLoginPage() {
+export function loadLoginPage() {
   const app = document.getElementById("app");
   
   document.body.classList.add("themePink");
@@ -26,18 +26,18 @@ function loadLoginPage() {
 
 
 
-function showRegister() {
+export function showRegister() {
   document.getElementById("loginSection").style.display = "none";
   document.getElementById("registerSection").style.display = "block";
 }
 
-function showLogin() {
+export function showLogin() {
   document.getElementById("loginSection").style.display = "block";
   document.getElementById("registerSection").style.display = "none";
 }
 
 
-function validate2FA() {
+export function validate2FA() {
   const twoFACode = document.getElementById('twoFACodeInput').value;
 
   // Par exemple, tu fais un fetch vers le back
