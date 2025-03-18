@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME TEST CUSTOM CONFIG</title>
+    <link rel="stylesheet" href="./css/game_test.css">
+</head>
+<body>
+    <div id="game-container"></div>
+    <div id="inputs">
+        <h3>Pong 3D Configuration</h3>
+        <div class="controls-container">
+            <div class="controls-column">
+                <div class="slider-section">
+                    <h4>Camera Rotation</h4>
+                    <div class="slider-row">
+                        <label for="rotateX">Rotate X</label>
+                        <input type="range" id="rotateX" min="-3.14" max="3.14" step="0.01" value="0">
+                        <span class="value" id="rotateXValue">0</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="rotateY">Rotate Y</label>
+                        <input type="range" id="rotateY" min="-3.14" max="3.14" step="0.01" value="0">
+                        <span class="value" id="rotateYValue">0</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="rotateZ">Rotate Z</label>
+                        <input type="range" id="rotateZ" min="-3.14" max="3.14" step="0.01" value="0">
+                        <span class="value" id="rotateZValue">0</span>
+                    </div>
+                </div>
+                
+                <div class="slider-section">
+                    <h4>Polar Coordinates</h4>
+                    <div class="slider-row">
+                        <label for="phi">Phi (vertical angle)</label>
+                        <input type="range" id="phi" min="-1.57" max="1.57" step="0.01" value="0">
+                        <span class="value" id="phiValue">0</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="theta">Theta (horizontal angle)</label>
+                        <input type="range" id="theta" min="-3.14" max="3.14" step="0.01" value="0">
+                        <span class="value" id="thetaValue">0</span>
+                    </div>
+                </div>
+                
+                <div class="slider-section">
+                    <h4>Camera Distance</h4>
+                    <div class="slider-row">
+                        <label for="useCalculatedRadius">Use Calculated Radius</label>
+                        <input type="checkbox" id="useCalculatedRadius" checked>
+                    </div>
+                    <div class="slider-row">
+                        <label for="calculatedRadiusMargin">Radius Margin</label>
+                        <input type="range" id="calculatedRadiusMargin" min="0.5" max="3" step="0.1" value="1">
+                        <span class="value" id="calculatedRadiusMarginValue">1</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="manualRadius">Manual Radius</label>
+                        <input type="range" id="manualRadius" min="50" max="200" step="1" value="92" disabled>
+                        <span class="value" id="manualRadiusValue">92</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-column">
+                <div class="slider-section">
+                    <h4>Game Parameters</h4>
+                    <div class="slider-row">
+                        <label for="ballSpeed">Ball Speed</label>
+                        <input type="range" id="ballSpeed" min="0.5" max="3" step="0.1" value="1">
+                        <span class="value" id="ballSpeedValue">1</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="paddleSpeed">Paddle Speed</label>
+                        <input type="range" id="paddleSpeed" min="0.3" max="2" step="0.1" value="0.8">
+                        <span class="value" id="paddleSpeedValue">0.8</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="ballSize">Ball Size</label>
+                        <input type="range" id="ballSize" min="0.5" max="2" step="0.1" value="1">
+                        <span class="value" id="ballSizeValue">1</span>
+                    </div>
+                </div>
+                
+                <div class="slider-section">
+                    <h4>Board Setup</h4>
+                    <div class="slider-row">
+                        <label for="boardWidth">Board Width</label>
+                        <input type="range" id="boardWidth" min="30" max="100" step="1" value="60">
+                        <span class="value" id="boardWidthValue">60</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="boardHeight">Board Height</label>
+                        <input type="range" id="boardHeight" min="30" max="100" step="1" value="40">
+                        <span class="value" id="boardHeightValue">40</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="wallHeight">Wall Height</label>
+                        <input type="range" id="wallHeight" min="1" max="10" step="0.5" value="3">
+                        <span class="value" id="wallHeightValue">3</span>
+                    </div>
+                </div>
+                
+                <div class="slider-section">
+                    <h4>Bot AI</h4>
+                    <div class="slider-row">
+                        <label for="botDifficulty">Difficulty</label>
+                        <input type="range" id="botDifficulty" min="0.1" max="1" step="0.05" value="0.5">
+                        <span class="value" id="botDifficultyValue">0.5</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="botPredictionError">Prediction Error</label>
+                        <input type="range" id="botPredictionError" min="0" max="0.5" step="0.01" value="0.1">
+                        <span class="value" id="botPredictionErrorValue">0.1</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="botReactionTime">Reaction Time (ms)</label>
+                        <input type="range" id="botReactionTime" min="0" max="500" step="10" value="100">
+                        <span class="value" id="botReactionTimeValue">100</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-column">
+                <div class="slider-section">
+                    <h4>Visual Settings</h4>
+                    <div class="slider-row">
+                        <label for="boardOpacity">Board Opacity</label>
+                        <input type="range" id="boardOpacity" min="0.1" max="1" step="0.05" value="1">
+                        <span class="value" id="boardOpacityValue">1</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="wallOpacity">Wall Opacity</label>
+                        <input type="range" id="wallOpacity" min="0.1" max="1" step="0.05" value="1">
+                        <span class="value" id="wallOpacityValue">1</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="lightIntensity">Light Intensity</label>
+                        <input type="range" id="lightIntensity" min="0.2" max="2" step="0.1" value="1">
+                        <span class="value" id="lightIntensityValue">1</span>
+                    </div>
+                </div>
+                
+                <div class="slider-section">
+                    <h4>Physics Settings</h4>
+                    <div class="slider-row">
+                        <label for="bounceIntensity">Bounce Intensity</label>
+                        <input type="range" id="bounceIntensity" min="0.5" max="1.5" step="0.05" value="1">
+                        <span class="value" id="bounceIntensityValue">1</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="paddleImpactEffect">Paddle Impact Effect</label>
+                        <input type="range" id="paddleImpactEffect" min="0.5" max="1.5" step="0.05" value="1">
+                        <span class="value" id="paddleImpactEffectValue">1</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="spinEffect">Spin Effect</label>
+                        <input type="range" id="spinEffect" min="0" max="0.2" step="0.01" value="0.1">
+                        <span class="value" id="spinEffectValue">0.1</span>
+                    </div>
+                </div>
+                
+                <div class="slider-section">
+                    <h4>Paddle Settings</h4>
+                    <div class="slider-row">
+                        <label for="paddleHeight">Paddle Height</label>
+                        <input type="range" id="paddleHeight" min="3" max="15" step="0.5" value="7">
+                        <span class="value" id="paddleHeightValue">7</span>
+                    </div>
+                    <div class="slider-row">
+                        <label for="paddleWidth">Paddle Width</label>
+                        <input type="range" id="paddleWidth" min="0.5" max="3" step="0.1" value="1">
+                        <span class="value" id="paddleWidthValue">1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preset-section">
+            <h4>Camera Presets</h4>
+            <div class="button-row">
+                <button id="presetTopDown" class="preset-btn">Top Down</button>
+                <button id="presetPlayerView" class="preset-btn">Player View</button>
+                <button id="presetSideView" class="preset-btn">Side View</button>
+                <button id="presetIsometricView" class="preset-btn">Isometric</button>
+                <button id="presetCornerView" class="preset-btn">Corner View</button>
+            </div>
+            
+            <h4>Game Controls</h4>
+            <div class="button-row">
+                <button id="saveConfig">Save Configuration</button>
+                <button id="resetGame" class="game-control-btn">Reset Game</button>
+                <button id="togglePause" class="game-control-btn">Pause/Resume</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.173.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.173.0/examples/jsm/"
+          }
+        }
+    </script>
+    <script type="module" src="js/game_test.js"></script>
+</body>
+</html>

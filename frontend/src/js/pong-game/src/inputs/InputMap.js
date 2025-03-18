@@ -34,41 +34,46 @@ export class InputMap {
 	}
 
 	initCameraInputs() {
-		const { cameraManager } = this.context;
+		const { viewManager } = this.context;
 		const { keys } = this.config.camera.controls;
-	
 		if (!this.config.camera.controls.enabled) return;
-		console.log(keys.phiPos)
-	
-		this.map.set(keys.phiPos,
-			cameraManager.phiUp.bind(cameraManager));
-		this.map.set(keys.phiNeg,
-			cameraManager.phiDown.bind(cameraManager));
-		this.map.set(keys.thetaPos,
-			cameraManager.thetaUp.bind(cameraManager));
-		this.map.set(keys.thetaNeg,
-			cameraManager.thetaDown.bind(cameraManager));
 		
-		this.map.set(keys.rotateXPos,
-			cameraManager.rotateUpX.bind(cameraManager));
-		this.map.set(keys.rotateXNeg,
-			cameraManager.rotateDownX.bind(cameraManager));
-		this.map.set(keys.rotateYPos,
-			cameraManager.rotateUpY.bind(cameraManager));
-		this.map.set(keys.rotateYNeg,
-			cameraManager.rotateDownY.bind(cameraManager));
-		this.map.set(keys.rotateZPos,
-			cameraManager.rotateUpZ.bind(cameraManager));
-		this.map.set(keys.rotateZNeg,
-			cameraManager.rotateDownZ.bind(cameraManager));
+		// Get all camera managers
+		const getCameraManagers = () => {
+			console.log(this.config.camera.controls.enabled)
+			return viewManager.views.map(view => view.cameraManager);
+		};
+	
+		// Map keys to operations on all cameras
+		this.map.set(keys.phiPos, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.phiUp()));
+		this.map.set(keys.phiNeg, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.phiDown()));
+		this.map.set(keys.thetaPos, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.thetaUp()));
+		this.map.set(keys.thetaNeg, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.thetaDown()));
+		
+		this.map.set(keys.rotateXPos, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpX()));
+		this.map.set(keys.rotateXNeg, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateDownX()));
+		this.map.set(keys.rotateYPos, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpY()));
+		this.map.set(keys.rotateYNeg, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateDownY()));
+		this.map.set(keys.rotateZPos, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpZ()));
+		this.map.set(keys.rotateZNeg, 
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateDownZ()));
 	
 		this.map.set(keys.toggleCalculatedRadius, 
-			cameraManager.toggleCalculatedRadius.bind(cameraManager));
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.toggleCalculatedRadius()));
 		this.map.set(keys.marginIncrease, 
-			cameraManager.calculatedRadiusMarginUp.bind(cameraManager));
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.calculatedRadiusMarginUp()));
 		this.map.set(keys.marginDecrease, 
-			cameraManager.calculatedRadiusMarginDown.bind(cameraManager));
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.calculatedRadiusMarginDown()));
 		this.map.set(keys.logParams, 
-			cameraManager.logCameraConfig.bind(cameraManager));
+			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.logCameraConfig()));
 	}
 }

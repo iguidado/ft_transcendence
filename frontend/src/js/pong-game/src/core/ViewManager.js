@@ -8,6 +8,10 @@ export class ViewManager {
         this.game = gameRegistry.getCurrentContext()
         this.config = this.game.config
         this.views = []
+		if (!this.config.views)
+			this.config.views = {}
+		if (!this.config.views.cameraPresets || !this.config.views.cameraPresets.length)
+			this.config.views.cameraPresets = [{}]
         this.init()
     }
 
@@ -24,12 +28,11 @@ export class ViewManager {
         } else {
             this.game.container.style.flexWrap = 'wrap';
         }
-
         document.body.appendChild(this.game.container);
     }
-
+	
     init() {
-        if (!this.game.container) {
+		if (!this.game.container) {
             this.createDefaultContainer();
         }
         

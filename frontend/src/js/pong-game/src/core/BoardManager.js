@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { gameRegistry } from './GameRegistry'
-import { Wall } from '../Objects/Wall'
-import { Paddle } from '../Objects/Paddle'
-import { Ball } from '../Objects/Ball'
+import { Wall } from '../objects/Wall'
+import { Paddle } from '../objects/Paddle'
+import { Ball } from '../objects/Ball'
 
 export class BoardManager {
     constructor() {

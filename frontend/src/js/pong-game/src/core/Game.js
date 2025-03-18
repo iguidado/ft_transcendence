@@ -9,17 +9,16 @@ import { InputManager } from '../inputs/InputManager.js'
 let currId = 1
 
 export class Game {
-    constructor(config_custom = {}) {
+    constructor(container, config_custom = {}) {
         this.gameId = currId++;
         this.isRunning = false;
-        this.container = null; // Will be created by ViewManager if needed
+        this.container = container || null; // Will be created by ViewManager if needed
 
         gameRegistry.registerContext(this.gameId, this);
         gameRegistry.setCurrentContext(this.gameId);
 
         this.config = initConfig(config_custom);
         this.scene = initScene();
-
         // Initialize board and game objects
         this.boardManager = new BoardManager();
         this.inputManager = new InputManager();

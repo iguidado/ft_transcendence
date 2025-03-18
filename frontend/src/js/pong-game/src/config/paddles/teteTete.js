@@ -6,11 +6,11 @@ export default {
 	speed: 0.8,
 	controls: {
 		speed: 0.7, // Vitesse relative à la balle
-		leftBot: true,
-		rightBot: true,
+		leftBot: false,
+		rightBot: false,
 		keys: {
-			leftUp: 'w',
-			leftDown: 's',
+			leftUp: 'a',
+			leftDown: 'd',
 			rightUp: 'ArrowRight',
 			rightDown: 'ArrowLeft'
 		},

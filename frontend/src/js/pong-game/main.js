@@ -1,5 +1,10 @@
 import { Game } from "./src/core/Game.js";
+import {teteTete} from "./src/config/preset/teteTete.js";
 
-const game = new Game();
+// const game = new Game();
+
+// game.start();
+
+const game = new Game(null, teteTete);
 
 game.start();

@@ -2,14 +2,14 @@ import * as THREE from "three"
 
 export default {
 	polar: {
-		"rotateX": 1.540000000000001,
-		"rotateY": 1.5707963267948966,
+		"rotateX": 0,
+		"rotateY": 0,
 		"rotateZ": 0,
-		"phi": 0.2617993877991494,
+		"phi": 0,
 		"theta": 0,
-		"radius": 92,
-		"useCalculatedRadius": false,
-		"calculatedRadiusMargin": 1.5
+		// "radius": 92,
+		"useCalculatedRadius": true,
+		"calculatedRadiusMargin": 1
 	},
 	controls: {
 		enabled: false,
