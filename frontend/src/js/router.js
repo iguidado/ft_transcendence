@@ -1,4 +1,5 @@
 async function fetchHTMLContent(url) {
+    console.log('fetchHTMLContent:', url);
     try {
         url = `./fragments/${url}.html`;
         const response = await fetch(url);
@@ -15,7 +16,19 @@ async function fetchHTMLContent(url) {
 
 function load_page(url) {
     fetchHTMLContent(url).then(htmlContent => {
-        document.getElementById('app').innerHTML = htmlContent;
-    if (url === 'pong') loadGame();
+        const app = document.getElementById('app');
+        app.innerHTML = htmlContent;
+        fetchHTMLContent('build').then(htmlContent => {
+            const building = document.createElement('div');
+            building.innerHTML = htmlContent;
+            const groupElement = building.querySelector(`#${url}Group`);
+            if (groupElement) {
+                groupElement.style.display = 'none';
+            }
+            app.appendChild(building);
+            initBuildButtons(); 
+        });
+        if (url === 'pong') loadGame();
     });
 }
+

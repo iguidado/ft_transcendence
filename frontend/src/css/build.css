@@ -1,0 +1,119 @@
+#buildContainer {
+    position: fixed;
+    bottom: 0; right: 0;
+    height: 90vh;
+    aspect-ratio: 400/600;
+    margin: 0 auto;    
+}
+
+.layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: contain;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#layerBack{
+  background-image: url("../rsc/back.png");
+  z-index: 1;
+}
+
+#layerGameOn{
+  background-image: url("../rsc/game1.png");
+  z-index: 3;
+  display: none;
+}
+
+#layerGameOff{
+  background-image: url("../rsc/game2.png");
+  z-index: 2;
+  display: block;
+}
+
+#layerProfileOn{
+  background-image: url("../rsc/profile1.png");
+  z-index: 3;
+  display: none;
+}
+
+#layerProfileOff{
+  background-image: url("../rsc/profile2.png");
+  z-index: 2;
+  display: block;
+}
+
+#layerDashOn{
+  background-image: url("../rsc/dash1.png");
+  z-index: 3;
+  display: none;
+}
+
+#layerDashOff{
+  background-image: url("../rsc/dash2.png");
+  z-index: 2;
+  display: block;
+}
+
+#layerLogOn {
+  background-image: url("../rsc/log1.png");
+  z-index: 3;
+  display: none;
+}
+
+#layerLogOff {
+  background-image: url("../rsc/log2.png");
+  z-index: 2;
+  display: block;
+}
+
+#layerBuild {
+  background-image: url("../rsc/build.png");
+  z-index: 10;
+}
+
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+  /* border: 1px solid; */
+  background: transparent;
+  pointer-events: auto;
+}
+
+#btnGame {
+  top: 6%;
+  right: 1%;
+  width: 15%;
+  height: 5%;
+  z-index: 999;
+}
+
+#btnProfile {
+  top: 17%;
+  right: 5%;
+  width: 15%;
+  height: 4%;
+  z-index: 999;
+
+}
+
+#btnDash {
+  top: 31%;
+  right: 1%;
+  width: 20%;
+  height: 8%;
+  z-index: 999;
+}
+
+
+#btnLog {
+  top: 48%;
+  right: 2%;
+  width: 20%;
+  height: 7%;
+  z-index: 999;
+}
