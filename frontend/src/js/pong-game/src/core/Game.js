@@ -13,7 +13,6 @@ export class Game {
         this.gameId = currId++;
         this.isRunning = false;
         this.container = container || null; // Will be created by ViewManager if needed
-
         gameRegistry.registerContext(this.gameId, this);
         gameRegistry.setCurrentContext(this.gameId);
 
@@ -49,23 +48,32 @@ export class Game {
     }
 
     start() {
-        if (this.isRunning) return;
+		if (this.isRunning) return;
         this.isRunning = true;
         this.animate();
     }
-
+	
     stop() {
-        this.isRunning = false;
+		this.isRunning = false;
         if (this._animationFrame) {
-            cancelAnimationFrame(this._animationFrame);
+			cancelAnimationFrame(this._animationFrame);
             this._animationFrame = null;
         }
     }
-
+	
     update() {
+        // Remove or comment out frequent console logs
+        // console.log("TOTO");
+        
         this.inputManager.update();
         this.updateBots();
-        this.boardManager.ball.move();
+        
+        // Only update the ball if it exists
+        if (this.boardManager && this.boardManager.ball) {
+            this.boardManager.ball.move();
+        } else {
+            console.warn("Ball not initialized in boardManager");
+        }
     }
 
     cleanup() {

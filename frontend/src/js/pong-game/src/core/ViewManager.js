@@ -98,8 +98,15 @@ export class ViewManager {
     }
 
     cleanup() {
-        for (const view of this.views) {
-            view.rendererManager.cleanup()
-        }
-    }
+		for (const view of this.views) {
+			view.rendererManager.cleanup();
+			// Remove the view container from DOM if it exists
+			if (view.container && view.container.parentNode) {
+				view.container.parentNode.removeChild(view.container);
+			}
+		}
+		
+		// Clear the views array
+		this.views = [];
+	}
 }

@@ -16,7 +16,6 @@ export class CameraManager {
             board: this.context.config.board,
             paddles: this.context.config.paddles
         };
-        
         this.camera = new THREE.PerspectiveCamera(
             this.config.fov,
             this.container.clientWidth / this.container.clientHeight,
@@ -170,7 +169,6 @@ export class CameraManager {
     phiUp() {
         this.config.polar.phi = 
         (this.config.polar.phi + this.phiSpeed) % (2 * Math.PI)
-        console.log(this.config.polar.phi)
         this.init()
     }
 

@@ -34,15 +34,8 @@ export class InputMap {
 	}
 
 	initCameraInputs() {
-		const { viewManager } = this.context;
 		const { keys } = this.config.camera.controls;
 		if (!this.config.camera.controls.enabled) return;
-		
-		// Get all camera managers
-		const getCameraManagers = () => {
-			console.log(this.config.camera.controls.enabled)
-			return viewManager.views.map(view => view.cameraManager);
-		};
 	
 		// Map keys to operations on all cameras
 		this.map.set(keys.phiPos, 
