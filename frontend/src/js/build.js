@@ -1,3 +1,4 @@
+import { load_page } from "./router";
 
 function toggleLayerPair(event){
     // console.log('toggleLayerPair:', event);
@@ -16,7 +17,7 @@ function toggleLayerPair(event){
     }
 }
 
-function initBuildButtons(){
+export function initBuildButtons(){
     const hotspots = document.querySelectorAll('[data-off][data-on]');
     hotspots.forEach(btn => {
       btn.addEventListener("mouseover", toggleLayerPair);

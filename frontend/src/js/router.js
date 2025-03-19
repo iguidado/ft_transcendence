@@ -1,3 +1,7 @@
+import { initBuildButtons } from "./build";
+import { showLogin } from "./login";
+import { loadGame } from "./pong";
+
 async function fetchHTMLContent(url) {
     console.log('fetchHTMLContent:', url);
     try {
@@ -14,7 +18,14 @@ async function fetchHTMLContent(url) {
     }
 }
 
-function load_page(url) {
+
+// url name: script to load
+const routeScripts = {
+	pong: loadGame
+}
+
+
+export function load_page(url) {
     fetchHTMLContent(url).then(htmlContent => {
         const app = document.getElementById('app');
         app.innerHTML = htmlContent;
@@ -28,7 +39,7 @@ function load_page(url) {
             app.appendChild(building);
             initBuildButtons(); 
         });
-        if (url === 'pong') loadGame();
+        if (routeScripts[url]) routeScripts[url]();
     });
 }
 
