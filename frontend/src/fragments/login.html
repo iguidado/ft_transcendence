@@ -18,13 +18,49 @@
         <input type="password" class="form-control form-control-lg" id="passwordInput" placeholder="Enter your password" />
       </div>
 
-      <button type="submit" class="btn my-button btn-lg mt-4 w-100">CONNECT</button>
+      <button type="button" 
+      class="btn my-button mt-3" 
+      data-bs-toggle="modal" 
+      data-bs-target="#twoFAModal">
+      2FA
+     </button>
+    <!-- Le modal 2FA-->
+    <div class="modal fade" id="twoFAModal" tabindex="-1" aria-labelledby="twoFAModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="twoFAModalLabel">Enter your 2FA Code</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
 
-      <button type="button" class="btn my-button btn-lg mt-4 w-80" onclick="showRegister()">
+          <div class="modal-body">
+            <!-- Champ 2FA code -->
+            <input type="text" class="form-control" id="twoFACodeInput" placeholder="000000"/>
+            <small class="text-muted">Please enter the 6-digit code from your Authenticator app.</small>
+          </div>
+
+          <div class="modal-footer">
+            <!-- Bouton pour valider le code 2FA -->
+            <button type="button" class="btn btn-primary" id="2FAValidateButton">
+              Validate
+            </button>
+            <!-- Bouton standard de fermeture modale -->
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+      <button type="submit" class="btn my-button btn-lg mt-4 w-100" id="connectButton">CONNECT</button>
+
+      <button type="button" class="btn my-button btn-lg mt-4 w-80" id="registerButton">
         REGISTER
       </button>
 
-      <button class="btn my-button btn-lg mt-4 w-80" id="connectButton">
+      <button class="btn my-button btn-lg mt-4 w-80" id="connect42Button">
         CONNECT WITH 42
       </button>
     </form>
@@ -69,7 +105,7 @@
       </button>
     </form>
 
-    <button type="button" class="btn my-button btn-lg mt-4 w-80" onclick="showLogin()">
+    <button type="button" class="btn my-button btn-lg mt-4 w-80" id="backToLoginButton">
       BACK TO LOGIN
     </button>
   </div>
@@ -77,7 +113,9 @@
 </div>
 </div>
 </div>
-<!-- Le modal 2FA-->
+
+
+<!-- Le modal 2FA A ENLEVER DE REGISTER-->
 <div class="modal fade" id="twoFAModal" tabindex="-1" aria-labelledby="twoFAModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -94,7 +132,7 @@
 
       <div class="modal-footer">
         <!-- Bouton pour valider le code 2FA -->
-        <button type="button" class="btn btn-primary" onclick="validate2FA()">
+        <button type="button" class="btn btn-primary" id="2FAValidateButton">
           Validate
         </button>
         <!-- Bouton standard de fermeture modale -->
