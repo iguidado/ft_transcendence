@@ -116,9 +116,7 @@ clean:
 
 fclean: down prod-down
 	@-docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine
-	@-docker rmi -f docker.elastic.co/kibana/kibana:$(STACK_V)  docker.elastic.co/logstash/logstash:$(STACK_V) docker.elastic.co/elasticsearch/elasticsearch:$(STACK_V) ft_transcendence-setup
-	@Deleted every images
-	@Deleting every volumes
+	@-docker rmi -f docker.elastic.co/kibana/kibana:$(STACK_V)  docker.elastic.co/logstash/logstash:$(STACK_V) docker.elastic.co/elasticsearch/elasticsearch:$(STACK_V) ft_transcendence-setup 2> /dev/null
 	-@docker volume rm $$(docker volume ls -q)
 	-sudo rm -rf frontend/dev
 
