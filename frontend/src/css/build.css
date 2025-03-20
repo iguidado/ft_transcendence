@@ -1,8 +1,7 @@
 #buildContainer {
     position: fixed;
-    top: 0; right: 0;
-    height: 100vh;
-    height: 100vh;
+    bottom: 0; right: 0;
+    height: 90vh;
     aspect-ratio: 400/600;
     margin: 0 auto;    
 }
