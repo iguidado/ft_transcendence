@@ -1,41 +1,52 @@
 import * as THREE from "three"
-import { addLine } from "./tools.js"
-import { scene } from "./scene.js"
-import { paddleLeft, paddleRight } from "./objects.js"
-import { config } from "./config.js"
+import { addLine } from "../utils/addLine.js"
+import {gameRegistry} from "../core/GameRegistry.js"
 
 export class Ball {
-	displayDirectionVectorLength=5
 	constructor({x, y, radius, direction, speed, color, paddleBoncingSpeedMultiplicator} = {}) {
-		this.direction = direction || config.ball.direction
-		this.speed = speed || config.ball.speed
-		this.radius = radius || config.ball.radius
-		this.color = color || config.ball.color
-		this.geometry = new THREE.SphereGeometry(this.radius)
-		this.material = new THREE.MeshBasicMaterial( { color: this.color } );
-		this.ball = new THREE.Mesh( this.geometry, this.material );
-		this.paddleBoncingSpeedMultiplicator = paddleBoncingSpeedMultiplicator || config.ball.paddleBoncingSpeedMultiplicator
-
+		const context = gameRegistry.getCurrentContext();
+        const config = context.config;
 		
-		this.ball.position.x = x || config.ball.x
-		this.ball.position.y = y || config.ball.y
-		
-		this.defaultDirection = this.direction
-		this.defaultSpeed = this.speed
-		this.defaultPosition = this.ball.position.clone()
+		// Initialize properties
+		this.direction = direction || new THREE.Vector3(1, 0, 0);  // Changed to Vector3
+		this.speed = speed || config.ball.speed;
+		this.radius = radius || config.ball.radius;
+		this.color = color || config.ball.color;
+		this.paddleBoncingSpeedMultiplicator = paddleBoncingSpeedMultiplicator || config.ball.paddleBoncingSpeedMultiplicator;
 
-		scene.add( this.ball );
+		// Create the mesh
+		this.geometry = new THREE.SphereGeometry(this.radius);
+		this.material = new THREE.MeshBasicMaterial({ color: this.color });
+		this.mesh = new THREE.Mesh(this.geometry, this.material);
+		
+		// Set initial position
+		this.mesh.position.x = x || config.ball.x;
+		this.mesh.position.y = y || config.ball.y;
+		this.mesh.position.z = 0;
+		
+		// Store default values for reset
+		this.defaultDirection = this.direction.clone();
+		this.defaultSpeed = this.speed;
+		this.defaultPosition = this.mesh.position.clone();
 	}
 	reset() {
+		const context = gameRegistry.getCurrentContext();
+        const config = context.config;
 		this.direction = this.defaultDirection
-		this.speed = this.defaultSpeed
-		this.ball.position.set(this.defaultPosition.x, this.defaultPosition.y, this.defaultPosition.z)
+		this.speed = config.ball.speed
+		this.paddleLeft = config.paddles.speed
+		this.paddleRight = config.paddles.speed
+		this.mesh.position.set(this.defaultPosition.x, this.defaultPosition.y, this.defaultPosition.z)
 	}
 
 	bounceOnObject() {
+		const context = gameRegistry.getCurrentContext();
+        const config = context.config;
 		let hit = this.scanForObstacles()
 		if (hit) {
 			const hitObject = hit.object;
+			const paddleRight = context.boardManager.paddleRight
+			const paddleLeft = context.boardManager.paddleLeft
 			if (hitObject === paddleLeft.mesh || hitObject === paddleRight.mesh) {
 				const paddleHeight = hitObject.geometry.parameters.height;
 				const relativeHitY = (hit.point.y - hitObject.position.y) / (paddleHeight / 2);
@@ -52,11 +63,12 @@ export class Ball {
 				
 				this.direction.normalize();
 				
-				if (this.speed * this.paddleBoncingSpeedMultiplicator < config.ball.maxSpeed)
+				if (this.speed * this.paddleBoncingSpeedMultiplicator < config.ball.maxSpeed) {
 					this.speed *= this.paddleBoncingSpeedMultiplicator
-				else if (this.speed != config.ball.maxSpeed)
+				}
+				else if (this.speed != config.ball.maxSpeed) {
 					this.speed = config.ball.maxSpeed
-				console.log(this.speed)
+				}
 			} else {
 				// Handle other collisions (walls, etc.)
 				if (Math.abs(hit.face.normal.x) > Math.abs(hit.face.normal.y)) {
@@ -70,25 +82,29 @@ export class Ball {
 
 	move() {
 		this.bounceOnObject()
-		this.ball.position.x += this.direction.x * this.speed;
-		this.ball.position.y += this.direction.y * this.speed;
+		this.mesh.position.x += this.direction.x * this.speed;
+		this.mesh.position.y += this.direction.y * this.speed;
 	}
 
 	debugObjects = []
 
 	scanForObstacles() {
-		if (config.ball.debugRayCaster)
-			this.debugObjects.forEach(obj => scene.remove(obj))
-		const startPos = this.ball.position.clone();
+		const context = gameRegistry.getCurrentContext();
+        const config = context.config;
+		if (config.ball.debugRayCaster) {
+			this.debugObjects.forEach(obj => context.scene.remove(obj))
+			this.debugObjects = []
+		}
+		const startPos = this.mesh.position.clone();
 		const normalizedDir = this.direction.clone().normalize();
-		const radius = this.ball.geometry.parameters.radius;
+		const radius = this.mesh.geometry.parameters.radius;
 
 		const numRays = 10;
 		const arcAngle = Math.PI;
 		
 		// Récupérer et mettre à jour les meshes
-		const meshes = scene.children.filter(obj => 
-			obj.type === 'Mesh' && obj !== this.ball
+		const meshes = context.boardManager.boardGroup.children.filter(obj => 
+			obj.type === 'Mesh' && obj !== this.mesh
 		);
 		// Force update des matrices
 		meshes.forEach(mesh => {
@@ -140,7 +156,7 @@ export class Ball {
 					);
 					debugSphere.position.copy(hitPoint);
 					this.debugObjects.push(debugSphere)
-					scene.add(debugSphere);
+					context.scene.add(debugSphere);
 				}
 			}
 
