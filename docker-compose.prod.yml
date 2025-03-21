@@ -1,0 +1,113 @@
+include:
+  - ./ELK/docker-compose.yml
+
+services:
+# Frontend production container: Enforced Nginx server with healthcheck
+# -----------------------------------------------------------------------------------------------------------
+
+  frontend-prod:
+    container_name: frontend
+    pull_policy: never
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.prod
+      args:
+        - HTTPS_PORT=${HTTPS_PORT}     # Needed to adapt nginx redirection
+    image: frontend:prod
+    ports:
+      - "${FRONT_PORT}:80"          # Port exposing HTTP scheme
+      - "${HTTPS_PORT}:443"         # Port exposing HTTPS scheme
+    volumes:
+      - ./frontend/src:/usr/share/nginx/html:rw,z  # Bind mount for development
+      - ./nginx/ssl:/etc/nginx/ssl:rw,z  # ssl certificate
+    depends_on:
+      backend:
+        condition: service_started
+          #     logstash:
+          #       condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - web-network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:12201"
+        tag: "nginx"
+
+
+# Backend service: Run with django. Provide API for user management and data retrieval. Also Socket for pong game
+# --------------------------------------------------------------------------------------------------------------------
+  backend:
+    container_name: backend
+    pull_policy: never
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    depends_on:
+      db:
+        condition: service_started
+      logstash:
+        condition: service_healthy
+    image: backend:local
+    command: /root/setup.sh
+    networks:
+      - web-network
+    ports:
+      - "${BACK_PORT}:8000"
+    environment:
+        #     - DEBUG=1
+        #     - DJANGO_SETTINGS_MODULE=project.settings.development
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_USER_EMAIL=${DB_USER_EMAIL}
+        #- JWT_SECRET_KEY=your-secret-key-here
+    volumes:
+      - ./backend/src:/app:rw,z  # Mount backend code
+        #   networks:
+        #     - web-network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:12201"
+        tag: "django"
+
+# Database service: Provide user management databases for authentication and user metrics
+# --------------------------------------------------------------------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    container_name: ${DB_HOST}
+      #   depends_on:
+      #     logstash:
+      #       condition: service_healthy
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - web-network
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://localhost:12201"
+        tag: "postgres"
+
+volumes:
+  postgres_data:
+    name: postgres_data
+
+
+networks:
+  ELK_web-network:
+    external: true
+    name: web
+  ELK_elk-network:
+    external: true # Defined in ELK/docker-compose.yml
+    name: elk

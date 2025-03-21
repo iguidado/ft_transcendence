@@ -22,7 +22,7 @@ from django.urls import path, re_path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView
+from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView, LoginView
 
 
 
@@ -54,7 +54,7 @@ urlpatterns = [
 	path('api/register/', RegisterView.as_view(), name="register"),
     
 	#LOGIN
-	path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+	path('api/login/', LoginView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),    
 	
 	#GET

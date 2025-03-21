@@ -48,7 +48,8 @@ INSTALLED_APPS = [
 	'rest_framework',
 	'rest_framework_simplejwt',
 	'django_crontab',
-	'channels'
+	'channels',
+	'corsheaders'
 ]
 
 AUTH_USER_MODEL = 'api.User'
@@ -64,6 +65,8 @@ ASGI_APPLICATION = 'billpong.asgi.application'
 #     },
 # }
 
+CRONJOBS = {('*/15 * * * *', 'api.cron.ResetExpiredCodesJob')}
+			 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -102,6 +105,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8888",
 ]
 
 ROOT_URLCONF = 'billpong.urls'
@@ -162,6 +170,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'api.backends.EmailBackend',
 ]
 
 

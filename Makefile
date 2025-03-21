@@ -4,11 +4,13 @@
 # ------------------------
 
 NPM_DEPS=three
+STACK_V=8.7.1
 
 # Build configuration
 # ------------------------
 
-BUILD_FILE=docker-compose.yml
+DEV_CMP=docker-compose.dev.yml
+PROD_CMP=docker-compose.prod.yml
 DC=docker compose
 
 
@@ -43,9 +45,11 @@ VITE_CFG=vite.config.js
 # Frontend dev environment Setup:
 # ------------------------------------
 
-all: $(BUILD_FILE) $(DEV_DIR)$(PKG_FILE) .env
-	sed -i "s/\(.*=\).*/\1/" .env.dev 
-	$(DC) --profile=dev up -d
+all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) dev .env
+	sed -i "s/\(.*=\).*/\1/" .env.dev
+
+dev:
+	$(DC) -f docker-compose.dev.yml up -d
 
 .env:
 	cp .env.dev .env
@@ -55,32 +59,32 @@ all: $(BUILD_FILE) $(DEV_DIR)$(PKG_FILE) .env
 # ------------------------------------
 
 $(DEV_DIR)$(PKG_FILE): $(DEV_DIR)
-	npm create vite@latest frontend/dev -- --template vanilla -y \
-		&& cd $(DEV_DIR) && npm install && npm install --save $(NPM_DEPS)
-	rm -f $(DEV_DIR)index.html
-	rm -rf $(DEV_DIR)src $(DEV_DIR)public
+	sudo npm create vite@latest frontend/dev -- --template vanilla -y \
+		&& cd $(DEV_DIR) && sudo npm install && sudo npm install --save $(NPM_DEPS)
+	sudo rm -f $(DEV_DIR)index.html
+	sudo rm -rf $(DEV_DIR)src $(DEV_DIR)public
 
 
 $(DEV_DIR):
 	mkdir -p $(DEV_DIR)
 
 down:
-	-$(DC) --profile=dev down
+	-$(DC) -f docker-compose.dev.yml down
 
 
-build:
-	$(DC) --profile=dev up --build -d
+build: $(DEV_CMP)
+	$(DC) -f docker-compose.dev.yml up --build -d
 
 
 monitoring:
-	$(DC) --profile=monitoring up
+	$(DC) -f docker-compose.prod.yml --profile=monitoring up
 
 
 # Prod environment Setup:
 # ------------------------------------
 
 prod: $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) .env
-	$(DC) --profile=prod up --build -d
+	$(DC) -f docker-compose.prod.yml up --build -d
 
 
 $(CERT_DIR):
@@ -95,7 +99,7 @@ $(CERT_DIR)$(CERT_FILE)  $(CERT_DIR)$(KEY_FILE): $(CERT_DIR)
 		-addext "subjectAltName=DNS:localhost,DNS:*.localhost,IP:127.0.0.1"
 
 prod-down:
-	-$(DC) --profile=prod down
+	-$(DC) -f docker-compose.prod.yml down
 
 prod-re: prod-down prod
 
@@ -103,18 +107,21 @@ prod-re: prod-down prod
 # ----------------------------------------
 
 clean:
-	$(DC) rm #Clean stopped container
-	sed -i "s/\(.*=\).*/\1/" .env.dev 
-	sed -i "s/\(.*=\).*/\1/" .env.prod
-	docker system prune #Clean all dangling entity
+	$(DC) -f docker-compose.dev.yml rm -f  #Clean stopped container
+	@sed -i "s/\(.*=\).*/\1/" .env.dev 
+	@sed -i "s/\(.*=\).*/\1/" .env.prod
+	@echo "Cleaned .env.{dev;prod} files"
+	@docker system prune #Clean all dangling entity
 
 
 fclean: down prod-down
-	-docker rmi frontend backend:local postgres:15-alpine
+	@-docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine
+	@-docker rmi -f docker.elastic.co/kibana/kibana:$(STACK_V)  docker.elastic.co/logstash/logstash:$(STACK_V) docker.elastic.co/elasticsearch/elasticsearch:$(STACK_V) ft_transcendence-setup
+	@Deleted every images
+	@Deleting every volumes
+	-@docker volume rm $$(docker volume ls -q)
 	-sudo rm -rf frontend/dev
-
 
 re: fclean all
 
-
-.PHONY: all bg monitoring log down prod prod-down prod-re
+.PHONY: all dev down prod prod-down prod-re clean fclean re
