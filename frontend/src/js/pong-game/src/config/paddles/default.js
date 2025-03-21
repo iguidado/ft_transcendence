@@ -1,7 +1,7 @@
 export default {
 	length: 10,
 	depth: 3,
-	width: 1,
+	width: 3,
 	maxBounceAngle: Math.PI / 3,
 	speed: 0.8,
 	controls: {

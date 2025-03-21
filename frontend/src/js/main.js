@@ -1,7 +1,3 @@
-import "./login.js"
-import "./pong.js"
-import "./build.js"
-import "./router.js"
 import { load_page } from "./router.js";
 
 

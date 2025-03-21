@@ -26,6 +26,7 @@ export class Game {
         // Set up resize handler with bound context
         this._handleResizeBound = this.handleResize.bind(this);
         window.addEventListener('resize', this._handleResizeBound);
+        this.viewManager.render();
     }
 
     addView(container, cameraConfig = {}) {

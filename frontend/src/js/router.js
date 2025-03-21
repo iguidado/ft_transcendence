@@ -1,6 +1,6 @@
 import { initBuildButtons } from "./build";
 import { showLogin } from "./login";
-import { loadGame } from "./pong";
+import { loadGame } from "./loadGame";
 
 async function fetchHTMLContent(url) {
     console.log('fetchHTMLContent:', url);
