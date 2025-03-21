@@ -3,10 +3,7 @@ import { load_page } from "./router";
 export function loadLoginPage() {
   const app = document.getElementById("app");
   
-  document.body.classList.add("themePink");
-  
 
-    
     // -- Écouteur sur le formulaire de login --
     const loginForm = document.getElementById("loginForm");
     loginForm.addEventListener("submit", (e) => {
