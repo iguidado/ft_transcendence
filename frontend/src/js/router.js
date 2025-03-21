@@ -1,6 +1,9 @@
 import { initBuildButtons } from "./build";
 import { showLogin } from "./login";
-import { loadGame } from "./loadGame";
+import { showRegister } from "./login";
+import { loadGame } from "./pong";
+import { loadLoginPage } from "./login";
+
 
 async function fetchHTMLContent(url) {
     console.log('fetchHTMLContent:', url);
@@ -21,7 +24,9 @@ async function fetchHTMLContent(url) {
 
 // url name: script to load
 const routeScripts = {
-	pong: loadGame
+	pong: loadGame,
+    login: loadLoginPage,
+    register: showRegister
 }
 
 
