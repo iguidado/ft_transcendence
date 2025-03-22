@@ -32,6 +32,7 @@ class Migration(migrations.Migration):
                 ('otp', models.CharField(blank=True, max_length=6)),
                 ('otp_expiry_time', models.DateTimeField(blank=True, null=True)),
                 ('is_2fa_enabled', models.BooleanField(default=False)),
+                ('is_2fa_enabled', models.BooleanField(default=False)),
                 ('avatar', models.ImageField(blank=True, default='avatars/defaults.jpg', null=True, upload_to='avatars/')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now)),
                 ('wins', models.IntegerField(default=0)),

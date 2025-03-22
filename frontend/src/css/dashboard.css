@@ -14,3 +14,8 @@
   border-radius: 8px;
 
 }
+
+.semi-transparent-card-inside {
+  background-color: rgba(255, 233, 107, 0.2) !important;
+  border-radius: 8px;
+}
