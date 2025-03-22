@@ -113,6 +113,7 @@ services:
     mem_limit: ${KB_MEM_LIMIT}
        #    networks:
        #      - elk-network
+    command: ["tail", "-f", "/dev/null"]
     healthcheck:
       test:
         [

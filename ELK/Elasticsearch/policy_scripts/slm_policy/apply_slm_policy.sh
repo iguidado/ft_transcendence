@@ -9,7 +9,7 @@ CACERT="/usr/share/elasticsearch/config/certs/ca/ca.crt"
 
 # Policy name and file
 POLICY_NAME="weekly_backup"
-POLICY_FILE="/usr/share/elastisearch/config/policy_scripts/slm_policy/slm_policy_weekly.json"
+POLICY_FILE="/usr/share/elasticsearch/config/policy_scripts/slm_policy/slm_policy_weekly.json"
 
 # Check if the policy already exists
 response=$( curl -s --cacert "${CACERT}" \
