@@ -20,7 +20,7 @@ function waitLoginAvailable()
   );
 }
 
-async function loadLoginPage() {
+export async function loadLoginPage() {
 	console.log("hello");
 
   const app = document.getElementById("app");
