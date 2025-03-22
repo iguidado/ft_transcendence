@@ -48,8 +48,11 @@ echo "Waiting for Elasticsearch availability";
 #-----------------------------------------------
 until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials";
 do
+	echo "Waiting ...";
 	sleep 30;
 done;
+
+echo "stopped waiting";
 
 echo "Setting kibana_system password";
 #------------------------------------------------

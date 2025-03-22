@@ -44,7 +44,9 @@ VITE_CFG=vite.config.js
 # Frontend dev environment Setup:
 # ------------------------------------
 
-all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) .env
+#all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) .env
+
+all: $(DEV_CMP) dev .env
 	sed -i "s/\(.*=\).*/\1/" .env.dev
 
 dev:
@@ -57,11 +59,11 @@ dev:
 # Dev environment Setup:
 # ------------------------------------
 
-$(DEV_DIR)$(PKG_FILE): $(DEV_DIR)
-	npm create vite@latest frontend/dev -- --template vanilla -y \
-		&& cd $(DEV_DIR) && npm install && npm install --save $(NPM_DEPS)
-	rm -f $(DEV_DIR)index.html
-	rm -rf $(DEV_DIR)src $(DEV_DIR)public
+#$(DEV_DIR)$(PKG_FILE): $(DEV_DIR)
+#	npm create vite@latest frontend/dev -- --template vanilla -y \
+#		&& cd $(DEV_DIR) && npm install && npm install --save $(NPM_DEPS)
+#	rm -f $(DEV_DIR)index.html
+#	rm -rf $(DEV_DIR)src $(DEV_DIR)public
 
 
 $(DEV_DIR):
@@ -114,11 +116,11 @@ clean:
 
 
 fclean: down prod-down
-	-@docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine docker.elastic.co/kibana/kibana
-	@Deleted every images
-	@Deleting every volumes
-	-@docker volume rm $$(docker volume ls -q)
-	-sudo rm -rf frontend/dev
+	-@docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine docker.elastic.co/kibana/kibana 2> /dev/null
+	@echo "Deleted every images"
+	@echo "Deleting every volumes"
+	-@docker volume rm $$(docker volume ls -q) 2> /dev/null
+	-rm -rf frontend/dev
 
 re: fclean all
 
