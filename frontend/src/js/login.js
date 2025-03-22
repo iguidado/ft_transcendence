@@ -1,3 +1,4 @@
+import { load_page } from "./router";
 
 export function loadLoginPage() {
   const app = document.getElementById("app");
@@ -22,6 +23,34 @@ export function loadLoginPage() {
     console.log("Connexion via 42 OAuth (à implémenter).");
     // plus tard => loadDashboard() ou autre
   });
+
+
+// -- Écouteur sur le bouton “REGISTER” --
+  const registerBtn = document.getElementById("registerButton");
+  if (registerBtn) {
+    registerBtn.addEventListener("click", () => {
+      console.log("Clic sur le bouton REGISTER");
+      showRegister(); 
+    });
+}
+
+// -- Écouteur sur le bouton “CONNECT” -- FETCH ICI POUR SE CONNECTER
+  const loginBtn = document.getElementById("connectButton");
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      console.log("Clic sur le bouton LOGIN");
+      load_page('profile');
+    });
+  }
+
+  // -- ecouteur sur le bouton Back to Login
+  const backToLoginBtn = document.getElementById("backToLoginButton");
+  if (backToLoginBtn) {
+    backToLoginBtn.addEventListener("click", () => {
+      console.log("Clic sur le bouton BACK TO LOGIN");
+      showLogin();
+    });
+  }
 }
 
 
