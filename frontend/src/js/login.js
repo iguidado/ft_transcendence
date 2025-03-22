@@ -41,9 +41,12 @@ async function loadLoginPage() {
         submitButton.textContent = 'Logging in...';
       
         try {
+          console.log({
+            email: emailValue,
+            password: passValue,
+          });
           const response = await fetch('http://127.0.0.1:8080/api/login/', {
             method: 'POST',
-            credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
             },
@@ -52,7 +55,7 @@ async function loadLoginPage() {
               password: passValue,
             })
           });
-      
+          
           if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Login failed');
