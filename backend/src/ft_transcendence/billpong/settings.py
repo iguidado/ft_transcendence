@@ -13,10 +13,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from datetime import timedelta
 from dotenv import load_dotenv
 from pathlib import Path
+from decouple import config
 import os
 
-
-load_dotenv()
+env_path = Path('/home/bugs/Dev/ft_transcendence/.env')
+load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -108,12 +109,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+PORT = config("FRONT_PORT", default='4000')
+print(f"FRONT_PORT value: {PORT} (type: {type(PORT)})")
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4000",
-    "http://127.0.0.1:4000",
+    f"http://localhost:{PORT}",
+    f"http://127.0.0.1:{PORT}",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',

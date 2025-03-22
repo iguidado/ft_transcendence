@@ -53,6 +53,7 @@ class LoginView(APIView):
 
 		email = serializer.validated_data['email']
 		password = serializer.validated_data['password']
+		print(f"User {password} ({email})")
 
 		user = authenticate(request, email=email, password=password)
 
