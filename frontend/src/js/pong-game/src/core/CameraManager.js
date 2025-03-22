@@ -6,18 +6,18 @@ export class CameraManager {
         this.game = game;
         this.container = container;
         this.context = gameRegistry.getCurrentContext();
-        
-        // Make sure we always use the game's board and paddles configuration,
-        // even when a custom camera config is provided
+
+        // Merge the camera configuration
         this.config = {
             ...this.context.config.camera,
             ...customConfig,
-            // Ensure we always have access to these critical game dimensions
             board: this.context.config.board,
             paddles: this.context.config.paddles
         };
+
+        // Use the FOV from the configuration
         this.camera = new THREE.PerspectiveCamera(
-            this.config.fov,
+            this.config.fov || 75, // Default FOV is 75
             this.container.clientWidth / this.container.clientHeight,
             0.1,
             1000
@@ -50,7 +50,12 @@ export class CameraManager {
         }
         const box = this.createGameBoundingBox();
         const rotatedBox = this.getRotatedBoundingBox(box);
-        return this.calculateOptimalRadius(rotatedBox);
+        
+        // Debug the rotated box
+        this.debugRotatedBox(rotatedBox);
+        
+        // Pass phi and theta to calculateOptimalRadius
+        return this.calculateOptimalRadius(rotatedBox, this.config.polar.phi, this.config.polar.theta);
     }
 
     createGameBoundingBox() {
@@ -89,20 +94,91 @@ export class CameraManager {
         return rotatedBox;
     }
 
-    calculateOptimalRadius(rotatedBox) {
+    calculateOptimalRadius(rotatedBox, phi, theta) {
         const size = new THREE.Vector3();
         rotatedBox.getSize(size);
+        const center = new THREE.Vector3();
+        rotatedBox.getCenter(center);
 
+        // Create a camera direction vector based on phi and theta
+        const cameraDirection = new THREE.Vector3(
+            Math.sin(theta) * Math.cos(phi),
+            Math.sin(phi),
+            Math.cos(theta) * Math.cos(phi)
+        ).normalize();
+
+        // Calculate vertical and horizontal FOVs
         const vFov = this.config.fov * Math.PI / 180;
         const aspect = this.camera.aspect;
         const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
 
-        const radiusForHeight = size.y / (2 * Math.tan(vFov / 2));
-        const radiusForWidth = size.x / (2 * Math.tan(hFov / 2));
-        const radiusForDepth = size.z;
+        // Calculate corners of the bounding box
+        const halfWidth = size.x / 2;
+        const halfHeight = size.y / 2;
+        const halfDepth = size.z / 2;
+        
+        const corners = [
+            new THREE.Vector3(center.x - halfWidth, center.y - halfHeight, center.z - halfDepth),
+            new THREE.Vector3(center.x - halfWidth, center.y - halfHeight, center.z + halfDepth),
+            new THREE.Vector3(center.x - halfWidth, center.y + halfHeight, center.z - halfDepth),
+            new THREE.Vector3(center.x - halfWidth, center.y + halfHeight, center.z + halfDepth),
+            new THREE.Vector3(center.x + halfWidth, center.y - halfHeight, center.z - halfDepth),
+            new THREE.Vector3(center.x + halfWidth, center.y - halfHeight, center.z + halfDepth),
+            new THREE.Vector3(center.x + halfWidth, center.y + halfHeight, center.z - halfDepth),
+            new THREE.Vector3(center.x + halfWidth, center.y + halfHeight, center.z + halfDepth)
+        ];
 
-        return Math.max(radiusForHeight, radiusForWidth, radiusForDepth) * 
-               this.config.polar.calculatedRadiusMargin;
+        // Create view plane perpendicular to camera direction
+        const viewPlaneNormal = cameraDirection.clone();
+        const viewPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(
+            viewPlaneNormal, 
+            new THREE.Vector3(0, 0, 0)
+        );
+
+        // Project all corners onto the view plane
+        const projectedPoints = corners.map(corner => {
+            const projected = new THREE.Vector3();
+            viewPlane.projectPoint(corner, projected);
+            return projected;
+        });
+
+        // Find the right and up vectors on the view plane
+        const upVector = new THREE.Vector3(0, 1, 0);
+        // If camera is nearly vertical, use a different up reference
+        if (Math.abs(Math.cos(phi)) < 0.1) {
+            upVector.set(0, 0, 1);
+        }
+        
+        const rightVector = new THREE.Vector3().crossVectors(upVector, viewPlaneNormal).normalize();
+        // Recalculate the up vector to ensure it's perpendicular to both the view direction and right vector
+        upVector.crossVectors(viewPlaneNormal, rightVector).normalize();
+
+        // Calculate 2D bounds of the projected points on the view plane
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        
+        projectedPoints.forEach(point => {
+            const projectedX = point.dot(rightVector);
+            const projectedY = point.dot(upVector);
+            
+            minX = Math.min(minX, projectedX);
+            maxX = Math.max(maxX, projectedX);
+            minY = Math.min(minY, projectedY);
+            maxY = Math.max(maxY, projectedY);
+        });
+
+        // Calculate required distances
+        const projectedWidth = maxX - minX;
+        const projectedHeight = maxY - minY;
+        
+        // Calculate required radius for vertical and horizontal FOVs
+        const radiusForHeight = (projectedHeight / 2) / Math.tan(vFov / 2);
+        const radiusForWidth = (projectedWidth / 2) / Math.tan(hFov / 2);
+        
+        // Get the maximum radius to ensure everything is visible
+        const requiredRadius = Math.max(radiusForHeight, radiusForWidth);
+        
+        // Apply user-configured margin
+        return requiredRadius * this.config.polar.calculatedRadiusMargin;
     }
 
     positionCamera(radius) {
@@ -139,72 +215,86 @@ export class CameraManager {
     rotateUpX() {
         this.config.polar.rotateX += this.rotationSpeed
         this.init()
-    }
+		return this
+		return this
+	}
 
     rotateDownX() {
         this.config.polar.rotateX -= this.rotationSpeed
         this.init()
-    }
+		return this
+	}
 
     rotateUpY() {
         this.config.polar.rotateY += this.rotationSpeed
         this.init()
-    }
+		return this
+	}
 
     rotateDownY() {
         this.config.polar.rotateY -= this.rotationSpeed
         this.init()
-    }
+		return this
+	}
 
     rotateUpZ() {
         this.config.polar.rotateZ += this.rotationSpeed
         this.init()
-    }
+		return this
+	}
 
     rotateDownZ() {
         this.config.polar.rotateZ -= this.rotationSpeed
         this.init()
-    }
+		return this
+	}
 
     phiUp() {
         this.config.polar.phi = 
         (this.config.polar.phi + this.phiSpeed) % (2 * Math.PI)
         this.init()
-    }
+		return this
+	}
 
     phiDown() {
         this.config.polar.phi =
             (this.config.polar.phi - this.phiSpeed) % (2 * Math.PI)
         this.init()
-    }
+		return this
+	}
 
     thetaUp() {
         this.config.polar.theta
             = (this.config.polar.theta + this.thetaSpeed) % (2 * Math.PI)
         this.init()
-    }
+		return this
+	}
 
     thetaDown() {
         this.config.polar.theta
             = (this.config.polar.theta - this.thetaSpeed) % (2 * Math.PI)
         this.init()
-    }
+		return this
+	}
 
     toggleCalculatedRadius() {
         this.config.polar.useCalculatedRadius 
             = !this.config.polar.useCalculatedRadius
         this.init()
-    }
+		return this
+	}
 
     calculatedRadiusMarginUp() {
         this.config.polar.calculatedRadiusMargin += this.marginSpeed
         this.init()
-    }
+		return this
+	}
 
     calculatedRadiusMarginDown() {
         this.config.polar.calculatedRadiusMargin -= this.marginSpeed
         this.init()
-    }
+		return this
+	}
 
     logCameraConfig() {
         console.log('Camera parameters:', {
@@ -217,5 +307,38 @@ export class CameraManager {
             useCalculatedRadius: this.config.polar.useCalculatedRadius,
             calculatedRadiusMargin: this.config.polar.calculatedRadiusMargin
         })
+    }
+
+    debugRotatedBox(rotatedBox) {
+        // Get box dimensions and center
+        const size = new THREE.Vector3();
+        rotatedBox.getSize(size);
+        const center = new THREE.Vector3();
+        rotatedBox.getCenter(center);
+
+        // Extract corner positions
+        const corners = [
+            new THREE.Vector3(rotatedBox.min.x, rotatedBox.min.y, rotatedBox.min.z),
+            new THREE.Vector3(rotatedBox.min.x, rotatedBox.min.y, rotatedBox.max.z),
+            new THREE.Vector3(rotatedBox.min.x, rotatedBox.max.y, rotatedBox.min.z),
+            new THREE.Vector3(rotatedBox.min.x, rotatedBox.max.y, rotatedBox.max.z),
+            new THREE.Vector3(rotatedBox.max.x, rotatedBox.min.y, rotatedBox.min.z),
+            new THREE.Vector3(rotatedBox.max.x, rotatedBox.min.y, rotatedBox.max.z),
+            new THREE.Vector3(rotatedBox.max.x, rotatedBox.max.y, rotatedBox.min.z),
+            new THREE.Vector3(rotatedBox.max.x, rotatedBox.max.y, rotatedBox.max.z)
+        ];
+
+        // Display detailed information
+        console.group('RotatedBox Debug Info');
+        console.log('Box min:', rotatedBox.min);
+        console.log('Box max:', rotatedBox.max);
+        console.log('Box size:', size);
+        console.log('Box center:', center);
+        console.log('Box corners:', corners);
+        console.log('Phi:', this.config.polar.phi);
+        console.log('Theta:', this.config.polar.theta);
+        console.groupEnd();
+        
+        return rotatedBox; // Return for chaining
     }
 }

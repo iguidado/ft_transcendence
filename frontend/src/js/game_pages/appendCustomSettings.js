@@ -13,15 +13,12 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
   settingsList.forEach(setting => {
     const { 
       title, 
-      value, 
-      min = 0, 
-      max = 100, 
-      step = 1, 
+      defaultValue,
       minusCallback, 
       plusCallback 
     } = setting
 
-    settingsValues[title] = value
+    settingsValues[title] = defaultValue
 
     const settingContainer = document.createElement('div')
     settingContainer.className = 'setting-container'
@@ -47,11 +44,10 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
 
     const valueDisplay = document.createElement('p')
 	valueDisplay.className = 'value'
-	if (!isNaN(value)) {
-		// Limit to maximum 2 decimal places without forcing zeros
-		valueDisplay.textContent = Math.round(value * 100) / 100
+	if (!isNaN(defaultValue)) {
+		valueDisplay.textContent = Math.round(defaultValue * 100) / 100
 	} else {
-		valueDisplay.textContent = value
+		valueDisplay.textContent = defaultValue
 	}
 
     const plusBtn = document.createElement('div')
@@ -71,21 +67,19 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
     const intervalSpeed = 100
 
     minusBtn.addEventListener('mousedown', () => {
-      const decreaseValue = () => {
-        const currentValue = parseFloat(valueDisplay.textContent)
-        if (currentValue > min) {
-          const newValue = Math.max(min, currentValue - step)
-          valueDisplay.textContent = newValue
-          settingsValues[title] = newValue
-
-          if (typeof minusCallback === 'function') {
-            minusCallback(newValue)
-          }
+        const decreaseValue = () => {
+            const currentValue = settingsValues[title]
+            settingsValues[title] = minusCallback(currentValue)
+            // Format to 2 decimal places if it's a number
+            if (!isNaN(settingsValues[title])) {
+                valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
+            } else {
+                valueDisplay.textContent = settingsValues[title]
+            }
         }
-      }
 
-      decreaseValue()
-      minusInterval = setInterval(decreaseValue, intervalSpeed)
+        decreaseValue()
+        minusInterval = setInterval(decreaseValue, intervalSpeed)
     })
 
     minusBtn.addEventListener('mouseup', () => {
@@ -97,21 +91,19 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
     })
 
     plusBtn.addEventListener('mousedown', () => {
-      const increaseValue = () => {
-        const currentValue = parseFloat(valueDisplay.textContent)
-        if (currentValue < max) {
-          const newValue = Math.min(max, currentValue + step)
-          valueDisplay.textContent = newValue
-          settingsValues[title] = newValue
-
-          if (typeof plusCallback === 'function') {
-            plusCallback(newValue)
-          }
+        const increaseValue = () => {
+            const currentValue = settingsValues[title]
+            settingsValues[title] = plusCallback(currentValue)
+            // Format to 2 decimal places if it's a number
+            if (!isNaN(settingsValues[title])) {
+                valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
+            } else {
+                valueDisplay.textContent = settingsValues[title]
+            }
         }
-      }
 
-      increaseValue()
-      plusInterval = setInterval(increaseValue, intervalSpeed)
+        increaseValue()
+        plusInterval = setInterval(increaseValue, intervalSpeed)
     })
 
     plusBtn.addEventListener('mouseup', () => {

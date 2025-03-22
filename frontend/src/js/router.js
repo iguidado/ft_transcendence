@@ -1,7 +1,7 @@
 import { initBuildButtons } from "./build";
 import { showLogin } from "./login";
 import { showRegister } from "./login";
-import { loadGame } from "./pong";
+import { loadGame } from "./loadGame";
 import { loadLoginPage } from "./login";
 
 
