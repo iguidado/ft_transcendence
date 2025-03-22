@@ -14,14 +14,16 @@ export class BoardManager {
 			height: this.config.board.wallWidth,
 			width: this.config.board.width + this.config.board.wallWidth,
 			depth: this.config.board.depth,
-			y: this.config.board.height/2
+			y: this.config.board.height/2,
+			texturePath: "../../../../rsc/pongTextures/wallTex.png"
 		})
 	
 		this.wallBottom = new Wall({
 			height: this.config.board.wallWidth,
 			width: this.config.board.width + this.config.board.wallWidth,
 			depth: this.config.board.depth,
-			y: -this.config.board.height/2
+			y: -this.config.board.height/2,
+			texturePath: "../../../../rsc/pongTextures/wallTex.png"
 		})
 	
 		this.paddleLeft = new Paddle({ isLeft: true, color: 0x0000ff })

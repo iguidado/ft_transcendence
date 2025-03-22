@@ -8,10 +8,13 @@ export class ViewManager {
         this.game = gameRegistry.getCurrentContext()
         this.config = this.game.config
         this.views = []
-		if (!this.config.views)
-			this.config.views = {}
-		if (!this.config.views.cameraPresets || !this.config.views.cameraPresets.length)
-			this.config.views.cameraPresets = [{}]
+        if (!this.config.views)
+            this.config.views = {}
+        if (!this.config.views.cameraPresets || !this.config.views.cameraPresets.length)
+            this.config.views.cameraPresets = [{}]
+        // Initialize containerFitting property with default value
+        if (this.config.views.containerFitting === undefined)
+            this.config.views.containerFitting = false
         this.init()
     }
 
@@ -32,7 +35,7 @@ export class ViewManager {
     }
 	
     init() {
-		if (!this.game.container) {
+        if (!this.game.container) {
             this.createDefaultContainer();
         }
         
@@ -44,24 +47,22 @@ export class ViewManager {
         
         for (let i = 0; i < numViews; i++) {
             const viewElement = document.createElement('div');
+            viewElement.classList.add("pong-view-element");
+            viewElement.style.border = "solid 2px black";
             
             // Set width and height based on layout
             if (this.config.views.layout === 'horizontal') {
-                // For horizontal layout, divide width by number of views
                 viewElement.style.width = `${100 / numViews}%`;
                 viewElement.style.height = '100%';
             } else if (this.config.views.layout === 'vertical') {
-                // For vertical layout, divide height by number of views
                 viewElement.style.width = '100%';
                 viewElement.style.height = `${100 / numViews}%`;
             } else {
-                // For grid layout, calculate based on square root
                 const columns = Math.ceil(Math.sqrt(numViews));
                 viewElement.style.width = `${100 / columns}%`;
                 viewElement.style.height = `${100 / Math.ceil(numViews / columns)}%`;
             }
             
-            // Add a subtle border to see the separation
             viewElement.style.boxSizing = 'border-box';
             viewElement.style.position = 'relative';
             
@@ -70,6 +71,9 @@ export class ViewManager {
             // Add the view with the corresponding preset
             const cameraConfig = this.config.views.cameraPresets[i] || {};
             this.createView(viewElement, cameraConfig);
+
+            // Ajuster le conteneur après son ajout au DOM
+            setTimeout(() => this.fitContainerToBoard(viewElement), 0);
         }
     }
 
@@ -79,6 +83,7 @@ export class ViewManager {
             cameraManager: new CameraManager(this.game, container, cameraConfig),
             rendererManager: new RendererManager(this.game, container)
         }
+        this.fitContainerToBoard(container);
         view.cameraManager.init()
         this.views.push(view)
         return view
@@ -92,6 +97,7 @@ export class ViewManager {
 
     handleResize() {
         for (const view of this.views) {
+            this.fitContainerToBoard(view.container);
             view.rendererManager.handleResize()
             view.cameraManager.init()
         }
@@ -109,4 +115,33 @@ export class ViewManager {
 		// Clear the views array
 		this.views = [];
 	}
+
+    fitContainerToBoard(container) {
+        if (!this.config.views.containerFitting) return;
+
+        // Récupérer les dimensions du board depuis la configuration
+        const boardWidth = this.config.board.width;
+        const boardHeight = this.config.board.height;
+        const boardAspectRatio = boardWidth / boardHeight;
+
+        // Récupérer les dimensions actuelles du conteneur
+        const containerWidth = container.offsetWidth;
+        const containerHeight = container.offsetHeight;
+        const containerAspectRatio = containerWidth / containerHeight;
+
+        // Ajuster les dimensions du conteneur pour correspondre au ratio du board
+        if (containerAspectRatio > boardAspectRatio) {
+            // Le conteneur est trop large, ajuster la largeur
+            const newWidth = containerHeight * boardAspectRatio;
+            container.style.width = `${newWidth}px`;
+            container.style.height = `${containerHeight}px`;
+            container.style.margin = "0 auto"; // Centrer horizontalement
+        } else {
+            // Le conteneur est trop haut, ajuster la hauteur
+            const newHeight = containerWidth / boardAspectRatio;
+            container.style.height = `${newHeight}px`;
+            container.style.width = `${containerWidth}px`;
+            container.style.margin = "auto 0"; // Centrer verticalement
+        }
+    }
 }

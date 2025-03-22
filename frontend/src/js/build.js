@@ -1,7 +1,7 @@
 import { load_page } from "./router";
 
 function toggleLayerPair(event){
-    // console.log('toggleLayerPair:', event);
+    console.log('toggleLayerPair:', event);
     const btn = event.currentTarget;
     const onId = btn.getAttribute('data-on');
     const offId = btn.getAttribute('data-off');
