@@ -1,7 +1,11 @@
+import { appendCustomSettings } from "./appendCustomSettings";
+import { CustomBtnsList } from "./config/CustomBtnsList";
+
 // Function to handle the switch menu button functionality
-function setupSwitchMenuButton() {
+function setupSwitchMenuButton(ctx) {
+	console.log('TOTO',ctx)
     const switchMenuBtn = document.getElementById('switch-menu-btn');
-    const settingsTitle = document.querySelector('#settings-title-container h2');
+    const settingsTitle = document.querySelector('#settings-title-container p');
     const settingsList = document.getElementById('settings-list-container');
     const modsList = document.getElementById('mods-list-container');
     const btnText = switchMenuBtn.querySelector('p');
@@ -11,7 +15,7 @@ function setupSwitchMenuButton() {
     modsList.style.opacity = '1';
     modsList.style.display = 'block';
     settingsList.style.opacity = '0';
-    settingsList.style.display = 'none';settingsList
+    settingsList.style.display = 'none';
     
     // Apply transitions for smooth fading
     modsList.style.transition = 'opacity 0.3s ease-in-out';
@@ -37,6 +41,7 @@ function setupSwitchMenuButton() {
                 }, 50);
             }, 300);
         } else {
+			appendCustomSettings(CustomBtnsList(ctx))
             // Switch to Mods mode
             btnText.textContent = "=> "+'Mods';
             settingsTitle.textContent = 'Custom';
@@ -57,9 +62,9 @@ function setupSwitchMenuButton() {
 }
 
 // Initialize the button functionality when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    setupSwitchMenuButton();
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     setupSwitchMenuButton();
+// });
 
 // Export function if using modules
 export { setupSwitchMenuButton };
