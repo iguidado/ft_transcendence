@@ -1,11 +1,22 @@
+<form class="form-container" id="loginForm">
+<div class="form-container__title">Connect to play !</div>
+<div class="form-container__field">
+  <label class="form-container__label" for="loginInput">Login</label>
+  <input class="form-container__input" type="text" id="loginInput" placeholder="Enter your login" />
+</div>
+<div class="form-container__field">
+  <label class="form-container__label" for="loginInput">Password</label>
+  <input class="form-container__input" type="text" id="passwordInput" placeholder="Enter your password" />
+</div>
+</div>
 
-<!-- Conteneur principal -->
+
+
+
+<!-- JE TE DETESTE
 <div class="container d-flex flex-column justify-content-start align-items-center" style="height:100vh; padding-top: 50px;">
 
-  <!-- Titre / Sous-titre éventuel -->
-  <h1 class="mb-4" style="font-size: 2.5rem;">AUTHENTIFICATION</h1>
 
-  <!-- SECTION LOGIN -->
   <div id="loginSection" style="width: 100%; max-width: 400px;">
     <form id="loginForm">
       <div class="mb-3">
@@ -24,7 +35,6 @@
       data-bs-target="#twoFAModal">
       2FA
      </button>
-    <!-- Le modal 2FA-->
     <div class="modal fade" id="twoFAModal" tabindex="-1" aria-labelledby="twoFAModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -34,17 +44,17 @@
           </div>
 
           <div class="modal-body">
-            <!-- Champ 2FA code -->
+
             <input type="text" class="form-control" id="twoFACodeInput" placeholder="000000"/>
             <small class="text-muted">Please enter the 6-digit code from your Authenticator app.</small>
           </div>
 
           <div class="modal-footer">
-            <!-- Bouton pour valider le code 2FA -->
+
             <button type="button" class="btn btn-primary" id="2FAValidateButton">
               Validate
             </button>
-            <!-- Bouton standard de fermeture modale -->
+
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Cancel
             </button>
@@ -66,7 +76,6 @@
     </form>
   </div>
 
-  <!-- SECTION REGISTER (cachée par défaut) -->
   <div id="registerSection" style="display: none; width: 100%; max-width: 600px;">
   <div class="card mt-4 semi-transparent-card" style="width: 80%;">
     <div class="card-body">
@@ -115,7 +124,7 @@
 </div>
 
 
-<!-- Le modal 2FA A ENLEVER DE REGISTER-->
+
 <div class="modal fade" id="twoFAModal" tabindex="-1" aria-labelledby="twoFAModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -125,21 +134,21 @@
       </div>
 
       <div class="modal-body">
-        <!-- Champ 2FA code -->
+
         <input type="text" class="form-control" id="twoFACodeInput" placeholder="000000"/>
         <small class="text-muted">Please enter the 6-digit code from your Authenticator app.</small>
       </div>
 
       <div class="modal-footer">
-        <!-- Bouton pour valider le code 2FA -->
+
         <button type="button" class="btn btn-primary" id="2FAValidateButton">
           Validate
         </button>
-        <!-- Bouton standard de fermeture modale -->
+
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Cancel
         </button>
       </div>
     </div>
   </div>
-</div>
+</div> -->
