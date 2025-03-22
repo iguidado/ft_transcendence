@@ -76,8 +76,6 @@ services:
       #  memlock:
       #    soft: -1
       #    hard: -1
-      #   networks:
-      #     - elk-network
     healthcheck:
       test:
         [
@@ -113,10 +111,6 @@ services:
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
     mem_limit: ${KB_MEM_LIMIT}
-      #    networks:
-      #      - elk-network
-      # entrypoint: ["tail", "-f", "/dev/null"]
-      #    command: ["tail", "-f", "/dev/null"]
     healthcheck:
       test:
         [
@@ -176,11 +170,6 @@ volumes:
   logstashdata01:
     driver: local
 
-
-          # networks:
-          #   default:
-          #     name: elastic
-          #     external: false
 
 networks:
   web-network:

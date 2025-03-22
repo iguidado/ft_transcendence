@@ -4,6 +4,7 @@
 # ------------------------
 
 NPM_DEPS=three
+STACK_V=8.7.1
 
 # Build configuration
 # ------------------------
@@ -45,7 +46,6 @@ VITE_CFG=vite.config.js
 # ------------------------------------
 
 #all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) .env
-
 all: $(DEV_CMP) dev .env
 	sed -i "s/\(.*=\).*/\1/" .env.dev
 
@@ -115,12 +115,15 @@ clean:
 	@docker system prune #Clean all dangling entity
 
 
+
 fclean: down prod-down
-	-@docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine docker.elastic.co/kibana/kibana 2> /dev/null
+	@-docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine 2> /dev/null
+	@-docker rmi -f docker.elastic.co/kibana/kibana:$(STACK_V) docker.elastic.co/logstash/logstash:$(STACK_V) docker.elastic.co/elasticsearch/elasticsearch:$(STACK_V) ft_transcendence-setup 2> /dev/null
 	@echo "Deleted every images"
 	@echo "Deleting every volumes"
 	-@docker volume rm $$(docker volume ls -q) 2> /dev/null
 	-rm -rf frontend/dev
+
 
 re: fclean all
 

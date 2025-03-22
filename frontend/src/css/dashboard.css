@@ -1,0 +1,21 @@
+/* Tableau et carte transparent pour le dashboard*/
+
+.semi-transparent-table thead,
+.semi-transparent-table tbody,
+.semi-transparent-table tr,
+.semi-transparent-table th,
+.semi-transparent-table td{
+  background-color: rgba(255, 233, 107, 0.1) !important;
+}
+
+.semi-transparent-card {
+  background-color: rgba(255, 107, 151, 0.7);
+
+  border-radius: 8px;
+
+}
+
+.semi-transparent-card-inside {
+  background-color: rgba(255, 233, 107, 0.2) !important;
+  border-radius: 8px;
+}
