@@ -5,19 +5,15 @@ import { updatePreview } from './updatePreview';
 
 
 const active_presets = new Map()
-active_presets.set(PRESET_TYPE.default, defaultConfig)
+active_presets.set(PRESET_TYPE.players, defaultConfig)
 /**
  * Merges all objects stored as values in the active_presets Map
  * @returns {Object} Merged object containing all properties from active presets
 */
 export function mergeActivePresets() {
-	let mergedConfig = active_presets.get(PRESET_TYPE.default) || {};
-	console.log(active_presets)
+	let mergedConfig = {};
 	active_presets.forEach((presetValue, key) => {
-		if (key != PRESET_TYPE.default) {
-			console.log(key)
 			mergedConfig = mergeConfig(mergedConfig, presetValue)
-		}
 	});
 	return mergedConfig;
 }
@@ -32,40 +28,43 @@ export function appendPresetButtons(ctx, containerId = 'mods-list-container') {
 
   container.innerHTML = '';
 
+  const sections = []
   settingPresets.forEach(preset => {
+	if (sections.indexOf(preset.type) == -1) {
+		sections.push(preset.type)
+		const title = document.createElement('h3')
+		title.textContent = preset.type.charAt(0).toUpperCase() + preset.type.slice(1);
+		container.appendChild(title)
+	}
     const presetBtn = document.createElement('button');
     presetBtn.className = 'mod-btn';
 
     const btnText = document.createElement('p');
     btnText.textContent = preset.name;
 
+	presetBtn.setAttribute('data-preset-type', preset.type);
+  
+	switch (preset.type) {
+	  case PRESET_TYPE.camera:
+		presetBtn.classList.add('camera-preset');
+		break;
+	  case PRESET_TYPE.controls:
+		presetBtn.classList.add('controls-preset');
+		break;
+	  case PRESET_TYPE.players:
+	  default:
+		presetBtn.classList.add('default-preset');
+		break;
+	}
+
     presetBtn.appendChild(btnText);
 
     presetBtn.addEventListener('click', () => {
 		active_presets.set(preset.type, preset.gameConfig)
-        ctx.config = mergeActivePresets();
+        ctx.config = initConfig(mergeActivePresets());
         updatePreview(ctx);
     });
 
     container.appendChild(presetBtn);
-  });
-  const presetButtons = container.querySelectorAll('.mod-btn');
-  presetButtons.forEach((button, index) => {
-    const preset = settingPresets[index];
-
-    button.setAttribute('data-preset-type', preset.type);
-
-    switch (preset.type) {
-      case PRESET_TYPE.camera:
-        button.classList.add('camera-preset');
-        break;
-      case PRESET_TYPE.controls:
-        button.classList.add('controls-preset');
-        break;
-      case PRESET_TYPE.default:
-      default:
-        button.classList.add('default-preset');
-        break;
-    }
   });
 }

@@ -63,8 +63,6 @@ export class Game {
     }
 	
     update() {
-        // Remove or comment out frequent console logs
-        // console.log("TOTO");
         
         this.inputManager.update();
         this.updateBots();
