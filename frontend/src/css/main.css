@@ -19,7 +19,7 @@
 /* Bouton personnalise */
 .my-button {
   position: relative;
-  color: #F2A65E;
+  /* color: #F2A65E; */
   text-decoration: none;
   text-transform: uppercase;
   text-align: center;

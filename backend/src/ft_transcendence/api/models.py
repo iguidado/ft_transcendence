@@ -13,8 +13,8 @@ class CustomeUserManager(UserManager):
 			raise ValueError("You must provide an email address")
 		if not password:
 			raise ValueError("You must provide a password")
-		user = self.model(username=username, **extra_fields)
 		email = self.normalize_email(email)
+		user = self.model(username=username, email=email, **extra_fields)
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
@@ -25,10 +25,11 @@ class CustomeUserManager(UserManager):
 		return self._create_user(username, email, password, **extra_fields)
 	
 	def create_superuser(self, username, email=None, password=None, **extra_fields):
-		if not email:
-			raise ValueError("Superuser must have an email address")
 		extra_fields.setdefault('is_staff', True)
 		extra_fields.setdefault('is_superuser', True)
+		
+		print(f"📧 create_superuser: username={username}, email={email}, password={password}")
+
 		return self._create_user(username, email, password, **extra_fields)
 	
 class User(AbstractBaseUser, PermissionsMixin):
@@ -39,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
 
+	jwt_token = models.CharField(max_length=512, blank=True, null=True)
 	otp = models.CharField(max_length=6, blank=True)
 	otp_expiry_time = models.DateTimeField(blank=True, null=True)
 	is_2fa_enabled = models.BooleanField(default=False)

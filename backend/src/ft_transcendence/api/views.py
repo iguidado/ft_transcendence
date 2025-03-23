@@ -34,15 +34,22 @@ class OTPService:
         )
 
 class LoginView(APIView):
-	permissions_classes = [AllowAny]
+	permission_classes = [AllowAny]
 	serializer_class = LoginSerializer
 
 	@swagger_auto_schema(
-			request_body=LoginSerializer
-	)
+			request_body=LoginSerializer,
+			request_body_example={
+            "email": "test@example.com",
+            "password": "password123"
+			}
+		)
 	def post(self, request):
 		serializer = LoginSerializer(data=request.data)
-		serializer.is_valid(raise_exception=True)
+		if serializer.is_valid():
+			pass
+		else:
+			return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
 
 		email = serializer.validated_data['email']
 		password = serializer.validated_data['password']
@@ -50,7 +57,7 @@ class LoginView(APIView):
 		user = authenticate(request, email=email, password=password)
 
 		if user is not None:
-			user_profile = User.objects.get(user=user)
+			user_profile = user
 
 			if user.is_2fa_enabled:
 				verification_code = OTPService.generate_otp() 
@@ -65,10 +72,11 @@ class LoginView(APIView):
 			django_login(request, user)
 
 			refresh = RefreshToken.for_user(user)
-			access_token = str(refresh.access_token)
+			user.jwt_token = str(refresh.access_token)
+			user.save()
 
 			return Response({
-                    'access_token': access_token,
+                    'access_token': user.jwt_token,
                     'refresh_token': str(refresh),
                     'detail': 'Login successful.'
                 }, status=status.HTTP_200_OK)
@@ -76,7 +84,7 @@ class LoginView(APIView):
 		return Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class VerifyOtpView(APIView):
-	permissions_classes = [AllowAny]
+	permission_classes = [AllowAny]
 	serializer_class = VerifyOtpSerializer
 
 	@swagger_auto_schema(
@@ -84,13 +92,13 @@ class VerifyOtpView(APIView):
 	)
 	def post(self, request,):
 		serializer = VerifyOtpSerializer(data=request.data)
-		serializer.is_valid(raise_exception=True)
-
+		if not serializer.is_valid():
+			return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
 		email = serializer.validated_data['email']
 		otp = serializer.validated_data['otp']
 
 		try:
-			user_profile = User.objects.get(user__email=email)
+			user_profile = User.objects.get(id=user.id)
 			
 			if user_profile.otp == otp and user_profile.otp_expiry_time > timezone.now():
 				user = user_profile.user
@@ -127,7 +135,7 @@ class UserProfileView(APIView):
 class UserListView(ListAPIView):
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserProfileSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
 	
 
 	@swagger_auto_schema(
