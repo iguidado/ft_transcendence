@@ -110,7 +110,6 @@ MIDDLEWARE = [
 ]
 
 PORT = config("FRONT_PORT", default='4000')
-print(f"FRONT_PORT value: {PORT} (type: {type(PORT)})")
 
 CORS_ALLOWED_ORIGINS = [
     f"http://localhost:{PORT}",

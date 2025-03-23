@@ -39,6 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
+	win_ratio = models.FloatField(default=0.0)
 
 	jwt_token = models.CharField(max_length=512, blank=True, null=True)
 	otp = models.CharField(max_length=6, blank=True)
@@ -61,14 +62,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	def	UpdateUserStats(self, boolean : bool):
 		if (isinstance(boolean, bool)==False):
-			print("c'est pas bon et j'ai pas encore gerer les logs erreurs")
+			print("Error: boolean must be a boolean")
 		else:
 			if(boolean==True):
 				self.wins += 1
 			else:
 				self.looses += 1
+			self.win_ratio = round((self.wins / (self.wins + self.looses)) * 100, 2)
 			self.save()
-
 
 	class Meta:
 		verbose_name = 'User'

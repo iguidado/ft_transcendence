@@ -1,5 +1,5 @@
 from .models import User
-from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyOtpSerializer, TwoFAUpdateSerializer
+from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyOtpSerializer, TwoFAUpdateSerializer, LeaderboardSerializer
 from datetime import timedelta
 from django.utils import timezone
 from rest_framework import permissions, viewsets, status
@@ -125,7 +125,7 @@ class VerifyOtpView(APIView):
 
 
 class UserProfileView(APIView):
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
 
 	@swagger_auto_schema(responses={200: UserProfileSerializer()})
 	def get(self, request, *args, **kwargs):
@@ -150,7 +150,7 @@ class UserListView(ListAPIView):
 class UserProfileByUserNameView(RetrieveAPIView):
 	queryset = User.objects.all()
 	serializer_class = UserProfileSerializer
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
 	lookup_field = "username"
 
 class RegisterView(APIView):
@@ -168,7 +168,7 @@ class RegisterView(APIView):
 
 
 class UserDisplayNameUpdateView(APIView):
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
 	serializer_class = UpdateDisplayNameSerializer
 
 
@@ -186,7 +186,7 @@ class UserDisplayNameUpdateView(APIView):
 
 
 class TwoFAUpdateView(APIView):
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
 	serializer_class = TwoFAUpdateSerializer
 
 	@swagger_auto_schema(request_body=UpdateDisplayNameSerializer)
@@ -201,7 +201,7 @@ class TwoFAUpdateView(APIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserAvatarUpdateView(APIView):
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
 	serializer_class = UpdateAvatarSerializer
 
 
@@ -227,12 +227,13 @@ class UserAvatarUpdateView(APIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateMatchHistoricView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = UpdateUserHistoricSerializer
 
     @swagger_auto_schema(
+			operation_description="Create a match and update the user statistics",
         request_body=UpdateUserHistoricSerializer,
-        responses={201: "Match créé et statistique mise à jour", 400: "Requête invalide"}
+        responses={201: "Match created and stats updated", 400: "Invalid request"}
     )
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -240,13 +241,13 @@ class CreateMatchHistoricView(APIView):
         if serializer.is_valid():
             match = serializer.save()
             return Response({
-                "message": "Match créé et statistique mise à jour",
+                "message": "Match created and stats updated",
                 "match": UpdateUserHistoricSerializer(match).data
             }, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FriendListView(APIView):
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
 
 	def get(self, request, *args, **kwargs):
 		user = request.user
@@ -255,9 +256,11 @@ class FriendListView(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 	
 class AddFriendView(APIView):
-	permission_classes = [IsAuthenticated]
+	permission_classes = [AllowAny]
 
-	@swagger_auto_schema(request_body=AddFriendSerializer)
+	@swagger_auto_schema(
+			operation_description="Add a friend by username",
+			request_body=AddFriendSerializer)
 	def post(self, request, *args, **kwargs):
 		user = request.user
 		username_to_add = request.data.get('username')
@@ -271,3 +274,15 @@ class AddFriendView(APIView):
 
 		user.friends.add(friend)
 		return Response({"detail": "Friend added successfully."}, status=status.HTTP_200_OK)
+
+class LeaderBoardView(APIView):
+	permission_classes = [AllowAny]
+
+	@swagger_auto_schema(
+			operation_description="Retrieve the top 10 users based on win ratio",
+			responses={200: LeaderboardSerializer(many=True)}
+	)
+	def get(self, request, *args, **kwargs):
+		users = User.objects.all().order_by('-win_ratio')[:10]
+		serializer = LeaderboardSerializer(users, many=True)
+		return Response(serializer.data, status=status.HTTP_200_OK)

@@ -17,12 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView
 from django.urls import path, re_path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView, LoginView
+from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView, LoginView, LeaderBoardView
 
 
 
@@ -58,6 +58,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),    
 	
 	#GET
+    path('api/leaderboard/', LeaderBoardView.as_view(), name='leaderboard'),
     path('api/user/profile/', UserProfileView.as_view(), name='user_profile'),
     path('api/users/', UserListView.as_view(), name='users_list'),
     path('api/user/<str:username>/profile/', UserProfileByUserNameView.as_view(), name='user_profile_by_id'),
