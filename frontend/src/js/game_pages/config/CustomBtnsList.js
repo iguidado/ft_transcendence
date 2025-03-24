@@ -35,11 +35,11 @@ export function CustomBtnsList(ctx) {
 			defaultValue: ctx.config.camera.polar.phi,
 			minusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.phiDown())
-				return ctx.game.config.camera.polar.phi
+				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.phi
 			},
 			plusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.phiUp())
-				return ctx.game.config.camera.polar.phi
+				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.phi
 			}
 		},
 		{
@@ -51,7 +51,7 @@ export function CustomBtnsList(ctx) {
 			},
 			plusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.thetaUp())
-				return ctx.game.config.camera.polar.theta
+				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.theta
 			}
 		},
 		{
@@ -63,7 +63,7 @@ export function CustomBtnsList(ctx) {
 			},
 			plusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpX())
-				return ctx.game.config.camera.polar.rotateX
+				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateX
 			}
 		},
 		{
@@ -71,11 +71,11 @@ export function CustomBtnsList(ctx) {
 			defaultValue: ctx.config.camera.polar.rotateY,
 			minusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateDownY())
-				return ctx.game.config.camera.polar.rotateY
+				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateY
 			},
 			plusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpY())
-				return ctx.game.config.camera.polar.rotateY
+				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateY
 			}
 		},
 		{
@@ -83,11 +83,11 @@ export function CustomBtnsList(ctx) {
 			defaultValue: ctx.config.camera.polar.rotateZ,
 			minusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateDownZ())
-				return ctx.game.config.camera.polar.rotateZ
+				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateZ
 			},
 			plusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpZ())
-				return ctx.game.config.camera.polar.rotateZ
+				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateZ
 			}
 		}
 	]

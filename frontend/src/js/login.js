@@ -16,10 +16,10 @@ export function loadLoginPage() {
     });
     
   // -- Écouteur sur le bouton “CONNECT WITH 42” (au besoin) --
-  document.getElementById("connectButton").addEventListener("click", () => {
-    console.log("Connexion via 42 OAuth (à implémenter).");
-    // plus tard => loadDashboard() ou autre
-  });
+//   document.getElementById("connectButton").addEventListener("click", () => {
+//     console.log("Connexion via 42 OAuth (à implémenter).");
+//     // plus tard => loadDashboard() ou autre
+//   });
 
 
 // -- Écouteur sur le bouton “REGISTER” --

@@ -12,7 +12,7 @@ active_presets.set(PRESET_TYPE.players, defaultConfig)
 */
 export function mergeActivePresets() {
 	let mergedConfig = {};
-	active_presets.forEach((presetValue, key) => {
+	active_presets.forEach(presetValue => {
 			mergedConfig = mergeConfig(mergedConfig, presetValue)
 	});
 	return mergedConfig;
