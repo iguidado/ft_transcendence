@@ -49,22 +49,20 @@ export class CameraManager {
             return this.config.polar.radius;
         }
         const box = this.createGameBoundingBox();
-        const rotatedBox = this.getRotatedBoundingBox(box);
+        // const rotatedBox = this.getRotatedBoundingBox(box);
         
         // Debug the rotated box
-        this.debugRotatedBox(rotatedBox);
+        this.debugRotatedBox(box);
         
         // Pass phi and theta to calculateOptimalRadius
-        return this.calculateOptimalRadius(rotatedBox, this.config.polar.phi, this.config.polar.theta);
+        return this.calculateOptimalRadius(box, this.config.polar.phi, this.config.polar.theta);
     }
 
     createGameBoundingBox() {
-        const boxGeometry = new THREE.BoxGeometry(
-            this.config.board.width + 2 * this.config.paddles.width,
-            this.config.board.height + 2 * this.config.board.wallWidth,
-            this.config.board.depth
-        );
-        return new THREE.Box3().setFromObject(new THREE.Mesh(boxGeometry));
+        // Créer une nouvelle Box3 à partir du boardGroup du BoardManager
+        const boardGroup = this.game.boardManager.boardGroup;
+        const box = new THREE.Box3().setFromObject(boardGroup);
+        return box;
     }
 
     getRotatedBoundingBox(box) {
@@ -310,35 +308,20 @@ export class CameraManager {
     }
 
     debugRotatedBox(rotatedBox) {
-        // Get box dimensions and center
-        const size = new THREE.Vector3();
-        rotatedBox.getSize(size);
-        const center = new THREE.Vector3();
-        rotatedBox.getCenter(center);
+        // Remove any existing debug box
+        const existingHelper = this.game.scene.getObjectByName('debugBox');
+        if (existingHelper) {
+            this.game.scene.remove(existingHelper);
+        }
 
-        // Extract corner positions
-        const corners = [
-            new THREE.Vector3(rotatedBox.min.x, rotatedBox.min.y, rotatedBox.min.z),
-            new THREE.Vector3(rotatedBox.min.x, rotatedBox.min.y, rotatedBox.max.z),
-            new THREE.Vector3(rotatedBox.min.x, rotatedBox.max.y, rotatedBox.min.z),
-            new THREE.Vector3(rotatedBox.min.x, rotatedBox.max.y, rotatedBox.max.z),
-            new THREE.Vector3(rotatedBox.max.x, rotatedBox.min.y, rotatedBox.min.z),
-            new THREE.Vector3(rotatedBox.max.x, rotatedBox.min.y, rotatedBox.max.z),
-            new THREE.Vector3(rotatedBox.max.x, rotatedBox.max.y, rotatedBox.min.z),
-            new THREE.Vector3(rotatedBox.max.x, rotatedBox.max.y, rotatedBox.max.z)
-        ];
-
-        // Display detailed information
-        console.group('RotatedBox Debug Info');
-        console.log('Box min:', rotatedBox.min);
-        console.log('Box max:', rotatedBox.max);
-        console.log('Box size:', size);
-        console.log('Box center:', center);
-        console.log('Box corners:', corners);
-        console.log('Phi:', this.config.polar.phi);
-        console.log('Theta:', this.config.polar.theta);
-        console.groupEnd();
+        // Create a Box3Helper to visualize the bounding box
+        const helper = new THREE.Box3Helper(rotatedBox, 0xff0000);
+        helper.name = 'debugBox';
+        helper.material.depthTest = false;
+        helper.material.transparent = true;
+        helper.material.opacity = 0.5;
         
-        return rotatedBox; // Return for chaining
+        // Add the helper to the scene
+        this.game.scene.add(helper);
     }
 }
