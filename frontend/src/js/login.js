@@ -1,4 +1,5 @@
 import { loginRequest } from "./api/routes/loginRequest";
+import { handleRegistration } from './register.js';
 
 function waitLoginAvailable()
 {
@@ -32,7 +33,6 @@ export async function loadLoginPage() {
     // -- Écouteur sur le formulaire de login --
     const loginForm = document.getElementById("loginForm");
     if (loginForm){
-      console.log("hello");
       loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = document.getElementById("emailInput").value;
@@ -115,7 +115,7 @@ export async function loadLoginPage() {
   if (registerBtn) {
     registerBtn.addEventListener("click", () => {
       console.log("Clic sur le bouton REGISTER");
-      showRegister(); 
+      // showRegister(); 
     });
 }
 
@@ -133,7 +133,9 @@ export async function loadLoginPage() {
   if (backToLoginBtn) {
     backToLoginBtn.addEventListener("click", () => {
       console.log("Clic sur le bouton BACK TO LOGIN");
-      showLogin();
+      handleRegistration();
+
+      // showLogin();
     });
   }
 }
@@ -143,6 +145,7 @@ export async function loadLoginPage() {
 export function showRegister() {
   document.getElementById("loginSection").style.display = "none";
   document.getElementById("registerSection").style.display = "block";
+  handleRegistration();
 }
 
 export function showLogin() {
