@@ -3,15 +3,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    min-height: 50vh;
+    /* min-height: 50vh; */
     padding-top: 50px;
     width: 50vw;
-    max-width: 300px;
-    margin: 1rem auto;
+    max-width: 350px;
     background-color: rgb(249, 78, 155, 0.6); 
     padding: 1rem;
     border: 7px dashed #422445;
     gap: 1.2rem;
+    margin: auto;
 }
 
 .form-container__title {
@@ -26,8 +26,8 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    width: 100%;
-    gap: 0.5rem;
+    width: 70%;
+    gap: 0.4rem;
 }
 
 .form-container__label {

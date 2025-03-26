@@ -1,0 +1,35 @@
+.profile-container{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: flex-start;
+    padding-top: 50px;
+    width: 50vw;
+    height: auto;
+    margin: 1rem auto;
+    background-color: rgba(250, 206, 110, 0.6); 
+    padding: 1rem;
+    border: 6px #422445;
+    border-style: groove double;
+    gap: 1.2rem;
+}
+
+.profile-container__title{
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fd9b5d;
+    text-shadow: #422445 2px 2px;
+}
+
+.profile-container__avatar{
+    position: relative;
+    display: flex;
+    border: 1px dashed #422445;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: 10%;
+    gap: 0.4rem;
+}
