@@ -30,18 +30,18 @@ export async function handleRegistration() {
       e.preventDefault();
       
       // Get field values
-      const login = registerForm.querySelector('input[placeholder="Choose your login"]').value;
+      const username = registerForm.querySelector('input[placeholder="Choose your login"]').value;
       const email = registerForm.querySelector('input[placeholder="Enter your mail"]').value;
       const password = registerForm.querySelector('input[placeholder="Choose your password"]').value;
-      const confirmPassword = registerForm.querySelector('input[placeholder="Confirm your password"]').value;
+      const confirm_password = registerForm.querySelector('input[placeholder="Confirm your password"]').value;
       
       // Client-side data validation
-      if (!login || !email || !password || !confirmPassword) {
+      if (!username || !email || !password || !confirm_password) {
         showError("All fields are required");
         return;
       }
       
-      if (password !== confirmPassword) {
+      if (password !== confirm_password) {
         showError("Passwords do not match");
         return;
       }
@@ -54,7 +54,7 @@ export async function handleRegistration() {
       
     //   try {
         // Call the API function for registration
-        registerRequest({ login, email, password , confirmPassword });
+        registerRequest({ username, email, password , confirm_password });
         
         // console.log("Registration successful:", result);
         
