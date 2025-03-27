@@ -1,4 +1,4 @@
-import { load_page } from "./router";
+import { load_page } from "./router.js";
 
 function toggleLayerPair(event){
     // console.log('toggleLayerPair:', event);

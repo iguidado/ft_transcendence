@@ -1,7 +1,7 @@
-import { initConfig, mergeConfig } from '../pong-game/src/config/initConfig';
-import { defaultConfig } from '../pong-game/src/config/preset/defaultConfig';
-import { settingPresets, PRESET_TYPE } from './config/settingPresets';
-import { updatePreview } from './updatePreview';
+import { initConfig, mergeConfig } from '../pong-game/src/config/initConfig.js';
+import { defaultConfig } from '../pong-game/src/config/preset/defaultConfig.js';
+import { settingPresets, PRESET_TYPE } from './config/settingPresets.js';
+import { updatePreview } from './updatePreview.js';
 
 
 const active_presets = new Map()

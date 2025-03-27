@@ -1,5 +1,5 @@
-import soloControls from "../camera/soloCameraControls";
-import soloPaddlesControls from "../paddles/soloPaddlesControls";
+import soloControls from "../camera/soloCameraControls.js";
+import soloPaddlesControls from "../paddles/soloPaddlesControls.js";
 
 export const soloPreset = {
 	camera: soloControls,
