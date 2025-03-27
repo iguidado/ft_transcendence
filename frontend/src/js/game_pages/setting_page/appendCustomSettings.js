@@ -15,7 +15,8 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
       title, 
       defaultValue,
       minusCallback, 
-      plusCallback 
+      plusCallback,
+      isKeybind 
     } = setting
 
     settingsValues[title] = defaultValue
@@ -34,89 +35,109 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
     const valueContainer = document.createElement('div')
     valueContainer.className = 'value-container'
 
-    const minusBtn = document.createElement('div')
-    minusBtn.className = 'minus-btn'
+    if (isKeybind) {
+        // Pour les keybinds, créer un bouton unique
+        const changeKeyBtn = document.createElement('button')
+        changeKeyBtn.className = 'keybind-btn'
+        changeKeyBtn.textContent = defaultValue
+        
+        changeKeyBtn.addEventListener('click', async () => {
+            const newValue = await plusCallback()
+            changeKeyBtn.textContent = newValue
+            settingsValues[title] = newValue
+        })
 
-    const minusBar = document.createElement('div')
-    minusBar.className = 'btn-bar minus-bar'
+        valueContainer.appendChild(changeKeyBtn)
+    } else {
+        // Code existant pour les autres types de paramètres
+        const minusBtn = document.createElement('div')
+        minusBtn.className = 'minus-btn'
 
-    minusBtn.appendChild(minusBar)
+        const minusBar = document.createElement('div')
+        minusBar.className = 'btn-bar minus-bar'
 
-    const valueDisplay = document.createElement('p')
-	valueDisplay.className = 'value'
-	if (!isNaN(defaultValue)) {
-		valueDisplay.textContent = Math.round(defaultValue * 100) / 100
-	} else {
-		valueDisplay.textContent = defaultValue
-	}
+        minusBtn.appendChild(minusBar)
 
-    const plusBtn = document.createElement('div')
-    plusBtn.className = 'plus-btn'
-
-    const plusHorizontalBar = document.createElement('div')
-    plusHorizontalBar.className = 'btn-bar horizontal-bar'
-
-    const plusVerticalBar = document.createElement('div')
-    plusVerticalBar.className = 'btn-bar vertical-bar'
-
-    plusBtn.appendChild(plusHorizontalBar)
-    plusBtn.appendChild(plusVerticalBar)
-
-    let minusInterval
-    let plusInterval
-    const intervalSpeed = 100
-
-    minusBtn.addEventListener('mousedown', () => {
-        const decreaseValue = () => {
-            const currentValue = settingsValues[title]
-            settingsValues[title] = minusCallback(currentValue)
-            // Format to 2 decimal places if it's a number
-            if (!isNaN(settingsValues[title])) {
-                valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
-            } else {
-                valueDisplay.textContent = settingsValues[title]
-            }
+        const valueDisplay = document.createElement('p')
+        valueDisplay.className = 'value'
+        if (!isNaN(defaultValue)) {
+            valueDisplay.textContent = Math.round(defaultValue * 100) / 100
+        } else {
+            valueDisplay.textContent = defaultValue
         }
 
-        decreaseValue()
-        minusInterval = setInterval(decreaseValue, intervalSpeed)
-    })
+        const plusBtn = document.createElement('div')
+        plusBtn.className = 'plus-btn'
 
-    minusBtn.addEventListener('mouseup', () => {
-      clearInterval(minusInterval)
-    })
+        const plusHorizontalBar = document.createElement('div')
+        plusHorizontalBar.className = 'btn-bar horizontal-bar'
 
-    minusBtn.addEventListener('mouseleave', () => {
-      clearInterval(minusInterval)
-    })
+        const plusVerticalBar = document.createElement('div')
+        plusVerticalBar.className = 'btn-bar vertical-bar'
 
-    plusBtn.addEventListener('mousedown', () => {
-        const increaseValue = () => {
-            const currentValue = settingsValues[title]
-            settingsValues[title] = plusCallback(currentValue)
-            // Format to 2 decimal places if it's a number
-            if (!isNaN(settingsValues[title])) {
-                valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
-            } else {
-                valueDisplay.textContent = settingsValues[title]
+        plusBtn.appendChild(plusHorizontalBar)
+        plusBtn.appendChild(plusVerticalBar)
+
+        let minusInterval
+        let plusInterval
+        const intervalSpeed = 100
+
+        minusBtn.addEventListener('mousedown', () => {
+            const decreaseValue = () => {
+                const currentValue = settingsValues[title]
+                minusCallback(currentValue).then(res => {
+                    settingsValues[title] = res
+                    // Format to 2 decimal places if it's a number
+                    if (!isNaN(settingsValues[title])) {
+                        valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
+                    } else {
+                        valueDisplay.textContent = settingsValues[title]
+                    }
+                })
             }
-        }
 
-        increaseValue()
-        plusInterval = setInterval(increaseValue, intervalSpeed)
-    })
+            decreaseValue()
+            minusInterval = setInterval(decreaseValue, intervalSpeed)
+        })
 
-    plusBtn.addEventListener('mouseup', () => {
-      clearInterval(plusInterval)
-    })
+        minusBtn.addEventListener('mouseup', () => {
+          clearInterval(minusInterval)
+        })
 
-    plusBtn.addEventListener('mouseleave', () => {
-      clearInterval(plusInterval)
-    })
+        minusBtn.addEventListener('mouseleave', () => {
+          clearInterval(minusInterval)
+        })
 
-    valueContainer.appendChild(minusBtn)
-    valueContainer.appendChild(valueDisplay)
-    valueContainer.appendChild(plusBtn)
+        plusBtn.addEventListener('mousedown', () => {
+            const increaseValue = () => {
+                const currentValue = settingsValues[title]
+                plusCallback(currentValue).then(res => {
+                    settingsValues[title] = res
+                    // Format to 2 decimal places if it's a number
+                    if (!isNaN(settingsValues[title])) {
+                        valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
+                    } else {
+                        valueDisplay.textContent = settingsValues[title]
+                    }
+                })
+            }
+
+            increaseValue()
+            plusInterval = setInterval(increaseValue, intervalSpeed)
+        })
+
+        plusBtn.addEventListener('mouseup', () => {
+          clearInterval(plusInterval)
+        })
+
+        plusBtn.addEventListener('mouseleave', () => {
+          clearInterval(plusInterval)
+        })
+
+        valueContainer.appendChild(minusBtn)
+        valueContainer.appendChild(valueDisplay)
+        valueContainer.appendChild(plusBtn)
+    }
 
     settingContainer.appendChild(titleContainer)
     settingContainer.appendChild(valueContainer)

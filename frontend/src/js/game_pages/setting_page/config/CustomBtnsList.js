@@ -1,4 +1,19 @@
 import { updatePreview } from "../updatePreview";
+import { createKeyCaptureOverlay } from '../createKeyCaptureOverlay';
+
+function captureKey(callback) {
+    const overlay = createKeyCaptureOverlay();
+    document.body.appendChild(overlay);
+
+    const handleKeyDown = (e) => {
+        e.preventDefault();
+        document.body.removeChild(overlay);
+        document.removeEventListener('keydown', handleKeyDown);
+        callback(e.key);
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+}
 
 export function CustomBtnsList(ctx) {
 	return [
@@ -78,7 +93,7 @@ export function CustomBtnsList(ctx) {
 			minusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateDownY())
 				ctx.config.camera.polar.rotateY = ctx.game.config.camera.polar.rotateY
-				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateY
+				return ctx.game.config.camera.polar.rotateY
 			},
 			plusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpY())
@@ -92,7 +107,7 @@ export function CustomBtnsList(ctx) {
 			minusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateDownZ())
 				ctx.config.camera.polar.rotateZ = ctx.game.config.camera.polar.rotateZ
-				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateZ
+				return ctx.game.config.camera.polar.rotateZ
 			},
 			plusCallback: () => {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpZ())
@@ -114,5 +129,71 @@ export function CustomBtnsList(ctx) {
 				return ctx.config.camera.boundingBoxMargin
 			}
 		},
+		{
+			title: 'Left Paddle Up',
+			defaultValue: ctx.config.paddles.controls.keys.leftUp,
+			isKeybind: true,
+			minusCallback: null,
+			plusCallback: () => {
+				return new Promise((resolve) => {
+					captureKey((key) => {
+						ctx.config.paddles.controls.keys.leftUp = key;
+						updatePreview(ctx);
+						resolve(key);
+					});
+				});
+			}
+		},
+		{
+			title: 'Left Paddle Down',
+			defaultValue: ctx.config.paddles.controls.keys.leftDown,
+			isKeybind: true,
+			minusCallback: () => {
+				return ctx.config.paddles.controls.keys.leftDown;
+			},
+			plusCallback: () => {
+				return new Promise((resolve) => {
+					captureKey((key) => {
+						ctx.config.paddles.controls.keys.leftDown = key;
+						updatePreview(ctx);
+						resolve(key);
+					});
+				});
+			}
+		},
+		{
+			title: 'Right Paddle Up',
+			defaultValue: ctx.config.paddles.controls.keys.rightUp,
+			isKeybind: true,
+			minusCallback: () => {
+				return ctx.config.paddles.controls.keys.rightUp;
+			},
+			plusCallback: () => {
+				return new Promise((resolve) => {
+					captureKey((key) => {
+						ctx.config.paddles.controls.keys.rightUp = key;
+						updatePreview(ctx);
+						resolve(key);
+					});
+				});
+			}
+		},
+		{
+			title: 'Right Paddle Down',
+			defaultValue: ctx.config.paddles.controls.keys.rightDown,
+			isKeybind: true,
+			minusCallback: () => {
+				return ctx.config.paddles.controls.keys.rightDown;
+			},
+			plusCallback: () => {
+				return new Promise((resolve) => {
+					captureKey((key) => {
+						ctx.config.paddles.controls.keys.rightDown = key;
+						updatePreview(ctx);
+						resolve(key);
+					});
+				});
+			}
+		}
 	]
 }
