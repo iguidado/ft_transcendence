@@ -49,7 +49,7 @@ export class CameraManager {
 			return this.config.polar.radius;
 		}
 		const box = this.createGameBoundingBox();
-		this.debugRotatedBox(box);
+		// this.debugRotatedBox(box);
 		return this.calculateOptimalRadius(box);
 	}
 

@@ -14,7 +14,7 @@ export class RendererManager {
             alpha: true
         });
         
-        this.renderer.setClearColor(0xF03DAA, 0.5);
+        this.renderer.setClearColor(0xF03DAA, 0);
         
         // Get initial dimensions
         const width = this.container.clientWidth || 1;  // Prevent zero width
