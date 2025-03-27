@@ -1,15 +1,16 @@
 import * as THREE from "three"
 
 export default {
+	boundingBoxMargin: 20,
 	polar: {
-		"rotateX": 0,
-		"rotateY": 0,
-		"rotateZ": 0,
-		"phi": 0,
-		"theta": 0,
-		// "radius": 92,
-		"useCalculatedRadius": true,
-		"calculatedRadiusMargin": 1
+		rotateX: 0,
+		rotateY: 0,
+		rotateZ: 0,
+		phi: 0,
+		theta: 0,
+		// radius: 92,
+		useCalculatedRadius: true,
+		calculatedRadiusMargin: 1,
 	},
 	controls: {
 		enabled: false,

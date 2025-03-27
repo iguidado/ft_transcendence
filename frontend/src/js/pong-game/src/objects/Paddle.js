@@ -14,17 +14,17 @@ export class Paddle {
         const geometry = new THREE.BoxGeometry(width, height, depth);
         const material = new THREE.MeshBasicMaterial({ color: color });
         this.mesh = new THREE.Mesh(geometry, material);
-        this.mesh.position.x = this.config.board.width/2 * (isLeft ? -1 : 1);
+        this.mesh.position.x = (this.config.board.width/2 - (width/2)) * (isLeft ? -1 : 1);
         this.mesh.position.y = 0;
         this.context.scene.add(this.mesh);
     }
 
     get maxY() {
-        return this.config.board.height/2 - this.config.paddles.length/2 - this.config.board.wallWidth;
+        return this.config.board.height/2 - this.config.paddles.length/2 - this.config.board.wallWidth/2;
     }
 
     get minY() {
-        return -this.config.board.height/2 + this.config.paddles.length/2 + this.config.board.wallWidth;
+        return -this.config.board.height/2 + this.config.paddles.length/2 + this.config.board.wallWidth/2;
     }
 
 	get speed() {

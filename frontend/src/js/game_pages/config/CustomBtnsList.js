@@ -89,6 +89,20 @@ export function CustomBtnsList(ctx) {
 				ctx.game.viewManager.views.forEach(({cameraManager}) => cameraManager.rotateUpZ())
 				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateZ
 			}
-		}
+		},
+		{
+			title: 'Camera margin',
+			defaultValue: ctx.config.camera.boundingBoxMargin,
+			minusCallback: () => {
+				ctx.config.camera.boundingBoxMargin -= 1
+				updatePreview(ctx)
+				return ctx.config.camera.boundingBoxMargin
+			},
+			plusCallback: () => {
+				ctx.config.camera.boundingBoxMargin += 1
+				updatePreview(ctx)
+				return ctx.config.camera.boundingBoxMargin
+			}
+		},
 	]
 }
