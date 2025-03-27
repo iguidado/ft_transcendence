@@ -45,36 +45,52 @@ export class CameraManager {
     }
 
     calculateRadius() {
-        if (!this.config.polar.useCalculatedRadius) {
-            return this.config.polar.radius;
-        }
-        const box = this.createGameBoundingBox();
-        // const rotatedBox = this.getRotatedBoundingBox(box);
-        
-        // Debug the rotated box
-        this.debugRotatedBox(box);
-        
-        // Pass phi and theta to calculateOptimalRadius
-        return this.calculateOptimalRadius(box, this.config.polar.phi, this.config.polar.theta);
-    }
+		if (!this.config.polar.useCalculatedRadius) {
+			return this.config.polar.radius;
+		}
+		const box = this.createGameBoundingBox();
+		this.debugRotatedBox(box);
+		return this.calculateOptimalRadius(box);
+	}
 
     createGameBoundingBox() {
-        // Créer une nouvelle Box3 à partir du boardGroup du BoardManager
-        const boardGroup = this.game.boardManager.boardGroup;
-        const box = new THREE.Box3().setFromObject(boardGroup);
-        return box;
-    }
+		const boardGroup = this.game.boardManager.boardGroup;
+		const box = new THREE.Box3().setFromObject(boardGroup);
+		const margin = this.config.boundingBoxMargin || 0;
+		const expandVector = new THREE.Vector3(margin, margin, margin);
+		box.expandByVector(expandVector);
+		return box;
+	}
 
-    getRotatedBoundingBox(box) {
-        const rotationMatrix = new THREE.Matrix4().makeRotationFromEuler(
-            new THREE.Euler(
-                this.config.polar.rotateX,
-                this.config.polar.rotateY,
-                this.config.polar.rotateZ,
-                'XYZ'
-            )
-        );
+    // getRotatedBoundingBox(box) {
+    //     const rotationMatrix = new THREE.Matrix4().makeRotationFromEuler(
+    //         new THREE.Euler(
+    //             this.config.polar.rotateX,
+    //             this.config.polar.rotateY,
+    //             this.config.polar.rotateZ,
+    //             'XYZ'
+    //         )
+    //     );
 
+    //     const corners = [
+    //         new THREE.Vector3(box.min.x, box.min.y, box.min.z),
+    //         new THREE.Vector3(box.min.x, box.min.y, box.max.z),
+    //         new THREE.Vector3(box.min.x, box.max.y, box.min.z),
+    //         new THREE.Vector3(box.min.x, box.max.y, box.max.z),
+    //         new THREE.Vector3(box.max.x, box.min.y, box.min.z),
+    //         new THREE.Vector3(box.max.x, box.min.y, box.max.z),
+    //         new THREE.Vector3(box.max.x, box.max.y, box.min.z),
+    //         new THREE.Vector3(box.max.x, box.max.y, box.max.z),
+    //     ];
+
+    //     corners.forEach(corner => corner.applyMatrix4(rotationMatrix));
+    //     const rotatedBox = new THREE.Box3();
+    //     corners.forEach(corner => rotatedBox.expandByPoint(corner));
+    //     return rotatedBox;
+    // }
+
+    calculateOptimalRadius(box) {
+        // Get the corners of the box
         const corners = [
             new THREE.Vector3(box.min.x, box.min.y, box.min.z),
             new THREE.Vector3(box.min.x, box.min.y, box.max.z),
@@ -86,97 +102,27 @@ export class CameraManager {
             new THREE.Vector3(box.max.x, box.max.y, box.max.z),
         ];
 
-        corners.forEach(corner => corner.applyMatrix4(rotationMatrix));
-        const rotatedBox = new THREE.Box3();
-        corners.forEach(corner => rotatedBox.expandByPoint(corner));
-        return rotatedBox;
-    }
-
-    calculateOptimalRadius(rotatedBox, phi, theta) {
-        const size = new THREE.Vector3();
-        rotatedBox.getSize(size);
-        const center = new THREE.Vector3();
-        rotatedBox.getCenter(center);
-
-        // Create a camera direction vector based on phi and theta
-        const cameraDirection = new THREE.Vector3(
-            Math.sin(theta) * Math.cos(phi),
-            Math.sin(phi),
-            Math.cos(theta) * Math.cos(phi)
-        ).normalize();
-
-        // Calculate vertical and horizontal FOVs
+        // Calculate FOVs
         const vFov = this.config.fov * Math.PI / 180;
         const aspect = this.camera.aspect;
         const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
 
-        // Calculate corners of the bounding box
-        const halfWidth = size.x / 2;
-        const halfHeight = size.y / 2;
-        const halfDepth = size.z / 2;
-        
-        const corners = [
-            new THREE.Vector3(center.x - halfWidth, center.y - halfHeight, center.z - halfDepth),
-            new THREE.Vector3(center.x - halfWidth, center.y - halfHeight, center.z + halfDepth),
-            new THREE.Vector3(center.x - halfWidth, center.y + halfHeight, center.z - halfDepth),
-            new THREE.Vector3(center.x - halfWidth, center.y + halfHeight, center.z + halfDepth),
-            new THREE.Vector3(center.x + halfWidth, center.y - halfHeight, center.z - halfDepth),
-            new THREE.Vector3(center.x + halfWidth, center.y - halfHeight, center.z + halfDepth),
-            new THREE.Vector3(center.x + halfWidth, center.y + halfHeight, center.z - halfDepth),
-            new THREE.Vector3(center.x + halfWidth, center.y + halfHeight, center.z + halfDepth)
-        ];
+        let maxRadius = 0;
 
-        // Create view plane perpendicular to camera direction
-        const viewPlaneNormal = cameraDirection.clone();
-        const viewPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(
-            viewPlaneNormal, 
-            new THREE.Vector3(0, 0, 0)
-        );
+        // Check each corner
+        corners.forEach(corner => {
+            // Calculate required radius for this corner
+            const heightRadius = Math.abs(corner.y) / Math.tan(vFov / 2);
+            const widthRadius = Math.abs(corner.x) / Math.tan(hFov / 2);
+            const depthRadius = Math.abs(corner.z);
 
-        // Project all corners onto the view plane
-        const projectedPoints = corners.map(corner => {
-            const projected = new THREE.Vector3();
-            viewPlane.projectPoint(corner, projected);
-            return projected;
+            // Get maximum radius needed for this corner
+            const cornerRadius = Math.max(heightRadius, widthRadius, depthRadius);
+            maxRadius = Math.max(maxRadius, cornerRadius);
         });
 
-        // Find the right and up vectors on the view plane
-        const upVector = new THREE.Vector3(0, 1, 0);
-        // If camera is nearly vertical, use a different up reference
-        if (Math.abs(Math.cos(phi)) < 0.1) {
-            upVector.set(0, 0, 1);
-        }
-        
-        const rightVector = new THREE.Vector3().crossVectors(upVector, viewPlaneNormal).normalize();
-        // Recalculate the up vector to ensure it's perpendicular to both the view direction and right vector
-        upVector.crossVectors(viewPlaneNormal, rightVector).normalize();
-
-        // Calculate 2D bounds of the projected points on the view plane
-        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-        
-        projectedPoints.forEach(point => {
-            const projectedX = point.dot(rightVector);
-            const projectedY = point.dot(upVector);
-            
-            minX = Math.min(minX, projectedX);
-            maxX = Math.max(maxX, projectedX);
-            minY = Math.min(minY, projectedY);
-            maxY = Math.max(maxY, projectedY);
-        });
-
-        // Calculate required distances
-        const projectedWidth = maxX - minX;
-        const projectedHeight = maxY - minY;
-        
-        // Calculate required radius for vertical and horizontal FOVs
-        const radiusForHeight = (projectedHeight / 2) / Math.tan(vFov / 2);
-        const radiusForWidth = (projectedWidth / 2) / Math.tan(hFov / 2);
-        
-        // Get the maximum radius to ensure everything is visible
-        const requiredRadius = Math.max(radiusForHeight, radiusForWidth);
-        
-        // Apply user-configured margin
-        return requiredRadius * this.config.polar.calculatedRadiusMargin;
+        // Apply margin
+        return maxRadius * this.config.polar.calculatedRadiusMargin;
     }
 
     positionCamera(radius) {
@@ -213,7 +159,6 @@ export class CameraManager {
     rotateUpX() {
         this.config.polar.rotateX += this.rotationSpeed
         this.init()
-		return this
 		return this
 	}
 

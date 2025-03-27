@@ -3,5 +3,5 @@ import soloPaddlesControls from "../paddles/soloPaddlesControls";
 
 export const soloPreset = {
 	camera: soloControls,
-	paddle: soloPaddlesControls
+	paddles: soloPaddlesControls
 }
