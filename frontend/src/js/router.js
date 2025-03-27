@@ -1,6 +1,6 @@
-import { initBuildButtons } from "./build";
-import { showLogin } from "./login";
-import { loadGame } from "./loadGame";
+import { initBuildButtons } from "./build.js";
+import { showLogin } from "./login.js";
+import { loadGame } from "./loadGame.js";
 
 async function fetchHTMLContent(url) {
     console.log('fetchHTMLContent:', url);

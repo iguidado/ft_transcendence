@@ -1,4 +1,4 @@
-import { updatePreview } from "../updatePreview";
+import { updatePreview } from "../updatePreview.js";
 
 export function soloSettingList(ctx) {
 	return [

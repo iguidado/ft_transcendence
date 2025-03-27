@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import { gameRegistry } from './GameRegistry'
-import { ScoreMonitor } from './ScoreMonitor'
+import { gameRegistry } from './GameRegistry.js'
+import { ScoreMonitor } from './ScoreMonitor.js'
 
 export class RendererManager {
     constructor(game, container) {

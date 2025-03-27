@@ -1,12 +1,12 @@
-import {Game} from "./pong-game/src/core/Game"
-import {versus} from "./pong-game/src/config/preset/versus"
-import { appendCustomSettings } from "./pongPageUtils/appendCustomSettings"
-import { appendPresetButtons } from "./pongPageUtils/appendPresetButtons"
-import { soloSettingList } from "./pongPageUtils/config/soloSettingList"
-import { updatePreview } from "./pongPageUtils/updatePreview";
-import { defaultConfig } from "./pong-game/src/config/preset/defaultConfig";
-import { initConfig } from "./pong-game/src/config/initConfig";
-import { setupSwitchMenuButton } from "./pong/menu"
+import {Game} from "./pong-game/src/core/Game.js"
+import {versus} from "./pong-game/src/config/preset/versus.js"
+import { appendCustomSettings } from "./pongPageUtils/appendCustomSettings.js"
+import { appendPresetButtons } from "./pongPageUtils/appendPresetButtons.js"
+import { soloSettingList } from "./pongPageUtils/config/soloSettingList.js"
+import { updatePreview } from "./pongPageUtils/updatePreview.js";
+import { defaultConfig } from "./pong-game/src/config/preset/defaultConfig.js";
+import { initConfig } from "./pong-game/src/config/initConfig.js";
+import { setupSwitchMenuButton } from "./pong/menu.js"
 
 export function loadGame(){
     const container = document.getElementById("game-preview");

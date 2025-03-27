@@ -1,4 +1,4 @@
-import { gameRegistry } from "../core/GameRegistry"
+import { gameRegistry } from "../core/GameRegistry.js"
 
 export class InputMap {
 	constructor() {
