@@ -1,5 +1,5 @@
-import { initConfig, mergeConfig } from '../pong-game/src/config/initConfig';
-import { defaultConfig } from '../pong-game/src/config/preset/defaultConfig';
+import { initConfig, mergeConfig } from '../../pong-game/src/config/initConfig';
+import { defaultConfig } from '../../pong-game/src/config/preset/defaultConfig';
 import { settingPresets, PRESET_TYPE } from './config/settingPresets';
 import { updatePreview } from './updatePreview';
 

@@ -1,6 +1,6 @@
 export default {
 	controls: {
 		leftBot: false,
-		rightBot: true,
+		rightBot: false,
 	}
 }

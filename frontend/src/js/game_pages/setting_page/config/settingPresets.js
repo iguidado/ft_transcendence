@@ -1,6 +1,6 @@
-import { soloPreset } from "../../pong-game/src/config/preset/solo";
-import { perspectivePreset } from "../../pong-game/src/config/preset/perspective";
-import { versus } from "../../pong-game/src/config/preset/versus";
+import { soloPreset } from "../../../pong-game/src/config/preset/solo";
+import { perspectivePreset } from "../../../pong-game/src/config/preset/perspective";
+import { versus } from "../../../pong-game/src/config/preset/versus";
 // import {defaultConfig} from "../../pong-game/src/config/preset/defaultConfig"
 
 export const PRESET_TYPE = Object.freeze({
