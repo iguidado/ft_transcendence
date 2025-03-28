@@ -40,7 +40,7 @@ class LoginView(APIView):
 	@swagger_auto_schema(
 			request_body=LoginSerializer,
 			request_body_example={
-            "email": "test@example.com",
+            "username": "user",
             "password": "password123"
 			}
 		)
@@ -51,11 +51,11 @@ class LoginView(APIView):
 		else:
 			return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
 
-		email = serializer.validated_data['email']
+		username = serializer.validated_data['username']
 		password = serializer.validated_data['password']
-		print(f"User {password} ({email})")
+		print(f"User {password} ({username})")
 
-		user = authenticate(request, email=email, password=password)
+		user = authenticate(request, username=username, password=password)
 
 		if user is not None:
 			user_profile = user
@@ -66,7 +66,7 @@ class LoginView(APIView):
 				user_profile.otp_expiry_time = timezone.now() + timedelta(minutes=15)
 				user_profile.save()
 
-				OTPService.send_otp_email(email, verification_code)
+				OTPService.send_otp_email(user.email, verification_code)
 
 				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
 

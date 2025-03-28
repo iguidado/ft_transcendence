@@ -4,12 +4,12 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 class LoginSerializer(serializers.Serializer):
-	email = serializers.EmailField(required=True, help_text="Email de l'utilisateur.")
+	username = serializers.CharField(max_length=150, required=True)
 	password = serializers.CharField(write_only=True, required=True, help_text="Mot de passe de l'utilisateur.")
 	
 	class Meta:
 		model = get_user_model()
-		fields = ['email', 'password']
+		fields = ['username', 'password']
 
 class VerifyOtpSerializer(serializers.Serializer):
 	class Meta:
@@ -44,7 +44,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','password', 'confirm_password']
+		fields = ['id', 'username', 'password', 'confirm_password']
 		extra_kwargs = {
 			'password' : {'write_only': True},
 			'confirm_password' : {'write_only': True}
@@ -53,8 +53,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 	def	validate(self, data):
 		if data['password'] != data['confirm_password']:
 			raise serializers.ValidationError({"Password does not match"})
-		if User.objects.filter(email=data['email']).exists():
-			raise serializers.ValidationError({"email": "This email is already in use."})
+		# if User.objects.filter(email=data['email']).exists():
+			# raise serializers.ValidationError({"email": "This email is already in use."})
 		return data
 
 	def create(self, validated_data):
