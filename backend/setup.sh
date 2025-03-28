@@ -36,19 +36,19 @@ from api.models import User
 from django.contrib.auth.hashers import make_password
 
 user_passwords = {
-    "spongebob": ("krabby123", "spongebob@email.com"),
-    "patrick": ("starfish!", "patrick@email.com"),
-    "squidward": ("clarinet42", "squidward@email.com"),
+    "spongebob": ("krabby123"),
+    "patrick": ("starfish!"),
+    "squidward": ("clarinet42"),
 }
 
-for username, (password, email) in user_passwords.items():
+for username, (password) in user_passwords.items():
     try:
-        user = User.objects.get(username=username, email=email)
+        user = User.objects.get(username=username)
         user.password = make_password(password)
         user.save()
         print(f"Password updated for {username}")
     except User.DoesNotExist:
-        print(f"User {username} ({email}) not found, skipping.")
+        print(f"User {username} not found, skipping.")
 
 print("Passwords updated successfully.")
 EOF
@@ -64,10 +64,9 @@ from api.models import User
 
 USERNAME = os.getenv('DB_USER')
 PASSWORD = os.getenv('DB_PASSWORD')
-EMAIL = os.getenv('DB_USER_EMAIL')
 
 if not User.objects.filter(username=USERNAME).exists():
-	User.objects.create_superuser(username=USERNAME, email=EMAIL,password=PASSWORD)
+	User.objects.create_superuser(username=USERNAME, password=PASSWORD)
 EOF
 
 

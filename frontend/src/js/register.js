@@ -31,12 +31,11 @@ export async function handleRegistration() {
       
       // Get field values
       const username = registerForm.querySelector('input[placeholder="Choose your login"]').value;
-      const email = registerForm.querySelector('input[placeholder="Enter your mail"]').value;
       const password = registerForm.querySelector('input[placeholder="Choose your password"]').value;
       const confirm_password = registerForm.querySelector('input[placeholder="Confirm your password"]').value;
       
       // Client-side data validation
-      if (!username || !email || !password || !confirm_password) {
+      if (!username || !password || !confirm_password) {
         showError("All fields are required");
         return;
       }
@@ -52,28 +51,7 @@ export async function handleRegistration() {
       submitButton.disabled = true;
       submitButton.textContent = "Registering...";
       
-    //   try {
-        // Call the API function for registration
-        registerRequest({ username, email, password , confirm_password });
-        
-        // console.log("Registration successful:", result);
-        
-        // Show success message
-        // showSuccess("Your account has been created successfully!");
-        
-        // Redirect to login page after a short delay
-        // setTimeout(() => {
-        //   showLogin(); // Existing function to return to the login page
-        // }, 2000);
-        
-    //   } catch (error) {
-    //     console.error("Registration error:", error);
-    //     showError(error.message || "An error occurred during registration");
-    //   } finally {
-    //     // Reset button state
-    //     submitButton.disabled = false;
-    //     submitButton.textContent = originalButtonText;
-    //   }
+        registerRequest({ username, password , confirm_password });
     });
   } else {
     console.error("The registerForm does not exist!");

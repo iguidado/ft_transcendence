@@ -8,11 +8,11 @@ function loginErrorHandler(error) {
 	console.log(error)
 }
 
-export function loginRequest({email, password}, responseHandler=loginResponseHandler, errorHandler=loginErrorHandler) {
+export function loginRequest({username, password}, responseHandler=loginResponseHandler, errorHandler=loginErrorHandler) {
 	console.log("TEST")
 	postRequest({
 		UrlPath: "/api/login/",
-		body: {email, password},
+		body: {username, password},
 		responseHandler,
 		errorHandler
 	})
