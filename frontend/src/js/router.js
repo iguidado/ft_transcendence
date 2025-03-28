@@ -3,6 +3,7 @@ import { showLogin } from "./login";
 import { showRegister } from "./login";
 import { loadGame } from "./loadGame";
 import { loadLoginPage } from "./login";
+import { loadProfilePage } from "./profile";
 
 
 async function fetchHTMLContent(url) {
@@ -26,7 +27,8 @@ async function fetchHTMLContent(url) {
 const routeScripts = {
 	pong: loadGame,
     login: loadLoginPage,
-    register: showRegister
+    register: showRegister,
+    profile: loadProfilePage
 }
 
 

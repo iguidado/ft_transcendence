@@ -1,5 +1,13 @@
-.profile-container{
-    position: fixed;
+.profile{
+    background-color: rgba(255, 223, 186, 0.8);
+    /* border: 6px double #422445; */
+    padding: 2rem;
+    max-width: 500px;
+    margin: 2rem auto;
+    font-family: monospace;
+    text-align: center;
+    /* box-shadow: 0 0 0 6px #fd9b5d, 0 0 0 12px #422445; */
+    /* position: fixed;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -12,24 +20,104 @@
     padding: 1rem;
     border: 6px #422445;
     border-style: groove double;
-    gap: 1.2rem;
+    gap: 1.2rem; */
 }
 
-.profile-container__title{
-    justify-content: center;
+.profile__title{
+    font-size: 2rem;
+    color: #fd9b5d;
+    text-shadow: 2px 2px #422445;
+    /* justify-content: center;
     font-size: 2rem;
     font-weight: bold;
     color: #fd9b5d;
-    text-shadow: #422445 2px 2px;
+    text-shadow: #422445 2px 2px; */
 }
 
-.profile-container__avatar{
-    position: relative;
+.profile__avatar{
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    border: 3px dashed #422445;
+    image-rendering: pixelated;
+    /* position: relative;
     display: flex;
     border: 1px dashed #422445;
     flex-direction: column;
     align-items: flex-end;
     justify-content: flex-end;
     width: 10%;
-    gap: 0.4rem;
+    gap: 0.4rem; */
 }
+
+.profile-frame {
+    position: relative;
+    width: fit-content;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .profile-frame::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 4px solid #422445;
+    box-shadow:
+      2px 2px #ff9b9b,
+      -2px -2px #ff9b9b;
+    pointer-events: none;
+  }
+
+.profile__avatar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .profile__settings-btn {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #422445;
+  }
+  
+  .profile__settings-modal {
+    background: rgba(255,255,255,0.8);
+    border: 2px dashed #422445;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .profile__settings-field {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .profile__input {
+    width: 100%;
+    padding: 0.3rem;
+    border: 2px solid #422445;
+    background: #fff8f0;
+    border-radius: 4px;
+  }
+  
+  .profile__button {
+    background-color: #422445;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-family: monospace;
+  }
+
+  .profile__stats {
+    margin-top: 2rem;
+    text-align: left;
+  }
+  

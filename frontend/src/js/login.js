@@ -11,14 +11,14 @@ export function loadLoginPage() {
       e.preventDefault(); // Empêche la soumission réelle et le rechargement de page
       const loginValue = document.getElementById("loginInput").value;
       const passValue = document.getElementById("passwordInput").value;
-      console.log("Tentative de connexion :", loginValue, passValue);
+      // console.log("Tentative de connexion :", loginValue, passValue);
       
       // (avec un fetch vers le back ou un mock) et rediriger (ex : loadDashboard())
     });
     
   // -- Écouteur sur le bouton “CONNECT WITH 42” (au besoin) --
   document.getElementById("connectButton").addEventListener("click", () => {
-    console.log("Connexion via 42 OAuth (à implémenter).");
+    // console.log("Connexion via 42 OAuth (à implémenter).");
     // plus tard => loadDashboard() ou autre
   });
 
@@ -27,7 +27,7 @@ export function loadLoginPage() {
   const registerBtn = document.getElementById("registerButton");
   if (registerBtn) {
     registerBtn.addEventListener("click", () => {
-      console.log("Clic sur le bouton REGISTER");
+      // console.log("Clic sur le bouton REGISTER");
       showRegister(); 
     });
 }
@@ -36,7 +36,7 @@ export function loadLoginPage() {
   const loginBtn = document.getElementById("connectButton");
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
-      console.log("Clic sur le bouton LOGIN");
+      // console.log("Clic sur le bouton LOGIN");
       load_page('profile');
     });
   }
@@ -45,7 +45,7 @@ export function loadLoginPage() {
   const backToLoginBtn = document.getElementById("backToLoginButton");
   if (backToLoginBtn) {
     backToLoginBtn.addEventListener("click", () => {
-      console.log("Clic sur le bouton BACK TO LOGIN");
+      // console.log("Clic sur le bouton BACK TO LOGIN");
       showLogin();
     });
   }
@@ -66,18 +66,15 @@ export function showLogin() {
 }
 
 
-export function validate2FA() {
-  const twoFACode = document.getElementById('twoFACodeInput').value;
+// export function validate2FA() {
+//   const twoFACode = document.getElementById('twoFACodeInput').value;
 
-  // Par exemple, tu fais un fetch vers le back
-  console.log("2FA code saisi:", twoFACode);
+//   // Si tu veux fermer le modal après validation manuelle
+//   // 1) Récupérer l'instance du modal
+//   const myModal = document.getElementById('twoFAModal');
+//   const modalInstance = bootstrap.Modal.getInstance(myModal);
+//   // 2) on le ferme
+//   modalInstance.hide();
 
-  // Si tu veux fermer le modal après validation manuelle
-  // 1) Récupérer l'instance du modal
-  const myModal = document.getElementById('twoFAModal');
-  const modalInstance = bootstrap.Modal.getInstance(myModal);
-  // 2) on le ferme
-  modalInstance.hide();
-
-  // suite: rediriger ou activer la 2FA etc.
-}
+//   // suite: rediriger ou activer la 2FA etc.
+// }
