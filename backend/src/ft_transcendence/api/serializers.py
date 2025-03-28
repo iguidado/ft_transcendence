@@ -5,16 +5,17 @@ from django.db.models import Q
 
 class LoginSerializer(serializers.Serializer):
 	username = serializers.CharField(max_length=150, required=True)
-	password = serializers.CharField(write_only=True, required=True, help_text="Mot de passe de l'utilisateur.")
+	password = serializers.CharField(write_only=True, required=True)
 	
 	class Meta:
 		model = get_user_model()
 		fields = ['username', 'password']
 
 class VerifyOtpSerializer(serializers.Serializer):
+	otp = serializers.CharField(max_length=6, required=True)
 	class Meta:
 		model = get_user_model()
-		fields = ['email', 'otp']
+		fields = ['otp']
 
 class MatchSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -27,7 +28,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','displayName', 'avatar', 'date_joined', 'wins', 'looses', 'match_history', 'otp', 'otp_expiry_time', 'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio']
+		fields = ['id', 'username', 'email','displayName', 'avatar', 'date_joined', 'wins', 'looses', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio']
 
 	def get_match_history(seld, obj):
 		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
@@ -77,9 +78,21 @@ class UpdateDisplayNameSerializer(serializers.ModelSerializer):
 		return value
 	
 class TwoFAUpdateSerializer(serializers.ModelSerializer):
+	email = serializers.EmailField(required=False, write_only=True)
+	action = serializers.ChoiceField(choices=['enable', 'disable'], required=True)
+	
 	class Meta:
 		model = get_user_model()
-		fields = ['is_2fa_enabled']
+		fields = ['action', 'email']
+
+	def validate(self, data):
+		action = data['action']
+
+		if action == 'enable':
+			email = data['email']
+			if not email :
+				raise serializers.ValidationError("Email is required")
+		return data
 
 class UpdateAvatarSerializer(serializers.ModelSerializer):
 

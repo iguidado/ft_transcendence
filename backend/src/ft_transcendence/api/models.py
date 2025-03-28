@@ -39,8 +39,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 	win_ratio = models.FloatField(default=0.0)
 
 	jwt_token = models.CharField(max_length=512, blank=True, null=True)
-	otp = models.CharField(max_length=6, blank=True)
-	otp_expiry_time = models.DateTimeField(blank=True, null=True)
+	otp_2fa = models.CharField(max_length=6, blank=True)
+	otp_email = models.CharField(max_length=6, blank=True)
+	otp_2fa_expiry_time = models.DateTimeField(blank=True, null=True)
+	otp_email_expiry_time = models.DateTimeField(blank=True, null=True)
 	is_2fa_enabled = models.BooleanField(default=False)
 
 	avatar = models.ImageField(upload_to='avatars/', default='avatars/defaults.jpg', null=True, blank=True)

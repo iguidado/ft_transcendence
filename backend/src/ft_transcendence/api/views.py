@@ -62,11 +62,11 @@ class LoginView(APIView):
 
 			if user.is_2fa_enabled:
 				verification_code = OTPService.generate_otp() 
-				user_profile.otp = verification_code
-				user_profile.otp_expiry_time = timezone.now() + timedelta(minutes=15)
+				user_profile.otp_2fa = verification_code
+				user_profile.otp_2fa_expiry_time = timezone.now() + timedelta(minutes=15)
 				user_profile.save()
 
-				OTPService.send_otp_email(user.email, verification_code)
+				# OTPService.send_otp_email(user.email, verification_code) #! Faire serveur mail
 
 				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
 
@@ -84,33 +84,31 @@ class LoginView(APIView):
 	
 		return Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-class VerifyOtpView(APIView):
+class VerifyLoginOtpView(APIView):
 	permission_classes = [AllowAny]
 	serializer_class = VerifyOtpSerializer
 
 	@swagger_auto_schema(
 			request_body=VerifyOtpSerializer
 	)
-	def post(self, request,):
+	def patch(self, request):
 		serializer = VerifyOtpSerializer(data=request.data)
 		if not serializer.is_valid():
 			return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
-		email = serializer.validated_data['email']
 		otp = serializer.validated_data['otp']
 
 		try:
-			user_profile = User.objects.get(id=user.id)
+			user = request.user
 			
-			if user_profile.otp == otp and user_profile.otp_expiry_time > timezone.now():
-				user = user_profile.user
+			if user.otp_2fa == otp and user.otp_2fa_expiry_time > timezone.now():
 				django_login(request, user)
 
 				refresh = RefreshToken.for_user(user)
 				access_token = str(refresh.access_token)
 
-				user_profile.otp = ''
-				user_profile.otp_expiry_time = None
-				user_profile.save()
+				user.otp_2fa = ''
+				user.otp_2fa_expiry_time = None
+				user.save()
 
 				return Response({
                     'access_token': access_token,
@@ -186,19 +184,63 @@ class UserDisplayNameUpdateView(APIView):
 
 
 class TwoFAUpdateView(APIView):
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 	serializer_class = TwoFAUpdateSerializer
 
-	@swagger_auto_schema(request_body=UpdateDisplayNameSerializer)
+	@swagger_auto_schema(request_body=TwoFAUpdateSerializer)
 
 	def patch(self, request, *args, **kwargs):
 		user = request.user
 		serializer = self.serializer_class(user, data=request.data, partial=True)
 
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
+		if not serializer.is_valid():
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+		action = serializer.validated_data['action']
+
+		if action == 'disable':
+			user.is_2fa_enabled = False
+			user.save()
+			return Response({'detail': 'Two-factor authentication disabled.'}, status=status.HTTP_200_OK)
+
+		elif action == 'enable':
+			email = serializer.validated_data['email']
+			if email:
+				verification_code = OTPService.generate_otp()
+				user.otp_email = verification_code
+				user.email = email
+				user.otp_email_expiry_time = timezone.now() + timedelta(minutes=15)
+				user.save()
+
+				# OTPService.send_otp_email(email, verification_code) #! Faire serveur mail
+				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)	
+			# return Response(serializer.data)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class VerifyEmailOtpView(APIView):
+	permission_classes = [IsAuthenticated]
+	serializer_class = VerifyOtpSerializer
+
+	@swagger_auto_schema(
+			request_body=VerifyOtpSerializer
+	)
+	def patch(self, request,):
+		serializer = VerifyOtpSerializer(data=request.data)
+		if not serializer.is_valid():
+			return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
+		otp = serializer.validated_data['otp']
+
+		user = request.user
+		if user.otp_email == otp and user.otp_email_expiry_time > timezone.now():
+			user.is_2fa_enabled = True
+			user.otp_email = ''
+			user.otp_email_expiry_time = None
+			user.save()
+			return Response({'detail': 'Two-factor authentication enabled.'}, status=status.HTTP_200_OK)
+		user.email = None
+		user.save()
+		return Response({'detail': 'Invalid or expired OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserAvatarUpdateView(APIView):
 	permission_classes = [AllowAny]
