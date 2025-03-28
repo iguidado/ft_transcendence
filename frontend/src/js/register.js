@@ -1,4 +1,6 @@
 import { registerRequest } from "./api/routes/registerRequest";
+import { showLogin } from "./login";
+import { load_page } from "./router";
 
 // Registration form management, API connection etc.
 
@@ -35,15 +37,15 @@ export async function handleRegistration() {
       const confirm_password = registerForm.querySelector('input[placeholder="Confirm your password"]').value;
       
       // Client-side data validation
-      if (!username || !password || !confirm_password) {
-        showError("All fields are required");
-        return;
-      }
+      // if (!username || !password || !confirm_password) {
+      //   showError("All fields are required");
+      //   return;
+      // }
       
-      if (password !== confirm_password) {
-        showError("Passwords do not match");
-        return;
-      }
+      // if (password !== confirm_password) {
+      //   showError("Passwords do not match");
+      //   return;
+      // }
       
       // Show loading state
       const submitButton = registerForm.querySelector('button[type="submit"]');
@@ -51,7 +53,15 @@ export async function handleRegistration() {
       submitButton.disabled = true;
       submitButton.textContent = "Registering...";
       
-        registerRequest({ username, password , confirm_password });
+        registerRequest({ username, password , confirm_password }, (res) => {
+          console.log(res);
+          submitButton.textContent = originalButtonText;
+          submitButton.disabled = false;
+          alert("Registration successful");
+          load_page('profile');
+        }, (err) => {
+          console.error("Register Error", err);
+        });
     });
   } else {
     console.error("The registerForm does not exist!");

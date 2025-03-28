@@ -1,18 +1,24 @@
 // GESTION changement avatar/pseudo, recuperations donnees API stats etc
 
 export async function loadProfilePage() {
-    const response = await fetch('/api/user/profile/', {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-      }
-    });
+    // const response = await fetch('localhost:8080/api/user/profile/', {
+    //   headers: {
+    //     Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+    //   }
+    // });
   
-    if (!response.ok) {
-      console.error("Erreur lors de la récupération du profil");
-      return;
-    }
+    // if (!response.ok) {
+    //   console.error("Erreur lors de la récupération du profil");
+    //   return;
+    // }
   
-    const data = await response.json();
+    // const data = await response.json();
+    const data = {
+      username: 'Pear',
+      avatar: './rsc/pear.png',
+      games_played: 5,
+      games_won: 3
+    };
     document.getElementById('usernameDisplay').textContent = data.username;
     document.getElementById('userAvatar').src = data.avatar || './rsc/pear.png';
   
