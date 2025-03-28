@@ -109,8 +109,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-PORT = config("FRONT_PORT", default='4000')
-
+PORT = os.getenv("FRONT_PORT")
 CORS_ALLOWED_ORIGINS = [
     f"http://localhost:{PORT}",
     f"http://127.0.0.1:{PORT}",

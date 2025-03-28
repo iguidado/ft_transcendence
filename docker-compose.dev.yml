@@ -50,6 +50,7 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_USER_EMAIL=${DB_USER_EMAIL}
+      - FRONT_PORT=${FRONT_PORT}
         #- JWT_SECRET_KEY=your-secret-key-here
     volumes:
       - ./backend/src:/app:rw,z  # Mount backend code
