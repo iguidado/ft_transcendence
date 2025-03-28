@@ -1,55 +1,11 @@
 .profile{
-    background-color: rgba(255, 223, 186, 0.8);
-    /* border: 6px double #422445; */
-    padding: 2rem;
-    max-width: 500px;
-    margin: 2rem auto;
-    font-family: monospace;
-    text-align: center;
-    /* box-shadow: 0 0 0 6px #fd9b5d, 0 0 0 12px #422445; */
-    /* position: fixed;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: flex-start;
-    padding-top: 50px;
-    width: 50vw;
-    height: auto;
-    margin: 1rem auto;
-    background-color: rgba(250, 206, 110, 0.6); 
-    padding: 1rem;
-    border: 6px #422445;
-    border-style: groove double;
-    gap: 1.2rem; */
+  background-color: rgba(255, 223, 186, 0.8);
+  padding: 2rem;
+  max-width: 500px;
+  margin: 2rem auto;
+  font-family: monospace;
+  text-align: center;
 }
-
-.profile__title{
-    font-size: 2rem;
-    color: #fd9b5d;
-    text-shadow: 2px 2px #422445;
-    /* justify-content: center;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #fd9b5d;
-    text-shadow: #422445 2px 2px; */
-}
-
-.profile__avatar{
-    width: 120px;
-    height: 120px;
-    border-radius: 8px;
-    border: 3px dashed #422445;
-    image-rendering: pixelated;
-    /* position: relative;
-    display: flex;
-    border: 1px dashed #422445;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-end;
-    width: 10%;
-    gap: 0.4rem; */
-}
-
 .profile-frame {
     position: relative;
     width: fit-content;
@@ -57,6 +13,23 @@
     padding: 2rem;
     background: rgba(255, 255, 255, 0.1);
   }
+
+.profile__title{
+    font-size: 3rem;
+    color: #fd9b5d;
+    text-shadow: 2px 2px #422445;
+
+}
+
+.profile__avatar{
+  position:fixed left;
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    /* border: 3px dashed #422445; */
+    image-rendering: pixelated;
+}
+
   
   .profile-frame::before {
     content: "";
@@ -78,11 +51,15 @@
   }
 
   .profile__settings-btn {
-    font-size: 1.5rem;
-    background: none;
+    width: 32px;
+    height: 32px;
+    background-image: url('../rsc/param.png');
+    background-size: contain;  
+    background-repeat: no-repeat; 
+    background-position: center;
     border: none;
     cursor: pointer;
-    color: #422445;
+    z-index: 999;
   }
   
   .profile__settings-modal {

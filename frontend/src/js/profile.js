@@ -14,7 +14,7 @@ export async function loadProfilePage() {
   
     const data = await response.json();
     document.getElementById('usernameDisplay').textContent = data.username;
-    document.getElementById('userAvatar').src = data.avatar || 'default.png';
+    document.getElementById('userAvatar').src = data.avatar || './rsc/pear.png';
   
     // Simulé pour l’instant
     document.getElementById('gamesPlayed').textContent = data.games_played || 0;
