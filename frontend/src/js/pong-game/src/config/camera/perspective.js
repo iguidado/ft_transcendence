@@ -6,7 +6,5 @@ export default {
 		theta: -Math.PI/4,
 		useCalculatedRadius: true,
 		calculatedRadiusMargin: 1.3
-	},
-	fov: 70,
-	lookAt: new THREE.Vector3(0, 0, 0)
+	}
 }

@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import { gameRegistry } from './GameRegistry'
-import { ScoreMonitor } from './ScoreMonitor'
 
 export class RendererManager {
     constructor(game, container) {
@@ -36,8 +35,6 @@ export class RendererManager {
         this.resizeObserver = new ResizeObserver(this.resizeDebounce);
         this.resizeObserver.observe(this.container);
         window.addEventListener('orientationchange', this.resizeDebounce);
-
-        this.scoreMonitor = new ScoreMonitor();
         
         // Initial size setup
         this.handleResize();
@@ -46,7 +43,6 @@ export class RendererManager {
     render(scene, camera) {
         // Safety check - only render if both scene and camera are properly initialized
         if (scene && camera && camera.matrixWorldAutoUpdate !== undefined) {
-            this.scoreMonitor.update();
             this.renderer.render(scene, camera);
         }
     }

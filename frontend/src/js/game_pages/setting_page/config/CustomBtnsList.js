@@ -18,6 +18,50 @@ function captureKey(callback) {
 export function CustomBtnsList(ctx) {
 	return [
 		{
+			title: 'Score Max',
+			defaultValue: ctx.config.score.max,
+			minusCallback: async () => {
+				if (!ctx.config.score.max)
+					return 0
+				ctx.config.score.max -= 1
+				updatePreview(ctx)
+				return ctx.config.score.max
+			},
+			plusCallback: async () => {
+				ctx.config.score.max += 1
+				updatePreview(ctx)
+				return ctx.config.score.max
+			}
+		},
+		{
+			title: 'Left Bot',
+			defaultValue: ctx.config.paddles.controls.leftBot,
+			minusCallback: async () => {
+				ctx.config.paddles.controls.leftBot = !ctx.config.paddles.controls.leftBot
+				updatePreview(ctx)
+				return ctx.config.paddles.controls.leftBot
+			},
+			plusCallback: async () => {
+				ctx.config.paddles.controls.leftBot = !ctx.config.paddles.controls.leftBot
+				updatePreview(ctx)
+				return ctx.config.paddles.controls.leftBot
+			}
+		},
+		{
+			title: 'Right Bot',
+			defaultValue: ctx.config.paddles.controls.rightBot,
+			minusCallback: async () => {
+				ctx.config.paddles.controls.rightBot = !ctx.config.paddles.controls.rightBot
+				updatePreview(ctx)
+				return ctx.config.paddles.controls.rightBot
+			},
+			plusCallback: async () => {
+				ctx.config.paddles.controls.rightBot = !ctx.config.paddles.controls.rightBot
+				updatePreview(ctx)
+				return ctx.config.paddles.controls.rightBot
+			}
+		},
+		{
 			title: 'Board Height',
 			defaultValue: ctx.config.board.height,
 			minusCallback: async () => {
