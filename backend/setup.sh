@@ -16,7 +16,20 @@ then
 	mkdir -p /app/ft_transcendence
 	django-admin startproject billpong /app/ft_transcendence
 fi
-	
+
+if ! [ -d /app/ft_transcendence/media/avatars ]
+then
+    mkdir -p /app/ft_transcendence/media/avatars
+    chmod -R 755 /app/ft_transcendence/media
+fi
+
+if ! [ -d /app/ft_transcendence/static ]
+then
+    mkdir -p /app/ft_transcendence/static
+    chmod -R 755 /app/ft_transcendence/static
+fi
+
+
 if ! [ -d /app/ft_transcendence/api ]
 then
 	cd /app/ft_transcendence
@@ -26,6 +39,8 @@ fi
 python /app/ft_transcendence/manage.py makemigrations api
 
 python /app/ft_transcendence/manage.py migrate
+
+python /app/ft_transcendence/manage.py collectstatic --noinput
 
 # sleep 5
 

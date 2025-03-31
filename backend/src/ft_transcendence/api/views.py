@@ -130,7 +130,7 @@ class VerifyLoginOtpView(APIView):
 
 
 class UserProfileView(APIView):
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 
 	@swagger_auto_schema(responses={200: UserProfileSerializer()})
 	def get(self, request, *args, **kwargs):
@@ -155,7 +155,7 @@ class UserListView(ListAPIView):
 class UserProfileByUserNameView(RetrieveAPIView):
 	queryset = User.objects.all()
 	serializer_class = UserProfileSerializer
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 	lookup_field = "username"
 
 class RegisterView(APIView):
@@ -173,7 +173,7 @@ class RegisterView(APIView):
 
 
 class UserDisplayNameUpdateView(APIView):
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 	serializer_class = UpdateDisplayNameSerializer
 
 
@@ -250,7 +250,7 @@ class VerifyEmailOtpView(APIView):
 
 
 class UserAvatarUpdateView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = UpdateAvatarSerializer
     parser_classes = [MultiPartParser, FormParser]
 
@@ -278,7 +278,7 @@ class UserAvatarUpdateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateMatchHistoricView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = UpdateUserHistoricSerializer
 
     @swagger_auto_schema(
@@ -298,7 +298,7 @@ class CreateMatchHistoricView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FriendListView(APIView):
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 
 	def get(self, request, *args, **kwargs):
 		user = request.user
@@ -307,7 +307,7 @@ class FriendListView(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 	
 class AddFriendView(APIView):
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 
 	@swagger_auto_schema(
 			operation_description="Add a friend by username",
@@ -327,7 +327,7 @@ class AddFriendView(APIView):
 		return Response({"detail": "Friend added successfully."}, status=status.HTTP_200_OK)
 
 class LeaderBoardView(APIView):
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 
 	@swagger_auto_schema(
 			operation_description="Retrieve the top 10 users based on win ratio",
