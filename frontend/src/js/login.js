@@ -34,9 +34,14 @@ export function loadLoginPage() {
 
 // -- Écouteur sur le bouton “CONNECT” -- FETCH ICI POUR SE CONNECTER
   const loginBtn = document.getElementById("connectButton");
+
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
       // console.log("Clic sur le bouton LOGIN");
+      const valide2FAsection = document.getElementById('2FALoginModal');
+      console.log(valide2FAsection);
+      valide2FAsection.style.display = 'block';
+      if (validate2FAFromLogin.addEventListener('click', () => {load_page('profile');}))
       load_page('profile');
     });
   }

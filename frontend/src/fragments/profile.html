@@ -26,6 +26,14 @@
           <input type="checkbox" id="enable2FA" />
           Enable 2FA
         </label>
+        <div id="email2FASection" style="display: none;">
+          <input type="email" id="email2FAInput" placeholder="Enter your email" />
+          <button id="send2FAEmailBtn">Send code</button>
+        </div>
+        <div id="verify2FAModal" style="display: none;">
+          <input type="text" id="code2FAInput" placeholder="Enter code" />
+          <button id="confirm2FABtn">Confirm</button>
+        </div>
       </div>
       <button id="saveSettings" class="profile__button">Save changes</button>
     

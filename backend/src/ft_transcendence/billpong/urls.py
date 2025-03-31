@@ -65,7 +65,7 @@ urlpatterns = [
     path('api/user/friends/', FriendListView.as_view(), name='friend-list'),
 	
 	#PATCH
-	path('api/user/profile/update_displayname/', UserDisplayNameUpdateView.as_view(), name='user-diplayname-update'),
+	path('api/user/profile/update_displayname/', UserDisplayNameUpdateView.as_view(), name='user-displayname-update'),
 	path('api/user/profile/update_avatar/', UserAvatarUpdateView.as_view(), name='user-avatar-update'),	
     
 	#POST
