@@ -2,6 +2,7 @@ from .models import User
 from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyOtpSerializer, TwoFAUpdateSerializer, LeaderboardSerializer
 from datetime import timedelta
 from django.utils import timezone
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from django.core.mail import send_mail
 from rest_framework.response import Response
@@ -15,6 +16,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
 import random
 import os
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class OTPService:
     @staticmethod
@@ -248,30 +250,32 @@ class VerifyEmailOtpView(APIView):
 
 
 class UserAvatarUpdateView(APIView):
-	permission_classes = [AllowAny]
-	serializer_class = UpdateAvatarSerializer
+    permission_classes = [AllowAny]
+    serializer_class = UpdateAvatarSerializer
+    parser_classes = [MultiPartParser, FormParser]
 
-
-	# @swagger_auto_schema(request_body=UpdateDisplayNameSerializer)
-
-	@swagger_auto_schema(
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'avatar': openapi.Schema(type=openapi.TYPE_FILE, description="Upload the avatar image"),
-            },
-            required=['avatar'],
-        )
+    @swagger_auto_schema(
+        operation_description="Update user's avatar",
+        manual_parameters=[
+            openapi.Parameter(
+                name='avatar',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                required=True,
+                description='Upload the avatar image'
+            )
+        ],
+        consumes=['multipart/form-data']
     )
-	
-	def patch(self, request, *args, **kwargs):
-		user = request.user
-		serializer = self.serializer_class(user, data=request.data, partial=True)
+    
+    def patch(self, request, *args, **kwargs):
+        user = request.user
+        serializer = self.serializer_class(user, data=request.data, partial=True)
 
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateMatchHistoricView(APIView):
     permission_classes = [AllowAny]

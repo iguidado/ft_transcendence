@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	otp_email_expiry_time = models.DateTimeField(blank=True, null=True)
 	is_2fa_enabled = models.BooleanField(default=False)
 
-	avatar = models.ImageField(upload_to='avatars/', default='avatars/defaults.jpg', null=True, blank=True)
+	avatar = models.ImageField(upload_to='avatars/', default='avatars/defaults.png', null=True, blank=True)
 
 	date_joined = models.DateTimeField(default=timezone.now)
 
