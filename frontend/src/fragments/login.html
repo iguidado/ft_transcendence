@@ -8,15 +8,16 @@
 <div class="form-container__field">
   <label class="form-container__label" for="loginInput">Password</label>
   <input class="form-container__input" type="text" id="passwordInput" placeholder="Enter your password" />
-  <div id="2FALoginModal" style="display: none;">
-    <input type="text" id="code2FAInputLogin" placeholder="Enter your 2FA code" />
-    <button id="validate2FAFromLogin">Validate</button>
-  </div>
 </div>
 <button class="form-container__button" type="submit" id="connectButton">Connect</button>
 <button class="form-container__button" type="button" id="registerButton">Register</button>
 </div>
 </form>
+</div>
+
+<div id="2FALoginModal" class="profile" style="display: none;">
+  <input type="text" id="code2FAInputLogin" placeholder="Enter your 2FA code" />
+  <button id="validate2FAFromLogin">Validate</button>
 </div>
 
 <div id="registerSection" style="display: none;">
