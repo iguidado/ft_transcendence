@@ -2,7 +2,7 @@ from .models import User
 from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyOtpSerializer, TwoFAUpdateSerializer, LeaderboardSerializer
 from datetime import timedelta
 from django.utils import timezone
-from rest_framework import permissions, viewsets, status
+from rest_framework import status
 from django.core.mail import send_mail
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -10,7 +10,6 @@ from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import authenticate, login as django_login
 from rest_framework.views import APIView
 from drf_yasg import openapi
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
@@ -18,20 +17,26 @@ import random
 import os
 
 class OTPService:
-	@staticmethod
-	def generate_otp(n=6):
-		return "".join(map(str, random.sample(range(0,10), n)))
-	
-	@staticmethod
-	def send_otp_email(email, otp):
-		admin_email = os.getenv('DB_USER_EMAIL')
-
-		send_mail('Verification Code',
-            f'Your verification code is: {otp}',
-            admin_email,
-            [email],
-            fail_silently=False,
-        )
+    @staticmethod
+    def generate_otp(n=6):
+        return "".join(map(str, random.sample(range(0,10), n)))
+    
+    @staticmethod
+    def send_otp_email(email, otp):
+        try:
+            admin_email = os.getenv('EMAIL_HOST_USER')
+            
+            send_mail(
+                'Verification Code',
+                f'Your verification code is: {otp}',
+                admin_email,
+                [email],
+                fail_silently=False
+            )
+            return True
+        except Exception as e:
+            print(f"Error sending email: {str(e)}")
+            return False
 
 class LoginView(APIView):
 	permission_classes = [AllowAny]
@@ -66,7 +71,7 @@ class LoginView(APIView):
 				user_profile.otp_2fa_expiry_time = timezone.now() + timedelta(minutes=15)
 				user_profile.save()
 
-				# OTPService.send_otp_email(user.email, verification_code) #! Faire serveur mail
+				OTPService.send_otp_email(user.email, verification_code) #! Faire serveur mail
 
 				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
 
@@ -212,7 +217,7 @@ class TwoFAUpdateView(APIView):
 				user.otp_email_expiry_time = timezone.now() + timedelta(minutes=15)
 				user.save()
 
-				# OTPService.send_otp_email(email, verification_code) #! Faire serveur mail
+				OTPService.send_otp_email(email, verification_code) #! Faire serveur mail
 				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)	
 			# return Response(serializer.data)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
