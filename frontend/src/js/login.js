@@ -1,5 +1,6 @@
 import { load_page } from "./router";
 import { handleRegistration } from "./register";
+import { loginRequest } from "./api/routes/loginRequest";
 
 export function loadLoginPage() {
   const app = document.getElementById("app");
@@ -12,15 +13,31 @@ export function loadLoginPage() {
       const loginValue = document.getElementById("loginInput").value;
       const passValue = document.getElementById("passwordInput").value;
       // console.log("Tentative de connexion :", loginValue, passValue);
+              loginRequest(
+                { 
+                  username: loginValue,
+                  password: passValue
+                },
+                (res) => {
+                  console.log(res);
+                  const valide2FAsection = document.getElementById('2FALoginModal');
+                  console.log(valide2FAsection);
+                  valide2FAsection.style.display = 'block';
+                  // if (validate2FAFromLogin.addEventListener('click', () => {load_page('profile');}))
+                  //   load_page('profile');
+                },
+                (err) => {
+                  console.error("Register Error", err);
+              });
       
       // (avec un fetch vers le back ou un mock) et rediriger (ex : loadDashboard())
     });
     
   // -- Écouteur sur le bouton “CONNECT WITH 42” (au besoin) --
-  document.getElementById("connectButton").addEventListener("click", () => {
-    // console.log("Connexion via 42 OAuth (à implémenter).");
-    // plus tard => loadDashboard() ou autre
-  });
+  // document.getElementById("connectButton").addEventListener("click", () => {
+  //   // console.log("Connexion via 42 OAuth (à implémenter).");
+  //   // plus tard => loadDashboard() ou autre
+  // });
 
 
 // -- Écouteur sur le bouton “REGISTER” --
@@ -32,19 +49,6 @@ export function loadLoginPage() {
     });
 }
 
-// -- Écouteur sur le bouton “CONNECT” -- FETCH ICI POUR SE CONNECTER
-  const loginBtn = document.getElementById("connectButton");
-
-  if (loginBtn) {
-    loginBtn.addEventListener("click", () => {
-      // console.log("Clic sur le bouton LOGIN");
-      const valide2FAsection = document.getElementById('2FALoginModal');
-      console.log(valide2FAsection);
-      valide2FAsection.style.display = 'block';
-      if (validate2FAFromLogin.addEventListener('click', () => {load_page('profile');}))
-      load_page('profile');
-    });
-  }
 
   // -- ecouteur sur le bouton Back to Login
   const backToLoginBtn = document.getElementById("backToLoginButton");
