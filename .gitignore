@@ -1,6 +1,10 @@
 .env
 backend/src/ft_transcendence/billpong/__pycache__/
 backend/src/ft_transcendence/api/__pycache__/
+backend/src/ft_transcendence/media/
+backend/src/ft_transcendence/migrations/__pycache__/
+backend/src/ft_transcendence/staticfiles/
+backend/src/ft_transcendence/static/
 __pycache__/
 *.pyc
 db.sqlite3

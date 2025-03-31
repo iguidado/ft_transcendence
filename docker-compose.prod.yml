@@ -65,7 +65,8 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_USER_EMAIL=${DB_USER_EMAIL}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
         #- JWT_SECRET_KEY=your-secret-key-here
     volumes:
       - ./backend/src:/app:rw,z  # Mount backend code

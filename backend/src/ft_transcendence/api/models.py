@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
+from django.templatetags.static import static
 
 class CustomeUserManager(UserManager):
 	def _create_user(self, username, password, **extra_fields):
@@ -24,9 +25,6 @@ class CustomeUserManager(UserManager):
 	def create_superuser(self, username, password=None, **extra_fields):
 		extra_fields.setdefault('is_staff', True)
 		extra_fields.setdefault('is_superuser', True)
-		
-		print(f"📧 create_superuser: username={username}, password={password}")
-
 		return self._create_user(username, password, **extra_fields)
 	
 class User(AbstractBaseUser, PermissionsMixin):
@@ -39,11 +37,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 	win_ratio = models.FloatField(default=0.0)
 
 	jwt_token = models.CharField(max_length=512, blank=True, null=True)
-	otp = models.CharField(max_length=6, blank=True)
-	otp_expiry_time = models.DateTimeField(blank=True, null=True)
+	otp_2fa = models.CharField(max_length=6, blank=True)
+	otp_email = models.CharField(max_length=6, blank=True)
+	otp_2fa_expiry_time = models.DateTimeField(blank=True, null=True)
+	otp_email_expiry_time = models.DateTimeField(blank=True, null=True)
 	is_2fa_enabled = models.BooleanField(default=False)
 
-	avatar = models.ImageField(upload_to='avatars/', default='avatars/defaults.jpg', null=True, blank=True)
+	def get_default_avatar():
+		return static('api/images/defaults.png')
+
+	avatar = models.ImageField(upload_to='avatars/', default=get_default_avatar, null=True, blank=True)
 
 	date_joined = models.DateTimeField(default=timezone.now)
 
