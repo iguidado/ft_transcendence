@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
+from django.templatetags.static import static
 from django.utils import timezone
 
 class CustomeUserManager(UserManager):
@@ -27,9 +28,6 @@ class CustomeUserManager(UserManager):
 	def create_superuser(self, username, email=None, password=None, **extra_fields):
 		extra_fields.setdefault('is_staff', True)
 		extra_fields.setdefault('is_superuser', True)
-		
-		print(f"📧 create_superuser: username={username}, email={email}, password={password}")
-
 		return self._create_user(username, email, password, **extra_fields)
 	
 class User(AbstractBaseUser, PermissionsMixin):
@@ -45,7 +43,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 	otp_expiry_time = models.DateTimeField(blank=True, null=True)
 	is_2fa_enabled = models.BooleanField(default=False)
 
-	avatar = models.ImageField(upload_to='avatars/', default='avatars/defaults.jpg', null=True, blank=True)
+	def getDefaultAvatar():
+		return static('api/images/defaults.png')
+	
+	avatar = models.ImageField(upload_to='avatars/', default=getDefaultAvatar(), null=True, blank=True)
 
 	date_joined = models.DateTimeField(default=timezone.now)
 
@@ -58,6 +59,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = ['email']
+
 
 	def	UpdateUserStats(self, boolean : bool):
 		if (isinstance(boolean, bool)==False):
