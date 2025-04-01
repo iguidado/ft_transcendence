@@ -8,7 +8,7 @@ export default {
 				phi: Math.PI/18,
 				theta: -Math.PI/4,
 				useCalculatedRadius: true,
-				calculatedRadiusMargin: 1.7
+				calculatedRadiusMargin: 1
 			}
 		},
 		{  // Right paddle view
@@ -18,7 +18,7 @@ export default {
 				phi: Math.PI/18,
 				theta: Math.PI/4,
 				useCalculatedRadius: true,
-				calculatedRadiusMargin: 1.7
+				calculatedRadiusMargin: 1
 			}
 		}
 	]

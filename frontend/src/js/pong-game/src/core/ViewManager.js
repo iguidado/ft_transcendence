@@ -48,7 +48,7 @@ export class ViewManager {
         for (let i = 0; i < numViews; i++) {
             const viewElement = document.createElement('div');
             viewElement.classList.add("pong-view-element");
-            viewElement.style.border = "solid 2px black";
+            // viewElement.style.border = "solid 2px black";
             
             // Set width and height based on layout
             if (this.config.views.layout === 'horizontal') {

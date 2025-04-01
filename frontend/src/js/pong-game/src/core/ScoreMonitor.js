@@ -2,12 +2,15 @@ import { gameRegistry } from "./GameRegistry";
 import * as THREE from "three"
 
 export class ScoreMonitor {
-    constructor() {
+    constructor(container) {
         this.context = gameRegistry.getCurrentContext();
         this.scores = {
             left: 0,
             right: 0
         };
+		this.container = container
+		if (this.container)
+			this.container.innerText = "0 - 0"
     }
 
     update() {
@@ -23,22 +26,26 @@ export class ScoreMonitor {
     }
 
     handleScore(scoringSide) {
-        // Increment score
         this.scores[scoringSide]++;
 
-        // Reset ball with random direction
+		if (this.scores[scoringSide] >= this.context.config.score.max) {
+			this.onEndMatch(scoringSide, this)
+			return
+		}
+
         this.context.boardManager.ball.reset();
-        const randomY = (Math.random() - 0.5) * 0.5; // Random Y component between -0.25 and 0.25
+        const randomY = (Math.random() - 0.5) * 0.5;
         this.context.boardManager.ball.direction = new THREE.Vector3(
             scoringSide === 'left' ? 1 : -1,
             randomY,
             0
         ).normalize();
 
-        // Trigger any score-related events or callbacks here
         if (typeof this.onScore === 'function') {
             this.onScore(this.scores);
         }
+		if (this.container)
+			this.container.innerText = this.scores.left + " - " + this.scores.right
     }
 
     reset() {
@@ -48,8 +55,11 @@ export class ScoreMonitor {
         };
     }
 
-    // Optional: add callback for score updates
     setScoreCallback(callback) {
         this.onScore = callback;
     }
+
+	onEndMatch(winnerSide, instance) {
+		
+	}
 }

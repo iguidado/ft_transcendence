@@ -5,11 +5,12 @@ import { initScene } from './sceneUtils.js'
 import { BoardManager } from './BoardManager.js'
 import { ViewManager } from './ViewManager.js'
 import { InputManager } from '../inputs/InputManager.js'
+import { ScoreMonitor } from './ScoreMonitor.js'
 
 let currId = 1
 
 export class Game {
-    constructor(container, config_custom = {}) {
+    constructor(container, config_custom = {}, scoreContainer) {
         this.gameId = currId++;
         this.isRunning = false;
         this.container = container || null; // Will be created by ViewManager if needed
@@ -27,6 +28,7 @@ export class Game {
         this._handleResizeBound = this.handleResize.bind(this);
         window.addEventListener('resize', this._handleResizeBound);
         this.viewManager.render();
+		this.scoreMonitor = new ScoreMonitor(scoreContainer);
     }
 
     addView(container, cameraConfig = {}) {
@@ -63,13 +65,11 @@ export class Game {
     }
 	
     update() {
-        
         this.inputManager.update();
         this.updateBots();
-        
-        // Only update the ball if it exists
         if (this.boardManager && this.boardManager.ball) {
             this.boardManager.ball.move();
+			this.scoreMonitor.update();
         } else {
             console.warn("Ball not initialized in boardManager");
         }

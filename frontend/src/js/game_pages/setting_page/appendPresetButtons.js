@@ -1,5 +1,5 @@
-import { initConfig, mergeConfig } from '../pong-game/src/config/initConfig';
-import { defaultConfig } from '../pong-game/src/config/preset/defaultConfig';
+import { initConfig, mergeConfig } from '../../pong-game/src/config/initConfig';
+import { defaultConfig } from '../../pong-game/src/config/preset/defaultConfig';
 import { settingPresets, PRESET_TYPE } from './config/settingPresets';
 import { updatePreview } from './updatePreview';
 
@@ -12,7 +12,7 @@ active_presets.set(PRESET_TYPE.players, defaultConfig)
 */
 export function mergeActivePresets() {
 	let mergedConfig = {};
-	active_presets.forEach((presetValue, key) => {
+	active_presets.forEach(presetValue => {
 			mergedConfig = mergeConfig(mergedConfig, presetValue)
 	});
 	return mergedConfig;

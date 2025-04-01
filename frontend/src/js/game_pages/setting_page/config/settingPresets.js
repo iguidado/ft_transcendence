@@ -1,6 +1,7 @@
-import { soloPreset } from "../../pong-game/src/config/preset/solo";
-import { perspectivePreset } from "../../pong-game/src/config/preset/perspective";
-import { versus } from "../../pong-game/src/config/preset/versus";
+import { soloPreset } from "../../../pong-game/src/config/preset/solo";
+import { perspectivePreset } from "../../../pong-game/src/config/preset/perspective";
+import { versus } from "../../../pong-game/src/config/preset/versus";
+import {horizontalPreset} from "../../../pong-game/src/config/preset/horizontal";
 // import {defaultConfig} from "../../pong-game/src/config/preset/defaultConfig"
 
 export const PRESET_TYPE = Object.freeze({
@@ -23,6 +24,11 @@ export const settingPresets = [
 	{
 		name: "Perspective",
 		gameConfig: perspectivePreset,
+		type: PRESET_TYPE.camera
+	},
+	{
+		name: "Horizontal",
+		gameConfig: horizontalPreset,
 		type: PRESET_TYPE.camera
 	}
 ]
