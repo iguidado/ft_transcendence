@@ -12,7 +12,7 @@ export const getApiConfigDefault = () => {
 	}
 	const access_token = getAccessToken()
 	console.log("access_token", access_token)
-	if (access_token != undefined && access_token != null && access_token != "undefined")
+	if (access_token != undefined && access_token != null && access_token != "undefined" && access_token != "null")
 		obj.fetchOptions.headers['Authorization'] = `Bearer ${access_token}`
 	return obj
 }
