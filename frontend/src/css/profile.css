@@ -97,4 +97,26 @@
     margin-top: 2rem;
     text-align: left;
   }
-  
+
+#disconnect {
+  margin-top: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #ff9b9b;
+  color: #422445;
+  border: 2px solid #422445;
+  font-family: monospace;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#disconnect:hover {
+  background-color: #ff7777;
+  box-shadow: 2px 2px #422445;
+  transform: translate(-2px, -2px);
+}
+
+#disconnect:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+}

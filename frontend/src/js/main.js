@@ -1,9 +1,12 @@
 import { load_page } from "./router.js";
-
+import { getProfileData } from "./utils/profileUtils.js";
 
 document.body.classList.add("themePink");
 
-// === Au f5, on revient sur la meme page parce que flemme de cliquer ===
 window.addEventListener("DOMContentLoaded", () => {
-    load_page('login');
-  });
+	// TODO Check url and go right page when site load
+	if (getProfileData())
+		load_page("profile")
+	else
+    	load_page('login');
+});

@@ -1,22 +1,22 @@
-import { getApiConfigPost } from "../config/apiConfig";
+import { getApiConfigGet } from "../config/apiConfig";
 
 function responseHandlerDefault(res) {
-    console.log(res)
+	console.log(res)
 }
 
 function errorHandlerDefault(err) {
-    console.error(err)
+	console.error(err)
 }
 
-export async function postRequest({
-    UrlPath="",
-    body,
-    responseHandler=responseHandlerDefault,
-    errorHandler=errorHandlerDefault,
-    config
+export async function getRequest({
+	UrlPath="",
+	body,
+	responseHandler=responseHandlerDefault,
+	errorHandler=errorHandlerDefault,
+	config
 }) {
 	if (!config)
-		config = getApiConfigPost()
+		config = getApiConfigGet()
 	try {
 		// Ajouter les bons en-têtes et transformer le corps en JSON
 		const requestOptions = {
@@ -24,8 +24,8 @@ export async function postRequest({
 			headers: {
 				...config.fetchOptions.headers,
 			},
-			body: JSON.stringify(body)  // Convertir l'objet JavaScript en chaîne JSON
 		};
+
 		console.log(config)
 		const response = await fetch(config.url+UrlPath, requestOptions);
 
@@ -36,7 +36,8 @@ export async function postRequest({
 
 		const data = await response.json();
 		responseHandler(data)
-    } catch (error) {
-        errorHandler(error)
-    }
+		
+	} catch (error) {
+		errorHandler(error)
+	}
 }

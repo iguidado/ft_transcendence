@@ -1,113 +1,101 @@
-// GESTION changement avatar/pseudo, recuperations donnees API stats etc
+import { disconnect } from "./utils/disconnect"
+import { getProfileData } from "./utils/profileUtils"
 
-export async function loadProfilePage() {
-    // const response = await fetch('localhost:8080/api/user/profile/', {
-    //   headers: {
-    //     Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-    //   }
-    // });
-  
-    // if (!response.ok) {
-    //   console.error("Erreur lors de la récupération du profil");
-    //   return;
-    // }
-  
-    // const data = await response.json();
-    const data = {
-      username: 'Pear',
-      avatar: './rsc/pear.png',
-      games_played: 5,
-      games_won: 3
-    };
-    document.getElementById('usernameDisplay').textContent = data.username;
-    document.getElementById('userAvatar').src = data.avatar || './rsc/pear.png';
-  
-    // Simulé pour l’instant
-    document.getElementById('gamesPlayed').textContent = data.games_played || 0;
-    document.getElementById('gamesWon').textContent = data.games_won || 0;
-    
-    // Settings toggle
-    document.getElementById('openSettings').addEventListener('click', () => {
-      const modal = document.getElementById('settingsModal');
-      modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
-    });
-    // Handle 2FA settings
-    const enable2FA = document.getElementById('enable2FA');
-    const email2FASection = document.getElementById('email2FASection');
+// profileData: {
+// 	"id": 5,
+// 	"username": "toto",
+// 	"email": null,
+// 	"displayName": "",
+// 	"avatar": "/media/static/api/images/defaults.png",
+// 	"date_joined": "2025-04-02T22:59:43.397801Z",
+// 	"wins": 0,
+// 	"looses": 0,
+// 	"match_history": [],
+// 	"otp_2fa": "",
+// 	"otp_2fa_expiry_time": null,
+// 	"otp_email": "",
+// 	"otp_email_expiry_time": null,
+// 	"is_2fa_enabled": false,
+// 	"jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNjYwMzg4LCJpYXQiOjE3NDM2NTY3ODgsImp0aSI6IjQzMGQ3MGIyNzJiMTQ5OTBiMGIyYjJjYjY4ZGI2M2UxIiwidXNlcl9pZCI6NX0.2iv6FMJjU5T2kVpErwRscvTPtKGFvxT7FMS7XXDf4N4",
+// 	"friends": [],
+// 	"win_ratio": 0
+// }
 
-    // Set initial state based on data.is_2fa_enabled
-    enable2FA.checked = data.is_2fa_enabled || false;
-    email2FASection.style.display = enable2FA.checked ? 'block' : 'none';
+export function loadProfilePage() {
+	displayInformations()
+	settingsModal()
+}
 
-    // Toggle email2FASection visibility when enable2FA is clicked
-    enable2FA.addEventListener('change', () => {
-      email2FASection.style.display = enable2FA.checked ? 'block' : 'none';
-    });
+function displayInformations() {
+	const profileData = getProfileData()
+	console.log("profileData:", profileData)
+	document.getElementById("usernameDisplay")
+		.textContent = profileData.displayName
+	document.getElementById("userAvatar")
+		.src = profileData.avatar || "./rsc/pear.png"
+	document.getElementById("gamesPlayed").textContent = profileData.gamesPlayed
+	document.getElementById("gamesWon").textContent = profileData.gamesWon
+}
+ function settingsModal() {
+	const settingsBtn = document.getElementById("openSettings")
+	const settingsModal = document.getElementById("settingsModal")
+	let isOpen = false
+	settingsBtn.addEventListener("click", () => {
+		isOpen = !isOpen
+		settingsModal.style.display = isOpen ? "block" : "none"
+	})
+	twoFactorAuthSection()
+	saveSettings()
+	disconnectBtn()
+}
 
-    // Mock data to simulate sending confirmation email for 2FA
-    document.getElementById('send2FAEmailBtn').addEventListener('click', () => {
-      const emailInput = document.getElementById('email2FAInput').value;
+function twoFactorAuthSection() {
+	const profileData = getProfileData()
+	const settingsModal = document.getElementById("settingsModal")
+	const enable2FA = document.getElementById("enable2FA")
+	const email2FASection = document.getElementById("email2FASection")
+	const verify2FAModal = document.getElementById("verify2FAModal")
+	const send2FAEmailBtn = document.getElementById("send2FAEmailBtn")
+	const confirm2FABtn = document.getElementById("confirm2FABtn")
+	email2FASection.style.display = enable2FA.checked ? "block" : "none"
+	enable2FA.checked = profileData.is_2fa_enabled || false
+	enable2FA.addEventListener("change", () => {
+		email2FASection.style.display = enable2FA.checked ? "block" : "none"
+	})
+	send2FAEmailBtn.addEventListener("click", () => {
+			email2FASection.style.display = "none"
+			verify2FAModal.style.display = "block"
+			// TODO 2FA update
+			// api/user/2fa/update
+			// {
+			// 	"action": "enable" or "disable",
+			// 	"email": "user@example.com"
+			// }
+			const emailInput = document.getElementById("email2FAInput").value
+			console.log("Send email !", emailInput)
+		})
+	confirm2FABtn.addEventListener("click", () => {
+			// TODO Confirm code
+			// api/user/verify-email-otp
+			// {
+			// 	"otp": "string"
+			// }
+			console.log("Confirm clicked !")
+		})
+}
 
-      if (!emailInput) {
-      alert('Veuillez entrer une adresse email.');
-      return;
-      }
+function saveSettings() {
+	const settingsModal = document.getElementById("settingsModal")
+	document.getElementById("saveSettings")
+		.addEventListener("click", () => {
+			// TODO Save settings
+			settingsModal.style.display = "none"
+		})
+}
 
-      // Simulate opening the confirmation modal
-      const verify2FAModal = document.getElementById('verify2FAModal');
-      verify2FAModal.style.display = 'block';
-    });
-    document.getElementById('send2FAEmailBtn').addEventListener('click', async () => {
-      const emailInput = document.getElementById('email2FAInput').value;
-
-      if (!emailInput) {
-        alert('Veuillez entrer une adresse email.');
-        return;
-      }
-
-    });
-
-
-
-    // Handle 2FA confirmation
-    document.getElementById('confirm2FABtn').addEventListener('click', async () => {
-      //A RETIRER C'est juste pour visualier l'effet
-      alert('2FA activée avec succès.');
-
-      document.getElementById('enable2FA').checked = true; // Update the checkbox
-      document.getElementById('settingsModal').style.display = 'none'; // Close settings modal
-      document.getElementById('verify2FAModal').style.display = 'none'; // Close verification modal
-
-    });
-
-    // Save settings
-    document.getElementById('saveSettings').addEventListener('click', async () => {
-  
-      // Refresh profile
-      document.getElementById('settingsModal').style.display = 'none';
-      // loadProfilePage();
-    });
-
-
-    await new Promise(resolve => setTimeout(resolve, 50));
-    document.addEventListener("DOMContentLoaded", () => {
-        const settingsBtn = document.getElementById("openSettings");
-        const settingsModal = document.getElementById("settingsModal");
-      
-        let isOpen = false;
-      
-        settingsBtn.addEventListener("click", () => {
-          isOpen = !isOpen;
-          settingsModal.style.display = isOpen ? "block" : "none";
-        });
-      // Update displayed username immediately after saving
-      document.getElementById('saveSettings').addEventListener('click', () => {
-        const newName = document.getElementById('newDisplayName').value;
-        if (newName) {
-          data.username = newName; // Update the local data object
-          document.getElementById('usernameDisplay').textContent = newName; // Update the displayed username
-        }
-      });
-      });
-  }
-  
+function disconnectBtn() {
+	document.getElementById("disconnect")
+		.addEventListener("click", () => {
+			disconnect()
+		})
+}
