@@ -27,18 +27,31 @@ export function loadProfilePage() {
 }
 
 function displayInformations() {
-	pullProfile().then(() => {
+	pullProfile().then((isSuccess) => {
+		if (!isSuccess)
+			return noProfileData()
 		const profileData = getProfileData()
-		console.log("profileData:", profileData)
 		document.getElementById("usernameDisplay")
 			.textContent = profileData.displayName
 		document.getElementById("userAvatar")
 			.src = profileData.avatar || "./rsc/pear.png"
-		document.getElementById("gamesPlayed").textContent = profileData.gamesPlayed
-		document.getElementById("gamesWon").textContent = profileData.gamesWon
+		document.getElementById("gamesPlayed")
+			.textContent = profileData.gamesPlayed
+		document.getElementById("gamesWon")
+			.textContent = profileData.gamesWon
 	})
 }
- function settingsModal() {
+
+function noProfileData() {
+	// const containersList = document.getElementsByClassName("profile-frame")
+	// for (const elem of containersList) {
+	// 	elem.style.display = "none"
+	// }
+	// TODO showError("Session expired")
+	disconnect()
+}
+
+function settingsModal() {
 	const settingsBtn = document.getElementById("openSettings")
 	const settingsModal = document.getElementById("settingsModal")
 	let isOpen = false
