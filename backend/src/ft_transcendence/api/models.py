@@ -43,10 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	otp_email_expiry_time = models.DateTimeField(blank=True, null=True)
 	is_2fa_enabled = models.BooleanField(default=False)
 
-	def get_default_avatar():
-		return static('api/images/defaults.png')
-
-	avatar = models.ImageField(upload_to='avatars/', default=get_default_avatar, null=True, blank=True)
+	avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
 	date_joined = models.DateTimeField(default=timezone.now)
 
@@ -70,6 +67,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 				self.looses += 1
 			self.win_ratio = round((self.wins / (self.wins + self.looses)) * 100, 2)
 			self.save()
+
+	def get_avatar_url(self):
+		if self.avatar and hasattr(self.avatar, 'url') and self.avatar.name != 'static/api/images/defaults.png':
+			return self.avatar.url
+		return static('api/images/defaults.png')
 
 	class Meta:
 		verbose_name = 'User'

@@ -22,13 +22,19 @@ class MatchSerializer(serializers.ModelSerializer):
 		model = Match
 		fields = ['player_one', 'player_two', 'score_p1', 'score_p2', 'winner','date']
 
+class FriendSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ['username', 'is_active', 'avatar']
+
 class UserProfileSerializer(serializers.ModelSerializer):
 	match_history = serializers.SerializerMethodField()
 	friends = serializers.SerializerMethodField()
+	avatar_url = serializers.SerializerMethodField()
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','displayName', 'avatar', 'date_joined', 'wins', 'looses', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio']
+		fields = ['id', 'username', 'email','displayName', 'avatar_url', 'date_joined', 'wins', 'looses', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio']
 
 	def get_match_history(seld, obj):
 		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
@@ -37,6 +43,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 	def get_friends(self, obj):
 		friends = obj.friends.all()
 		return FriendSerializer(friends, many=True).data
+	
+	def get_avatar_url(self, obj):
+		return obj.get_avatar_url()
 
 
 
@@ -122,11 +131,6 @@ class UpdateUserHistoricSerializer(serializers.ModelSerializer):
 			match.player_one.UpdateUserStats(False)
 			match.player_two.UpdateUserStats(False)
 		return match
-
-class FriendSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = User
-		fields = ['username', 'is_active', 'avatar']
 		
 class AddFriendSerializer(serializers.ModelSerializer):
 	class Meta:
