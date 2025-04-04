@@ -4,14 +4,19 @@ import { pullProfile } from "../utils/profileUtils";
 import { saveAccessToken } from "../utils/saveAccessToken";
 
 function fetchHandler(res) {
-	console.log("api/login : ", res);
+	console.log("API Login response : ", res);
 	// const valide2FAsection = document.getElementById("2FALoginModal");
 	// console.log(valide2FAsection);
 	// valide2FAsection.style.display = "block";
 	if (res.access_token) {
 		saveAccessToken(res.access_token, res.refresh_token);
-		pullProfile();
-		load_page("profile")
+		pullProfile()
+			.then(() => {
+				load_page("profile")
+			})
+			.catch((err) => {
+				console.error("loginForm.js : pullProfile : ",err)
+			})
 	}
 }
 

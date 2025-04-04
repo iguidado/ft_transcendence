@@ -1,42 +1,39 @@
 import { getApiConfigPost } from "../config/apiConfig";
 
 function responseHandlerDefault(res) {
-    console.log(res)
+	console.log(res);
 }
 
 function errorHandlerDefault(err) {
-    console.error(err)
+	console.error(err);
 }
 
 export async function postRequest({
-    UrlPath="",
-    body,
-    responseHandler=responseHandlerDefault,
-    errorHandler=errorHandlerDefault,
-    config
+	UrlPath = "",
+	body,
+	responseHandler = responseHandlerDefault,
+	errorHandler = errorHandlerDefault,
+	config,
 }) {
-	if (!config)
-		config = getApiConfigPost()
+	if (!config) config = getApiConfigPost();
 	try {
-		// Ajouter les bons en-têtes et transformer le corps en JSON
 		const requestOptions = {
 			...config.fetchOptions,
 			headers: {
 				...config.fetchOptions.headers,
 			},
-			body: JSON.stringify(body)  // Convertir l'objet JavaScript en chaîne JSON
+			body: JSON.stringify(body),
 		};
-		console.log(config)
-		const response = await fetch(config.url+UrlPath, requestOptions);
-
+		const response = await fetch(config.url + UrlPath, requestOptions)
 		if (!response.ok) {
 			const errorData = await response.json().catch(() => ({}));
-			throw new Error(errorData.message || `Request failed with status ${response.status}`);
+			throw new Error(
+				errorData.message || `Request failed with status ${response.status}`
+			);
 		}
-
 		const data = await response.json();
-		responseHandler(data)
-    } catch (error) {
-        errorHandler(error)
-    }
+		responseHandler(data);
+	} catch (error) {
+		errorHandler(error);
+	}
 }

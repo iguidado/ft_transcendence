@@ -9,7 +9,6 @@ function loginErrorHandler(error) {
 }
 
 export function loginRequest({username, password}, responseHandler=loginResponseHandler, errorHandler=loginErrorHandler) {
-	console.log("TEST")
 	postRequest({
 		UrlPath: "/api/login/",
 		body: {username, password},

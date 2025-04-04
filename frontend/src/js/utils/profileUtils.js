@@ -3,9 +3,14 @@ import { profileRequest } from "../api/routes/profileRequest";
 
 
 export const pullProfile = () => {
-	profileRequest((data) => {
-		localStorage.setItem("userProfile", JSON.stringify(data))
-	});
+	return new Promise((resolve, reject) => {
+		profileRequest((data) => {
+				localStorage.setItem("userProfile", JSON.stringify(data))
+				resolve()
+			},
+			(err) => reject(err)
+		)
+	})
 };
 
 export const deleteProfileData = () => {

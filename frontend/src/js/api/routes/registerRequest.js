@@ -9,7 +9,6 @@ function registerErrorHandler(error) {
 }
 
 export function registerRequest({username, password, confirm_password}, responseHandler=registerResponseHandler, errorHandler=registerErrorHandler) {
-	console.log({username, password, confirm_password})
 	postRequest({
 		UrlPath: "/api/register/",
 		body: {username, password, confirm_password},

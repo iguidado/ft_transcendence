@@ -2,25 +2,26 @@ import { registerRequest } from "./api/routes/registerRequest"
 import { load_page } from "./router"
 
 export function handleRegistration() {
-	console.log("Initializing registration form")
-
 	const registerForm = document.getElementById("registerForm")
-	if (registerForm)
-		registerForm.addEventListener("submit", async (e) => {
+	if (!registerForm)
+		return
+	registerForm.addEventListener("submit", async (e) => {
 		e.preventDefault()
 		const username = registerForm.querySelector(
-			'input[placeholder="Choose your login"]' // ???!!!
+			'input[placeholder="Choose your login"]'
 		).value
 		const password = registerForm.querySelector(
-			'input[placeholder="Choose your password"]' // ???!!!
+			'input[placeholder="Choose your password"]'
 		).value
 		const confirm_password = registerForm.querySelector(
-			'input[placeholder="Confirm your password"]' // ???!!!
+			'input[placeholder="Confirm your password"]'
 		).value
 		const submitButton = registerForm.querySelector('button[type="submit"]')
-		const originalButtonText = submitButton.textContent
 		submitButton.disabled = true
-		submitButton.textContent = "Registering..."
+		setTimeout(
+			() => submitButton.disabled = false,
+			500
+		)
 		registerRequest(
 			{ username, password, confirm_password },
 			registerRequestCallBack,
@@ -30,13 +31,11 @@ export function handleRegistration() {
 }
 
 function registerRequestCallBack(res) {
-	console.log(res)
-	submitButton.textContent = originalButtonText
-	submitButton.disabled = false
-	alert("Registration successful")
-	load_page("profile")
+	console.log("Register API Response", res)
+	load_page("login")
 }
 
 function registerRequestErrorCallBack(err) {
+	// TODO Register error actions
 	console.error("Register Error", err)
 }
