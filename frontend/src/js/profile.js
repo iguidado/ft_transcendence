@@ -1,5 +1,5 @@
 import { disconnect } from "./utils/disconnect"
-import { getProfileData } from "./utils/profileUtils"
+import { getProfileData, pullProfile } from "./utils/profileUtils"
 
 // profileData: {
 // 	"id": 5,
@@ -27,14 +27,16 @@ export function loadProfilePage() {
 }
 
 function displayInformations() {
-	const profileData = getProfileData()
-	console.log("profileData:", profileData)
-	document.getElementById("usernameDisplay")
-		.textContent = profileData.displayName
-	document.getElementById("userAvatar")
-		.src = profileData.avatar || "./rsc/pear.png"
-	document.getElementById("gamesPlayed").textContent = profileData.gamesPlayed
-	document.getElementById("gamesWon").textContent = profileData.gamesWon
+	pullProfile().then(() => {
+		const profileData = getProfileData()
+		console.log("profileData:", profileData)
+		document.getElementById("usernameDisplay")
+			.textContent = profileData.displayName
+		document.getElementById("userAvatar")
+			.src = profileData.avatar || "./rsc/pear.png"
+		document.getElementById("gamesPlayed").textContent = profileData.gamesPlayed
+		document.getElementById("gamesWon").textContent = profileData.gamesWon
+	})
 }
  function settingsModal() {
 	const settingsBtn = document.getElementById("openSettings")
