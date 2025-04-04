@@ -19,13 +19,6 @@ function toggleLayerPair(event) {
 }
 
 export function initBuildButtons() {
-	// TODO Conditional display buttons
-	// if (getAccessToken()) {
-	// 	console.log("connected !")
-	// 	// not display back to login
-	// } else {
-	// 	console.log("disconnected !")
-	// }
 	const hotspots = document.querySelectorAll("[data-off][data-on]");
 	hotspots.forEach((btn) => {
 		btn.addEventListener("mouseover", toggleLayerPair);

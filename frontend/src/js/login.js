@@ -10,12 +10,6 @@ export function loadLoginPage() {
 			showRegister();
 		});
 	}
-	const backToLoginBtn = document.getElementById("backToLoginButton");
-	if (backToLoginBtn) {
-		backToLoginBtn.addEventListener("click", () => {
-			showLogin();
-		});
-	}
 	// TODO “CONNECT WITH 42”
 }
 

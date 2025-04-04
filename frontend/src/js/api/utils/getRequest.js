@@ -10,7 +10,6 @@ function errorHandlerDefault(err) {
 
 export async function getRequest({
 	UrlPath="",
-	body,
 	responseHandler=responseHandlerDefault,
 	errorHandler=errorHandlerDefault,
 	config

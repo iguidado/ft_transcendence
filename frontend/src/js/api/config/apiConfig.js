@@ -2,7 +2,7 @@ import { getAccessToken } from "../../utils/getAccessToken";
 
 export const getApiConfigDefault = () => {
 	const obj = {
-		url: "http://127.0.0.1:8080",
+		url: "http://127.0.0.1:8000",
 		fetchOptions: {
 			credentials: "include",
 			headers: {
