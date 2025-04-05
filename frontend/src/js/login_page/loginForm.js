@@ -1,4 +1,4 @@
-import { loginRequest } from "../api/routes/loginRequest";
+import { loginRequest } from "../api/routes/login";
 import { load_page } from "../router";
 import { pullProfile } from "../utils/profileUtils";
 import { saveAccessToken } from "../utils/saveAccessToken";

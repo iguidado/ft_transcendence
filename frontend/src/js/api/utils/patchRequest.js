@@ -1,4 +1,4 @@
-import { getApiConfigGet } from "../config/apiConfig"
+import { getApiConfigPatch } from "../config/apiConfig"
 
 function responseHandlerDefault(res) {
 	console.log(res)
@@ -8,21 +8,22 @@ function errorHandlerDefault(err) {
 	console.error(err)
 }
 
-export async function getRequest({
+export async function patchRequest({
 	UrlPath="",
 	responseHandler=responseHandlerDefault,
 	errorHandler=errorHandlerDefault,
-	config
+	config,
+	body
 }) {
 	if (!config)
-		config = getApiConfigGet()
+		config = getApiConfigPatch()
 	try {
-		// Ajouter les bons en-têtes et transformer le corps en JSON
 		const requestOptions = {
 			...config.fetchOptions,
 			headers: {
 				...config.fetchOptions.headers,
 			},
+			body: JSON.stringify(body),
 		}
 		const response = await fetch(config.url+UrlPath, requestOptions)
 

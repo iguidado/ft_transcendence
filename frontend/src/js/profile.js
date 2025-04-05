@@ -1,25 +1,6 @@
+import { toggle2faRequest } from "./api/routes/user/toggle2fa"
 import { disconnect } from "./utils/disconnect"
 import { getProfileData, pullProfile } from "./utils/profileUtils"
-
-// profileData: {
-// 	"id": 5,
-// 	"username": "toto",
-// 	"email": null,
-// 	"displayName": "",
-// 	"avatar": "/media/static/api/images/defaults.png",
-// 	"date_joined": "2025-04-02T22:59:43.397801Z",
-// 	"wins": 0,
-// 	"looses": 0,
-// 	"match_history": [],
-// 	"otp_2fa": "",
-// 	"otp_2fa_expiry_time": null,
-// 	"otp_email": "",
-// 	"otp_email_expiry_time": null,
-// 	"is_2fa_enabled": false,
-// 	"jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNjYwMzg4LCJpYXQiOjE3NDM2NTY3ODgsImp0aSI6IjQzMGQ3MGIyNzJiMTQ5OTBiMGIyYjJjYjY4ZGI2M2UxIiwidXNlcl9pZCI6NX0.2iv6FMJjU5T2kVpErwRscvTPtKGFvxT7FMS7XXDf4N4",
-// 	"friends": [],
-// 	"win_ratio": 0
-// }
 
 export function loadProfilePage() {
 	displayInformations()
@@ -52,6 +33,7 @@ function noProfileData() {
 }
 
 function settingsModal() {
+	console.log("Profile data: ", getProfileData())
 	const settingsBtn = document.getElementById("openSettings")
 	const settingsModal = document.getElementById("settingsModal")
 	let isOpen = false
@@ -76,18 +58,20 @@ function twoFactorAuthSection() {
 	enable2FA.checked = profileData.is_2fa_enabled || false
 	enable2FA.addEventListener("change", () => {
 		email2FASection.style.display = enable2FA.checked ? "block" : "none"
+		verify2FAModal.style.display = "none"
 	})
 	send2FAEmailBtn.addEventListener("click", () => {
 			email2FASection.style.display = "none"
 			verify2FAModal.style.display = "block"
-			// TODO 2FA update
-			// api/user/2fa/update
-			// {
-			// 	"action": "enable" or "disable",
-			// 	"email": "user@example.com"
-			// }
 			const emailInput = document.getElementById("email2FAInput").value
-			console.log("Send email !", emailInput)
+			toggle2faRequest(
+				{
+					action: profileData.is_2fa_enabled ? "enable" : "disable", 
+					email: emailInput
+				},
+				displayCodeValidation,
+				toggle2faError
+			)
 		})
 	confirm2FABtn.addEventListener("click", () => {
 			// TODO Confirm code
@@ -97,6 +81,17 @@ function twoFactorAuthSection() {
 			// }
 			console.log("Confirm clicked !")
 		})
+}
+
+function displayCodeValidation() {
+	document.getElementById("verify2FAModal").style.display = "block"
+	document.getElementById("email2FASection").style.display = "none"
+}
+
+function toggle2faError(err, res) {
+	// TODO show errors
+	console.warn("Error:", err)
+	console.warn("API Response:", res)
 }
 
 function saveSettings() {

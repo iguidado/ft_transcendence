@@ -26,10 +26,10 @@ export async function postRequest({
 		};
 		const response = await fetch(config.url + UrlPath, requestOptions)
 		if (!response.ok) {
-			const errorData = await response.json().catch(() => ({}));
-			throw new Error(
-				errorData.message || `Request failed with status ${response.status}`
-			);
+			const errorData = await response.json().catch(() => ({}))
+			let error =  new Error(errorData.message || `Request failed with status ${response.status}`)
+			errorHandler(error, response)
+			return
 		}
 		const data = await response.json();
 		responseHandler(data);

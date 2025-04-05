@@ -1,4 +1,4 @@
-import { getAccessToken } from "../../utils/getAccessToken";
+import { getAccessToken } from "../../utils/getAccessToken"
 
 export const getApiConfigDefault = () => {
 	const obj = {
@@ -9,31 +9,42 @@ export const getApiConfigDefault = () => {
 				"Content-Type": "application/json",
 			},
 		},
-	};
-	const access_token = getAccessToken();
+	}
+	const access_token = getAccessToken()
 	if (access_token)
-		obj.fetchOptions.headers["Authorization"] = `Bearer ${access_token}`;
-	return obj;
-};
+		obj.fetchOptions.headers["Authorization"] = `Bearer ${access_token}`
+	return obj
+}
 
 export const getApiConfigPost = () => {
-	const apiConfigDefault = getApiConfigDefault();
+	const apiConfigDefault = getApiConfigDefault()
 	return {
 		...apiConfigDefault,
 		fetchOptions: {
 			...apiConfigDefault.fetchOptions,
 			method: "POST",
 		},
-	};
-};
+	}
+}
 
 export const getApiConfigGet = () => {
-	const apiConfigDefault = getApiConfigDefault();
+	const apiConfigDefault = getApiConfigDefault()
 	return {
 		...apiConfigDefault,
 		fetchOptions: {
 			...apiConfigDefault.fetchOptions,
 			method: "GET",
 		},
-	};
-};
+	}
+}
+
+export const getApiConfigPatch = () => {
+	const apiConfigDefault = getApiConfigDefault()
+	return {
+		...apiConfigDefault,
+		fetchOptions: {
+			...apiConfigDefault.fetchOptions,
+			method: "PATCH",
+		},
+	}
+}

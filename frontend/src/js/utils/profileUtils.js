@@ -1,5 +1,5 @@
 import { getApiConfigDefault } from "../api/config/apiConfig";
-import { profileRequest } from "../api/routes/profileRequest";
+import { profileRequest } from "../api/routes/profile";
 
 
 export const pullProfile = () => {
@@ -25,7 +25,6 @@ export const getProfileData = () => {
 		data.displayName = data.username
 	// TODO Image qui fonctionne
 	data.avatar = getApiConfigDefault().url + data.avatar_url
-	console.log("Profile image URL", data.avatar)
 	// TODO Calculate real values gamesPlayed and gamesWon
 	data.gamesPlayed = 0
 	data.gamesWon = 0

@@ -11,7 +11,6 @@ function profileErrorHandler(error) {
 export function profileRequest(responseHandler=profileResponseHandler, errorHandler=profileErrorHandler) {
 	getRequest({
 		UrlPath: "/api/user/profile/",
-		// body: {},
 		responseHandler,
 		errorHandler
 	})

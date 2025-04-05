@@ -1,4 +1,4 @@
-import { registerRequest } from "./api/routes/registerRequest"
+import { registerRequest } from "./api/routes/register"
 import { load_page } from "./router"
 
 export function handleRegistration() {
