@@ -1,5 +1,6 @@
 import { loginRequest } from "../api/routes/loginRequest";
 import { load_page } from "../router";
+import { displayError } from "../utils/displayError";
 import { pullProfile } from "../utils/profileUtils";
 import { saveAccessToken } from "../utils/saveAccessToken";
 
@@ -21,8 +22,9 @@ function fetchHandler(res) {
 }
 
 function fetchErrorHandler(err) {
-	// TODO login error actions
-	console.error("Login Error", err);
+	// DONE login error actions ( a ameliorer l'erreur est en json pour le moment)
+	displayError("An error occurred during registration. Please try again." + err);
+
 }
 
 export function loginForm() {

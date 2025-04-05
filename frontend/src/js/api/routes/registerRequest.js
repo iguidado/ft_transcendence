@@ -1,5 +1,6 @@
 import { postRequest } from "../utils/postRequest";
 
+
 function registerResponseHandler(response) {
 	console.log(response)
 }

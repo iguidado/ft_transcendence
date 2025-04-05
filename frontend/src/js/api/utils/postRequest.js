@@ -8,6 +8,7 @@ function errorHandlerDefault(err) {
 	console.error(err);
 }
 
+// Error renvoie l'information fournie par le serveur ( mais dans un format moche si tu arrives a changer c'est bien en parsant le json)
 export async function postRequest({
 	UrlPath = "",
 	body,
@@ -26,9 +27,9 @@ export async function postRequest({
 		};
 		const response = await fetch(config.url + UrlPath, requestOptions)
 		if (!response.ok) {
-			const errorData = await response.json().catch(() => ({}));
+
 			throw new Error(
-				errorData.message || `Request failed with status ${response.status}`
+				await response.text()
 			);
 		}
 		const data = await response.json();
