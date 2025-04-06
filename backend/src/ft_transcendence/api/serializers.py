@@ -13,6 +13,7 @@ class LoginSerializer(serializers.Serializer):
 
 class VerifyOtpSerializer(serializers.Serializer):
 	otp = serializers.CharField(max_length=6, required=True)
+	temp_token = serializers.CharField(required=True)
 	class Meta:
 		model = get_user_model()
 		fields = ['otp']
@@ -34,7 +35,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','displayName', 'avatar_url', 'date_joined', 'wins', 'looses', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio']
+		fields = ['id', 'username', 'email','displayName', 'avatar_url', 'date_joined', 'wins', 'looses', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio', 'temp_auth_token']
 
 	def get_match_history(seld, obj):
 		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
@@ -142,4 +143,4 @@ class LeaderboardSerializer(serializers.ModelSerializer):
 		model = get_user_model()
 		fields = ['username', 'win_ratio', 'avatar', 'wins', 'looses']
 
-		
+

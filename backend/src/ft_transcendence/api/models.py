@@ -42,6 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	otp_2fa_expiry_time = models.DateTimeField(blank=True, null=True)
 	otp_email_expiry_time = models.DateTimeField(blank=True, null=True)
 	is_2fa_enabled = models.BooleanField(default=False)
+	temp_auth_token = models.CharField(max_length=64, blank=True, null=True)
 
 	avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 

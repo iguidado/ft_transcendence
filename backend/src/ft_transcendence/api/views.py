@@ -60,7 +60,6 @@ class LoginView(APIView):
 
 		username = serializer.validated_data['username']
 		password = serializer.validated_data['password']
-		print(f"User {password} ({username})")
 
 		user = authenticate(request, username=username, password=password)
 
@@ -71,11 +70,18 @@ class LoginView(APIView):
 				verification_code = OTPService.generate_otp() 
 				user_profile.otp_2fa = verification_code
 				user_profile.otp_2fa_expiry_time = timezone.now() + timedelta(minutes=15)
+				
+
+				temp_token = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=32))
+				user_profile.temp_auth_token = temp_token
 				user_profile.save()
 
-				OTPService.send_otp_email(user.email, verification_code) #! Faire serveur mail
+				OTPService.send_otp_email(user.email, verification_code)
 
-				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
+				return Response({
+					'detail': 'Verification code sent successfully.',
+					'temp_token': temp_token
+				}, status=status.HTTP_200_OK)
 
 			django_login(request, user)
 
@@ -92,41 +98,44 @@ class LoginView(APIView):
 		return Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class VerifyLoginOtpView(APIView):
-	permission_classes = [AllowAny]
-	serializer_class = VerifyOtpSerializer
+    permission_classes = [AllowAny]
+    serializer_class = VerifyOtpSerializer
 
-	@swagger_auto_schema(
-			request_body=VerifyOtpSerializer
-	)
-	def patch(self, request):
-		serializer = VerifyOtpSerializer(data=request.data)
-		if not serializer.is_valid():
-			return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
-		otp = serializer.validated_data['otp']
+    @swagger_auto_schema(
+            request_body=VerifyOtpSerializer
+    )
+    def patch(self, request):
+        serializer = VerifyOtpSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        otp = serializer.validated_data['otp']
+        temp_token = serializer.validated_data['temp_token']
 
-		try:
-			user = request.user
-			
-			if user.otp_2fa == otp and user.otp_2fa_expiry_time > timezone.now():
-				django_login(request, user)
+        try:
+            user = User.objects.get(temp_auth_token=temp_token)
+            
+            if user.otp_2fa == otp and user.otp_2fa_expiry_time > timezone.now():
+                django_login(request, user)
 
-				refresh = RefreshToken.for_user(user)
-				access_token = str(refresh.access_token)
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
 
-				user.otp_2fa = ''
-				user.otp_2fa_expiry_time = None
-				user.save()
+                user.otp_2fa = ''
+                user.otp_2fa_expiry_time = None
+                user.temp_auth_token = ''
+                user.save()
 
-				return Response({
+                return Response({
                     'access_token': access_token,
                     'refresh_token': str(refresh),
                     'detail': 'OTP verified successfully.'
                 }, status=status.HTTP_200_OK)
 
-			return Response({'detail': 'Invalid or expired OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Invalid or expired OTP.'}, status=status.HTTP_400_BAD_REQUEST)
 
-		except User.DoesNotExist:
-			return Response({'detail': 'User profile not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({'detail': 'Invalid session.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class UserProfileView(APIView):
