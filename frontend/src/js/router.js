@@ -3,7 +3,7 @@ import { showRegister } from "./login";
 import { loadGame } from "./loadGame";
 import { loadLoginPage } from "./login";
 import { loadProfilePage } from "./profile";
-
+// import { loadSocketTestPage } from "./socket-test";
 
 
 async function fetchHTMLContent(url) {
@@ -14,7 +14,6 @@ async function fetchHTMLContent(url) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
 		const htmlContent = await response.text();
-		// console.log(htmlContent); // Affiche le contenu HTML dans la console
 		return htmlContent;
 	} catch (error) {
 		console.error('Erreur lors de la récupération du fichier HTML:', error);
@@ -26,7 +25,8 @@ const routeScripts = {
 	pong: loadGame,
 	login: loadLoginPage,
 	register: showRegister,
-	profile: loadProfilePage
+	profile: loadProfilePage,
+	// 'socket-test': loadSocketTestPage
 }
 
 
@@ -45,7 +45,18 @@ export function load_page(url) {
 			initBuildButtons(); 
 		});
 		if (routeScripts[url]) routeScripts[url]();
-		// TODO Navigation in url
+			history.pushState({page: url}, "", `/${url}`);
 	});
+}
+
+window.addEventListener('popstate', (event) => {
+	const path = window.location.pathname.substring(1);
+	const page = path || 'login';
+	load_page(page);
+});
+
+export function getCurrentPageFromURL() {
+	const path = window.location.pathname.substring(1);
+	return path && routeScripts.hasOwnProperty(path) ? path : 'login';
 }
 
