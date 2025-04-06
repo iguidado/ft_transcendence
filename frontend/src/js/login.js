@@ -23,16 +23,3 @@ export function showLogin() {
 	document.getElementById("loginSection").style.display = "block";
 	document.getElementById("registerSection").style.display = "none";
 }
-
-// export function validate2FA() {
-//   const twoFACode = document.getElementById('twoFACodeInput').value;
-
-//   // Si tu veux fermer le modal après validation manuelle
-//   // 1) Récupérer l'instance du modal
-//   const myModal = document.getElementById('twoFAModal');
-//   const modalInstance = bootstrap.Modal.getInstance(myModal);
-//   // 2) on le ferme
-//   modalInstance.hide();
-
-//   // suite: rediriger ou activer la 2FA etc.
-// }

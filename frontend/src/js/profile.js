@@ -1,4 +1,6 @@
 import { toggle2faRequest } from "./api/routes/user/toggle2fa"
+import { verifyEmailOTP } from "./api/routes/user/verifyEmailOTP"
+import { load_page } from "./router"
 import { disconnect } from "./utils/disconnect"
 import { getProfileData, pullProfile } from "./utils/profileUtils"
 
@@ -24,10 +26,6 @@ function displayInformations() {
 }
 
 function noProfileData() {
-	// const containersList = document.getElementsByClassName("profile-frame")
-	// for (const elem of containersList) {
-	// 	elem.style.display = "none"
-	// }
 	// TODO showError("Session expired")
 	disconnect()
 }
@@ -57,7 +55,7 @@ function twoFactorAuthSection() {
 	email2FASection.style.display = enable2FA.checked ? "block" : "none"
 	enable2FA.checked = profileData.is_2fa_enabled || false
 	enable2FA.addEventListener("change", () => {
-		email2FASection.style.display = enable2FA.checked ? "block" : "none"
+		email2FASection.style.display = "block"
 		verify2FAModal.style.display = "none"
 	})
 	send2FAEmailBtn.addEventListener("click", () => {
@@ -66,24 +64,24 @@ function twoFactorAuthSection() {
 			const emailInput = document.getElementById("email2FAInput").value
 			toggle2faRequest(
 				{
-					action: profileData.is_2fa_enabled ? "enable" : "disable", 
+					action: profileData.is_2fa_enabled ? "disable" : "enable", 
 					email: emailInput
 				},
-				displayCodeValidation,
+				profileData.is_2fa_enabled ? loadProfilePage : displayCodeValidation,
 				toggle2faError
 			)
 		})
 	confirm2FABtn.addEventListener("click", () => {
-			// TODO Confirm code
-			// api/user/verify-email-otp
-			// {
-			// 	"otp": "string"
-			// }
-			console.log("Confirm clicked !")
+			const otp = document.getElementById("code2FAInput").value
+			verifyEmailOTP(otp, (res) => {
+				console.log(res)
+				load_page("profile")
+			})
 		})
 }
 
-function displayCodeValidation() {
+function displayCodeValidation(res) {
+	console.log(res)
 	document.getElementById("verify2FAModal").style.display = "block"
 	document.getElementById("email2FASection").style.display = "none"
 }
