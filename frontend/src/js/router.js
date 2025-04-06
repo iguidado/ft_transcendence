@@ -5,6 +5,7 @@ import { loadLoginPage } from "./login";
 import { loadProfilePage } from "./profile";
 
 
+
 async function fetchHTMLContent(url) {
 	try {
 		url = `./fragments/${url}.html`;

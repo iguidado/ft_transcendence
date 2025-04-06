@@ -1,5 +1,6 @@
 import { registerRequest } from "./api/routes/register"
 import { load_page } from "./router"
+import { displayError } from "./utils/displayError"
 
 export function handleRegistration() {
 	const registerForm = document.getElementById("registerForm")
@@ -36,6 +37,7 @@ function registerRequestCallBack(res) {
 }
 
 function registerRequestErrorCallBack(err) {
-	// TODO Register error actions
-	console.error("Register Error", err)
+	// DONE Register error actions
+	
+	displayError("An error occurred during registration. Please try again." + err);
 }
