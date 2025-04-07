@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { gameRegistry } from './GameRegistry'
+import { gameRegistry } from './GameRegistry.js'
 
 export class RendererManager {
     constructor(game, container) {

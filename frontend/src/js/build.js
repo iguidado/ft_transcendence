@@ -1,5 +1,5 @@
-import { load_page } from "./router";
-import { getAccessToken } from "./utils/getAccessToken";
+import { load_page } from "./router.js";
+import { getAccessToken } from "./utils/getAccessToken.js";
 
 function toggleLayerPair(event) {
 	// console.log('toggleLayerPair:', event);

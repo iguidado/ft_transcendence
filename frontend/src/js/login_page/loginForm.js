@@ -1,9 +1,9 @@
-import { loginRequest } from "../api/routes/login"
-import { verifyLoginOTP } from "../api/routes/user/verifyLoginOTP"
-import { load_page } from "../router"
-import { displayError } from "../utils/displayError"
-import { pullProfile } from "../utils/profileUtils"
-import { saveAccessToken } from "../utils/saveAccessToken"
+import { loginRequest } from "../api/routes/login.js"
+import { verifyLoginOTP } from "../api/routes/user/verifyLoginOTP.js"
+import { load_page } from "../router.js"
+import { displayError } from "../utils/displayError.js"
+import { pullProfile } from "../utils/profileUtils.js"
+import { saveAccessToken } from "../utils/saveAccessToken.js"
 
 // export function validate2FA() {
 // 	// const twoFACode = document.getElementById('twoFACodeInput').value

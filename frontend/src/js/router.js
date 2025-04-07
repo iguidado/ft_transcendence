@@ -1,9 +1,9 @@
-import { initBuildButtons } from "./build";
-import { showRegister } from "./login";
-import { loadGame } from "./loadGame";
-import { loadLoginPage } from "./login";
-import { loadProfilePage } from "./profile";
-// import { loadSocketTestPage } from "./socket-test";
+import { initBuildButtons } from "./build.js";
+import { showRegister } from "./login.js";
+import { loadGame } from "./loadGame.js";
+import { loadLoginPage } from "./login.js";
+import { loadProfilePage } from "./profile.js";
+// import { loadSocketTestPage } from "./socket-test.js";
 
 
 async function fetchHTMLContent(url) {

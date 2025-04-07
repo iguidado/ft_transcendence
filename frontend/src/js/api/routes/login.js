@@ -1,4 +1,4 @@
-import { postRequest } from "../utils/postRequest";
+import { postRequest } from "../utils/postRequest.js";
 
 function loginResponseHandler(response) {
 	console.log(response)

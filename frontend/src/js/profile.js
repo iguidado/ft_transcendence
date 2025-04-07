@@ -1,8 +1,8 @@
-import { toggle2faRequest } from "./api/routes/user/toggle2fa"
-import { verifyEmailOTP } from "./api/routes/user/verifyEmailOTP"
-import { load_page } from "./router"
-import { disconnect } from "./utils/disconnect"
-import { getProfileData, pullProfile } from "./utils/profileUtils"
+import { toggle2faRequest } from "./api/routes/user/toggle2fa.js"
+import { verifyEmailOTP } from "./api/routes/user/verifyEmailOTP.js"
+import { load_page } from "./router.js"
+import { disconnect } from "./utils/disconnect.js"
+import { getProfileData, pullProfile } from "./utils/profileUtils.js"
 
 export function loadProfilePage() {
 	displayInformations()

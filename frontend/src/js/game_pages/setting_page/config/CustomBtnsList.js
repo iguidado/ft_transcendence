@@ -1,5 +1,5 @@
-import { updatePreview } from "../updatePreview";
-import { createKeyCaptureOverlay } from '../createKeyCaptureOverlay';
+import { updatePreview } from "../updatePreview.js";
+import { createKeyCaptureOverlay } from '../createKeyCaptureOverlay.js';
 
 function captureKey(callback) {
     const overlay = createKeyCaptureOverlay();

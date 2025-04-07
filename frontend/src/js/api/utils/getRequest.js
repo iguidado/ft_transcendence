@@ -1,4 +1,4 @@
-import { getApiConfigGet } from "../config/apiConfig"
+import { getApiConfigGet } from "../config/apiConfig.js"
 
 function responseHandlerDefault(res) {
 	console.log(res)
