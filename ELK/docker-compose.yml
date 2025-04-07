@@ -9,6 +9,8 @@ services:
       args:
         - STACK_VERSION=${STACK_VERSION}
     user: root
+    networks:
+      - elk-network
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
     command: /root/setup.sh
@@ -74,8 +76,6 @@ services:
       #  memlock:
       #    soft: -1
       #    hard: -1
-      #   networks:
-      #     - elk-network
     healthcheck:
       test:
         [
@@ -106,13 +106,11 @@ services:
       - ELASTICSEARCH_HOSTS=https://es01:9200  # Change to HTTP-only
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
-      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca/ca.crt
       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
     mem_limit: ${KB_MEM_LIMIT}
-       #    networks:
-       #      - elk-network
     healthcheck:
       test:
         [
@@ -172,11 +170,6 @@ volumes:
   logstashdata01:
     driver: local
 
-
-          # networks:
-          #   default:
-          #     name: elastic
-          #     external: false
 
 networks:
   web-network:

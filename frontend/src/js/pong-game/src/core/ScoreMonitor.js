@@ -1,4 +1,4 @@
-import { gameRegistry } from "./GameRegistry";
+import { gameRegistry } from "./GameRegistry.js";
 import * as THREE from "three"
 
 export class ScoreMonitor {

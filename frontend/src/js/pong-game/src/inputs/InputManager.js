@@ -1,5 +1,5 @@
-import { gameRegistry } from "../core/GameRegistry";
-import { InputMap } from "./InputMap";
+import { gameRegistry } from "../core/GameRegistry.js";
+import { InputMap } from "./InputMap.js";
 
 export class InputManager {
     constructor() {

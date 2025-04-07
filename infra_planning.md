@@ -1,7 +1,7 @@
 ---
 
 # 🎯 Objective
-**In 2 weeks, enhance your platform to include:**
+
 ✅ Web Application Firewall (WAF)  
 ✅ HashiCorp Vault (for secret management)  
 ✅ Monitoring via **Grafana + Prometheus**
@@ -81,18 +81,23 @@
 .
 ├── docker-compose.dev.yml
 ├── docker-compose.prod.yml
-├── docker-compose.elk.yml
-├── docker-compose.monitoring.yml   # New
-├── docker-compose.vault.yml        # New
+├── 
+├── docker-compose.vault.yml       # New
 ├── nginx/
 │   ├── Dockerfile.prod
 │   ├── nginx.conf
-│   ├── modsecurity.conf            # New
-│   ├── rules/                       # New (OWASP CRS rules here)
-├── vault/
+│   ├── modsecurity.conf          # New
+│   ├── rules/                     # New (OWASP CRS rules here)
+├── vault/                        # New
 │   ├── policies/
 │   ├── vault-config.hcl
-├── monitoring/
+├── ELK/
+│   ├── docker-compose.elk.yml
+│   ├── Elasticsearch/
+│   ├── Logstash/
+│   ├── kibana/
+├── monitoring/                 # New
+│   ├── docker-compose.monitoring.yml  
 │   ├── prometheus/
 │   │   ├── prometheus.yml
 │   ├── grafana/
@@ -130,7 +135,7 @@
 # 🌐 Key Recommendations
 
 ✅ **WAF Logs to Logstash**  
-You can either log directly in GELF or let Nginx log to file and use **Filebeat** to ship it.  
+You can either log directly in GELF.  
 
 ✅ **Vault Secrets Injection**  
 For maximum security, avoid environment variables. Instead, use init scripts in containers that fetch secrets from Vault and inject into Django settings or Elasticsearch config files.

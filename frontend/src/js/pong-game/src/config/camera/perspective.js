@@ -1,3 +1,5 @@
+import * as THREE from "three"
+
 export default {
 	polar: {
 		rotateX: Math.PI/2,

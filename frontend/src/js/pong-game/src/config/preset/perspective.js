@@ -1,4 +1,4 @@
-import camera from "../camera/perspective"
+import camera from "../camera/perspective.js"
 
 export const perspectivePreset = {
 	camera
