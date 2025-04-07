@@ -1,4 +1,4 @@
-import { registerRequest } from "./api/routes/register"
+import { registerRequest } from "./api/routes/registerRoute"
 import { load_page } from "./router"
 import { displayError } from "./utils/displayError"
 
