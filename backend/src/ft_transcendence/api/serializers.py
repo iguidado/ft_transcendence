@@ -11,9 +11,15 @@ class LoginSerializer(serializers.Serializer):
 		model = get_user_model()
 		fields = ['username', 'password']
 
-class VerifyOtpSerializer(serializers.Serializer):
+class VerifyLoginOtpSerializer(serializers.Serializer):
 	otp = serializers.CharField(max_length=6, required=True)
 	temp_token = serializers.CharField(required=True)
+	class Meta:
+		model = get_user_model()
+		fields = ['otp']
+
+class VerifyEmailOtpSerializer(serializers.Serializer):
+	otp = serializers.CharField(max_length=6, required=True)
 	class Meta:
 		model = get_user_model()
 		fields = ['otp']
@@ -64,14 +70,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 	def	validate(self, data):
 		if data['password'] != data['confirm_password']:
 			raise serializers.ValidationError({"Password does not match"})
-		# if User.objects.filter(email=data['email']).exists():
-			# raise serializers.ValidationError({"email": "This email is already in use."})
 		return data
 
 	def create(self, validated_data):
-		# username = validated_data["username"]
-		# password = validated_data["password"]
-
 		validated_data.pop('confirm_password')
 		user = get_user_model().objects.create_user(**validated_data)
 		return user
