@@ -34,14 +34,14 @@ export function load_page(url) {
 	fetchHTMLContent(url).then(htmlContent => {
 		const app = document.getElementById('app');
 		app.innerHTML = htmlContent;
-		fetchHTMLContent('build').then(htmlContent => {
-			const building = document.createElement('div');
-			building.innerHTML = htmlContent;
-			const groupElement = building.querySelector(`#${url}Group`);
+		fetchHTMLContent('layout').then(htmlContent => {
+			const layout = document.createElement('div');
+			layout.innerHTML = htmlContent;
+			const groupElement = layout.querySelector(`#${url}Group`);
 			if (groupElement) {
 				groupElement.style.display = 'none';
 			}
-			app.appendChild(building);
+			app.appendChild(layout);
 			initBuildButtons(); 
 		});
 		if (routeScripts[url]) routeScripts[url]();
