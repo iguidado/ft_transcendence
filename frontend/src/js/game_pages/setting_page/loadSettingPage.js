@@ -1,11 +1,11 @@
-import {Game} from "../../pong-game/src/core/Game"
-import { appendCustomSettings } from "../../game_pages/setting_page/appendCustomSettings"
-import { appendPresetButtons } from "../../game_pages/setting_page/appendPresetButtons"
-import { CustomBtnsList } from "../../game_pages/setting_page/config/CustomBtnsList"
-import { defaultConfig } from "../../pong-game/src/config/preset/defaultConfig"
-import { initConfig } from "../../pong-game/src/config/initConfig"
-import { setupSwitchMenuButton } from "../../game_pages/setting_page/setupSwitchMenuButton"
-import { loadGamePage } from "../game_page/loadGamePage"
+import {Game} from "../../pong-game/src/core/Game.js"
+import { appendCustomSettings } from "../../game_pages/setting_page/appendCustomSettings.js"
+import { appendPresetButtons } from "../../game_pages/setting_page/appendPresetButtons.js"
+import { CustomBtnsList } from "../../game_pages/setting_page/config/CustomBtnsList.js"
+import { defaultConfig } from "../../pong-game/src/config/preset/defaultConfig.js"
+import { initConfig } from "../../pong-game/src/config/initConfig.js"
+import { setupSwitchMenuButton } from "../../game_pages/setting_page/setupSwitchMenuButton.js"
+import { loadGamePage } from "../game_page/loadGamePage.js"
 
 export function loadSettingPage() {
 	const game_container = document.getElementById("game-preview")

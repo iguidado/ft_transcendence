@@ -1,8 +1,8 @@
-import { initBuildButtons } from "./build";
-import { showRegister } from "./login";
-import { loadGame } from "./loadGame";
-import { loadLoginPage } from "./login";
-import { loadProfilePage } from "./profile";
+import { initBuildButtons } from "./layout.js";
+import { showRegister } from "./login.js";
+import { loadGame } from "./loadGame.js";
+import { loadLoginPage } from "./login.js";
+import { loadProfilePage } from "./profile.js";
 // import { loadSocketTestPage } from "./socket-test";
 
 

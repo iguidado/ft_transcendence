@@ -1,8 +1,8 @@
-import { soloPreset } from "../../../pong-game/src/config/preset/solo";
-import { perspectivePreset } from "../../../pong-game/src/config/preset/perspective";
-import { versus } from "../../../pong-game/src/config/preset/versus";
-import {horizontalPreset} from "../../../pong-game/src/config/preset/horizontal";
-// import {defaultConfig} from "../../pong-game/src/config/preset/defaultConfig"
+import { soloPreset } from "../../../pong-game/src/config/preset/solo.js";
+import { perspectivePreset } from "../../../pong-game/src/config/preset/perspective.js";
+import { versus } from "../../../pong-game/src/config/preset/versus.js";
+import {horizontalPreset} from "../../../pong-game/src/config/preset/horizontal.js";
+// import {defaultConfig} from "../../pong-game/src/config/preset/defaultConfig.js"
 
 export const PRESET_TYPE = Object.freeze({
 	players: 'players',

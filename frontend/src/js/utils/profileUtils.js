@@ -1,5 +1,5 @@
-import { getApiConfigDefault } from "../api/config/apiConfig";
-import { profileRequest } from "../api/routes/profileRoute";
+import { getApiConfigDefault } from "../api/config/apiConfig.js";
+import { profileRequest } from "../api/routes/profileRoute.js";
 
 
 export const pullProfile = () => {

@@ -1,6 +1,6 @@
-import { registerRequest } from "./api/routes/registerRoute"
-import { load_page } from "./router"
-import { displayError } from "./utils/displayError"
+import { registerRequest } from "./api/routes/registerRoute.js"
+import { load_page } from "./router.js"
+import { displayError } from "./utils/displayError.js"
 
 export function handleRegistration() {
 	const registerForm = document.getElementById("registerForm")

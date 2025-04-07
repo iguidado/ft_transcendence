@@ -1,4 +1,4 @@
-import { Game } from "../../pong-game/src/core/Game"
+import { Game } from "../../pong-game/src/core/Game.js"
 
 export function updatePreview(props) {
 	console.log(props.config)

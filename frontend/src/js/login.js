@@ -1,5 +1,5 @@
-import { handleRegistration } from "./register";
-import { loginForm } from "./login_page/loginForm";
+import { handleRegistration } from "./register.js";
+import { loginForm } from "./login_page/loginForm.js";
 
 export function loadLoginPage() {
 	// const app = document.getElementById("app");

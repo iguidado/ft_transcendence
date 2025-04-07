@@ -1,5 +1,5 @@
-import { appendCustomSettings } from "./appendCustomSettings";
-import { CustomBtnsList } from "./config/CustomBtnsList";
+import { appendCustomSettings } from "./appendCustomSettings.js";
+import { CustomBtnsList } from "./config/CustomBtnsList.js";
 
 // Function to handle the switch menu button functionality
 function setupSwitchMenuButton(ctx) {

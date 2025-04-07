@@ -1,4 +1,4 @@
-import { patchRequest } from "../../utils/patchRequest"
+import { patchRequest } from "../../utils/patchRequest.js"
 
 function toggle2faResponseHandler(response) {
 	console.log(response)

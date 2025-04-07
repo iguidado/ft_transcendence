@@ -1,4 +1,4 @@
-import { getRequest } from "../utils/getRequest";
+import { getRequest } from "../utils/getRequest.js";
 
 function profileResponseHandler(response) {
 	console.log(response)
