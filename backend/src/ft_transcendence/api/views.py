@@ -1,5 +1,5 @@
 from .models import User
-from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyOtpSerializer, TwoFAUpdateSerializer, LeaderboardSerializer
+from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyLoginOtpSerializer, TwoFAUpdateSerializer, LeaderboardSerializer, VerifyEmailOtpSerializer
 from datetime import timedelta
 from django.utils import timezone
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -51,6 +51,7 @@ class LoginView(APIView):
             "password": "password123"
 			}
 		)
+	
 	def post(self, request):
 		serializer = LoginSerializer(data=request.data)
 		if serializer.is_valid():
@@ -99,13 +100,14 @@ class LoginView(APIView):
 
 class VerifyLoginOtpView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = VerifyOtpSerializer
+    serializer_class = VerifyLoginOtpSerializer
 
     @swagger_auto_schema(
-            request_body=VerifyOtpSerializer
+            request_body=VerifyLoginOtpSerializer
     )
+	
     def patch(self, request):
-        serializer = VerifyOtpSerializer(data=request.data)
+        serializer = VerifyLoginOtpSerializer(data=request.data)
         if not serializer.is_valid():
             return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -142,7 +144,8 @@ class UserProfileView(APIView):
 	permission_classes = [IsAuthenticated]
 
 	@swagger_auto_schema(responses={200: UserProfileSerializer()})
-	def get(self, request, *args, **kwargs):
+	
+	def get(self, request):
 		user = request.user
 		serializer = UserProfileSerializer(user)
 		return Response(serializer.data, status=status.HTTP_200_OK)
@@ -151,7 +154,6 @@ class UserListView(ListAPIView):
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserProfileSerializer
 	permission_classes = [AllowAny]
-	
 
 	@swagger_auto_schema(
         operation_description="Retrieve the list of all users",
@@ -184,12 +186,10 @@ class RegisterView(APIView):
 class UserDisplayNameUpdateView(APIView):
 	permission_classes = [IsAuthenticated]
 	serializer_class = UpdateDisplayNameSerializer
-
-
-	@swagger_auto_schema(request_body=UpdateDisplayNameSerializer)
-
 	
-	def patch(self, request, *args, **kwargs):
+	@swagger_auto_schema(request_body=UpdateDisplayNameSerializer)
+	
+	def patch(self, request):
 		user = request.user
 		serializer = self.serializer_class(user, data=request.data, partial=True)
 
@@ -205,7 +205,7 @@ class TwoFAUpdateView(APIView):
 
 	@swagger_auto_schema(request_body=TwoFAUpdateSerializer)
 
-	def patch(self, request, *args, **kwargs):
+	def patch(self, request):
 		user = request.user
 		serializer = self.serializer_class(user, data=request.data, partial=True)
 
@@ -228,20 +228,20 @@ class TwoFAUpdateView(APIView):
 				user.otp_email_expiry_time = timezone.now() + timedelta(minutes=15)
 				user.save()
 
-				OTPService.send_otp_email(email, verification_code) #! Faire serveur mail
-				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)	
-			# return Response(serializer.data)
+				OTPService.send_otp_email(email, verification_code)
+				Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)	
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyEmailOtpView(APIView):
 	permission_classes = [IsAuthenticated]
-	serializer_class = VerifyOtpSerializer
+	serializer_class = VerifyEmailOtpSerializer
 
 	@swagger_auto_schema(
-			request_body=VerifyOtpSerializer
+			request_body=VerifyEmailOtpSerializer
 	)
+	
 	def patch(self, request,):
-		serializer = VerifyOtpSerializer(data=request.data)
+		serializer = VerifyEmailOtpSerializer(data=request.data)
 		if not serializer.is_valid():
 			return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
 		otp = serializer.validated_data['otp']
@@ -277,7 +277,7 @@ class UserAvatarUpdateView(APIView):
         consumes=['multipart/form-data']
     )
     
-    def patch(self, request, *args, **kwargs):
+    def patch(self, request):
         user = request.user
         serializer = self.serializer_class(user, data=request.data, partial=True)
 
@@ -295,7 +295,8 @@ class CreateMatchHistoricView(APIView):
         request_body=UpdateUserHistoricSerializer,
         responses={201: "Match created and stats updated", 400: "Invalid request"}
     )
-    def post(self, request, *args, **kwargs):
+	
+    def post(self, request):
         serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
@@ -309,7 +310,7 @@ class CreateMatchHistoricView(APIView):
 class FriendListView(APIView):
 	permission_classes = [IsAuthenticated]
 
-	def get(self, request, *args, **kwargs):
+	def get(self, request):
 		user = request.user
 		friends = user.friends.all()
 		serializer = FriendSerializer(friends, many=True)
@@ -320,8 +321,10 @@ class AddFriendView(APIView):
 
 	@swagger_auto_schema(
 			operation_description="Add a friend by username",
-			request_body=AddFriendSerializer)
-	def post(self, request, *args, **kwargs):
+			request_body=AddFriendSerializer
+	)
+	
+	def post(self, request):
 		user = request.user
 		username_to_add = request.data.get('username')
 		if not username_to_add:
@@ -342,7 +345,8 @@ class LeaderBoardView(APIView):
 			operation_description="Retrieve the top 10 users based on win ratio",
 			responses={200: LeaderboardSerializer(many=True)}
 	)
-	def get(self, request, *args, **kwargs):
+	
+	def get(self):
 		users = User.objects.all().order_by('-win_ratio')[:10]
 		serializer = LeaderboardSerializer(users, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
