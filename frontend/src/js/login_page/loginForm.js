@@ -46,11 +46,29 @@ function fetchHandler(res) {
 	}
 }
 
-function fetchErrorHandler(err) {
+function fetchErrorHandler(err, response) {
 	// DONE login error actions ( a ameliorer l'erreur est en json pour le moment)
-	displayError(
-		"An error occurred during registration. Please try again." + err
-	)
+
+	if (response.status === 401) {
+		displayError(
+			"Wrong login or password. Please try again."
+		)
+	}
+	else if (response.status === 500) {
+		displayError(
+			"Server error. Please try again later."
+		)
+	}
+	else if (response.status === 400) {
+		displayError(
+			"Bad request. Please check your input."
+		)
+	}
+	else{
+		displayError(
+			"An error occurred. Please try again." + err
+		)
+	}
 }
 
 export function loginForm() {
