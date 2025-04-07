@@ -41,7 +41,6 @@ schema_view = get_schema_view(
 
 urlpatterns = [
 	# API doc with Swagger and ReDoc
-	# path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
 	path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 	path('swagger-redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
@@ -68,7 +67,6 @@ urlpatterns = [
     path('api/user/2fa/update/', TwoFAUpdateView.as_view(), name='2fa-update'),
     path('api/user/verify-login-otp/', VerifyLoginOtpView.as_view(), name='verify-login-otp'),
     path('api/user/verify-email-otp/', VerifyEmailOtpView.as_view(), name='verify-email-otp'),
-    
 	path('api/user/profile/update_displayname/', UserDisplayNameUpdateView.as_view(), name='user-displayname-update'),
 	path('api/user/profile/update_avatar/', UserAvatarUpdateView.as_view(), name='user-avatar-update'),	
     
