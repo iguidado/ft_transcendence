@@ -200,41 +200,41 @@ class UserDisplayNameUpdateView(APIView):
 
 
 class TwoFAUpdateView(APIView):
-	permission_classes = [IsAuthenticated]
-	serializer_class = TwoFAUpdateSerializer
+    permission_classes = [IsAuthenticated]
+    serializer_class = TwoFAUpdateSerializer
 
-	@swagger_auto_schema(request_body=TwoFAUpdateSerializer)
+    @swagger_auto_schema(request_body=TwoFAUpdateSerializer)
+    def patch(self, request):
+        user = request.user
+        serializer = self.serializer_class(user, data=request.data, partial=True)
 
-	def patch(self, request):
-		user = request.user
-		serializer = self.serializer_class(user, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-		if not serializer.is_valid():
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        action = serializer.validated_data['action']
 
-		action = serializer.validated_data['action']
+        if action == 'disable':
+            user.is_2fa_enabled = False
+            user.save()
+            return Response({'detail': 'Two-factor authentication disabled.'}, status=status.HTTP_200_OK)
 
-		if action == 'disable':
-			user.is_2fa_enabled = False
-			user.save()
-			return Response({'detail': 'Two-factor authentication disabled.'}, status=status.HTTP_200_OK)
+        elif action == 'enable':
+            email = serializer.validated_data['email']
+            if email:
+                verification_code = OTPService.generate_otp()
+                user.otp_email = verification_code
+                user.email = email
+                user.otp_email_expiry_time = timezone.now() + timedelta(minutes=15)
+                user.save()
 
-		elif action == 'enable':
-			email = serializer.validated_data['email']
-			if email:
-				verification_code = OTPService.generate_otp()
-				user.otp_email = verification_code
-				user.email = email
-				user.otp_email_expiry_time = timezone.now() + timedelta(minutes=15)
-				user.save()
-
-				OTPService.send_otp_email(email, verification_code)
-				Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)	
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                OTPService.send_otp_email(email, verification_code)
+                return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'detail': 'Email is required for 2FA activation.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        return Response({'detail': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyEmailOtpView(APIView):
-	permission_classes = [IsAuthenticated]
-	serializer_class = VerifyEmailOtpSerializer
 
 	@swagger_auto_schema(
 			request_body=VerifyEmailOtpSerializer
