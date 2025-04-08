@@ -15,7 +15,7 @@ function displayInformations() {
 			return noProfileData()
 		const profileData = getProfileData()
 		document.getElementById("usernameDisplay")
-			.textContent = profileData.displayName
+		.textContent = profileData.displayName.charAt(0).toUpperCase() + profileData.displayName.slice(1)
 		document.getElementById("userAvatar")
 			.src = profileData.avatar || "./rsc/pear.png"
 		document.getElementById("gamesPlayed")
