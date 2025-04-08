@@ -6,7 +6,7 @@
 			"username": "spongebob",
 			"displayName": "SpongeBob SquarePants",
 			"email": "spongebob@email.com",
-			"avatar": "static/api/images/defaults.png",
+			"avatar": "static/api/images/chavatar.png",
 			"wins": 10,
 			"looses": 5
 		}

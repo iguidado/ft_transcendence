@@ -17,7 +17,7 @@ function displayInformations() {
 		document.getElementById("usernameDisplay")
 		.textContent = profileData.displayName.charAt(0).toUpperCase() + profileData.displayName.slice(1)
 		document.getElementById("userAvatar")
-			.src = profileData.avatar || "./rsc/pear.png"
+			.src = profileData.avatar
 		document.getElementById("gamesPlayed")
 			.textContent = profileData.gamesPlayed
 		document.getElementById("gamesWon")
