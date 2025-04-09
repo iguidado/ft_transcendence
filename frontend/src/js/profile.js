@@ -74,14 +74,12 @@ function twoFactorAuthSection() {
 	confirm2FABtn.addEventListener("click", () => {
 			const otp = document.getElementById("code2FAInput").value
 			verifyEmailOTP(otp, (res) => {
-				console.log(res)
 				load_page("profile")
 			})
 		})
 }
 
 function displayCodeValidation(res) {
-	console.log(res)
 	document.getElementById("verify2FAModal").style.display = "block"
 	document.getElementById("email2FASection").style.display = "none"
 }

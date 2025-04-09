@@ -3,7 +3,6 @@ import { leaderboardRequest } from "./api/routes/leaderboard";
 
 
 export function loadDashboardPage() {
-	console.log("TEST")
 	leaderboardRequest(displayInformation, logErr)
 }
 
@@ -12,7 +11,6 @@ function logErr(err) {
 }
 
 function displayInformation(data) {
-	console.log(data)
 	const leaderboard_table = document.getElementById("leaderboard-table-body")
 	// Clear existing table content
 	leaderboard_table.innerHTML = '';
@@ -30,7 +28,6 @@ function displayInformation(data) {
 
 	// Add each player to the table
 	data.forEach((player, index) => {
-		console.log(player)
 		const row = document.createElement('tr');
 		
 		// Add rank cell (position)

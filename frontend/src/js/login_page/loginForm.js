@@ -31,9 +31,7 @@ function fetchHandler(res) {
 			})
 	} else {
 		const valide2FAsection = document.getElementById("2FALoginModal")
-		console.log(valide2FAsection)
 		valide2FAsection.style.display = "block"
-		console.log(res)
 		if (!res.temp_token) {
 			console.warn("valide2FAsection !res.temp_token")
 			return
@@ -46,6 +44,8 @@ function fetchHandler(res) {
 				const otp = document.getElementById("code2FAInputLogin").value
 				verifyLoginOTP(otp, (res) => {
 					console.log("validate2FAFromLogin",res)
+				}, (err) => {
+					console.warn("loginForm", err)
 				})
 			})
 	}

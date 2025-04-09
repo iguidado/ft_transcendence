@@ -33,7 +33,6 @@ const routeScripts = {
 
 
 export function load_page(url) {
-	console.log("TOTO")
 	fetchHTMLContent(url).then(htmlContent => {
 		const app = document.getElementById('app');
 		app.innerHTML = htmlContent;
@@ -47,7 +46,6 @@ export function load_page(url) {
 			app.appendChild(layout);
 			initBuildButtons(); 
 		});
-		console.log(url)
 		if (routeScripts[url]) routeScripts[url]();
 			history.pushState({page: url}, "", `/${url}`);
 	});

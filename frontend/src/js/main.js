@@ -4,7 +4,6 @@ import { getProfileData } from "./utils/profileUtils.js"
 document.body.classList.add("themePink")
 
 window.addEventListener("DOMContentLoaded", () => {
-	console.log("YAYA")
 	const currentPage = getCurrentPageFromURL()
 	if (currentPage) {
 		load_page(currentPage)
