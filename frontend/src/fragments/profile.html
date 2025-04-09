@@ -1,7 +1,7 @@
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<div class="container d-flex justify-content-center align-items-center">
 
   <!-- Carte Bootstrap pour le profil -->
-  <div class="card profile-card p-4 text-center" style="width: 320px;">
+  <div class="card profile-card p-4 text-center">
     <!-- Avatar + bouton param. en haut à droite -->
     <div class="mb-3 position-relative">
       <img 
@@ -11,19 +11,19 @@
         height="150" 
       />
       <button
-      class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0" 
+      class="btn position-absolute gear-btn" 
       id="openSettings"
       data-bs-toggle="modal" 
       data-bs-target="#settingsModal"
-      style="background-image: url('./rsc/param.png'); background-size: cover;"
-      
-      >
-        <!-- Icône roue crantée Bootstrap Icons -->
-        <i class="bi bi-gear-fill"></i>
+      style=
+      "background-image: url('./rsc/param.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;">
       </button>
-      <!-- <button type="button" class="p-0 border-0 bg-transparent" style="display: inline-block;">
-        <img src="./rsc/param.png" alt="My Image Button" />
-      </button> -->
     </div>
 
     <!-- Titre du profil -->
@@ -32,7 +32,7 @@
     </h1>
 
     <!-- Statistiques -->
-    <div class="text-start ms-4 my-3">
+    <div class="text-start card-text ms-4 my-3">
       <p>Games played: <span id="gamesPlayed">0</span></p>
       <p>Games won: <span id="gamesWon">0</span></p>
     </div>
@@ -70,7 +70,8 @@
             type="text" 
             id="newDisplayName" 
             class="form-control" 
-            placeholder="Enter new username" 
+            placeholder="Enter new username"
+            style="background-color: rgba(255, 186, 106, 0.5)"
           />
         </div>
         <div class="mb-3">
@@ -80,6 +81,7 @@
             id="newAvatarURL" 
             class="form-control" 
             placeholder="Enter new avatar URL"
+            style="background-color: rgba(255, 186, 106, 0.5)"
           />
         </div>
         <div class="form-check mb-3">
@@ -87,6 +89,7 @@
             class="form-check-input" 
             type="checkbox" 
             id="enable2FA"
+            style="background-color: rgba(255, 186, 106, 0.5)"
           />
           <label class="form-check-label" for="enable2FA">Enable 2FA</label>
         </div>
@@ -97,6 +100,7 @@
             id="email2FAInput" 
             class="form-control mb-2"
             placeholder="Enter your email"
+            style="background-color: rgba(255, 186, 106, 0.5)"
           />
           <button 
             id="send2FAEmailBtn"
@@ -112,6 +116,7 @@
             id="code2FAInput" 
             class="form-control mb-2"
             placeholder="Enter code"
+            style="background-color: rgba(255, 186, 106, 0.5)"
           />
           <button 
             id="confirm2FABtn"
@@ -133,63 +138,3 @@
     </div>
   </div>
 </div>
-
-
-
-<div class="profile-frame">
-  <div class="profile">
-    <div class="profile__avatar-container">
-      <img id="userAvatar" class="profile__avatar" src="./rsc/pear.png" alt="User avatar" />
-      <button class="profile__settings-btn" id="openSettings"></button>
-    </div>
-    <h1 class="profile__title"><span id="usernameDisplay"></span>'s Profile</h1>
-
-
-    <div class="profile__stats">
-      <p>Games played: <span id="gamesPlayed">0</span></p>
-      <p>Games won: <span id="gamesWon">0</span></p>
-    </div>
-
-    <div class="profile__settings-modal" id="settingsModal" style="display: none;">
-      <div class="profile__settings-field">
-        <label for="newDisplayName">Change username:</label>
-        <input type="text" id="newDisplayName" class="profile__input" />
-      </div>
-      <div class="profile__settings-field">
-        <label for="newAvatarURL">Change avatar URL:</label>
-        <input type="text" id="newAvatarURL" class="profile__input" />
-      </div>
-      <div class="profile__settings-field">
-        <label>
-          <input type="checkbox" id="enable2FA" />
-          Enable 2FA
-        </label>
-        <div id="email2FASection" style="display: none;">
-          <input type="email" id="email2FAInput" placeholder="Enter your email" />
-          <button id="send2FAEmailBtn">Send code</button>
-        </div>
-        <div id="verify2FAModal" style="display: none;">
-          <input type="text" id="code2FAInput" placeholder="Enter code" />
-          <button id="confirm2FABtn">Confirm</button>
-        </div>
-      </div>
-      <button id="saveSettings" class="profile__button">Save changes</button>
-    </div>
-	<button id="disconnect">Disconnect</button>
-  </div>
-</div>
-
-
-
-
-<!-- <div class="profile">
-  <h1 class="profile__title">
-    <span id="usernameDisplay"></span>'s Profile
-  </h1>
-
-  <div class="profile__card">
-
-  </div>
-  <img class="profile__avatar" src="../rsc/pear.png" alt="avatar" />
-</div>
- -->

@@ -10,7 +10,6 @@ export function loadLoginPage() {
 			showRegister();
 		});
 	}
-	// TODO “CONNECT WITH 42”
 }
 
 export function showRegister() {
