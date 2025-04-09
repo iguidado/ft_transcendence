@@ -1,7 +1,7 @@
 import * as THREE from "three"
 
 export default {
-	boundingBoxMargin: 20,
+	boundingBoxMargin: 10,
 	polar: {
 		rotateX: 0,
 		rotateY: 0,

@@ -1,10 +1,10 @@
 import {Game} from "../../pong-game/src/core/Game.js"
-import { appendCustomSettings } from "../../game_pages/setting_page/appendCustomSettings.js"
-import { appendPresetButtons } from "../../game_pages/setting_page/appendPresetButtons.js"
-import { CustomBtnsList } from "../../game_pages/setting_page/config/CustomBtnsList.js"
+import { appendCustomSettings } from "./util/appendCustomSettings.js"
+import { appendPresetButtons } from "./util/appendPresetButtons.js"
+import { CustomBtnsList } from "./config/CustomBtnsList.js"
 import { defaultConfig } from "../../pong-game/src/config/preset/defaultConfig.js"
 import { initConfig } from "../../pong-game/src/config/initConfig.js"
-import { setupSwitchMenuButton } from "../../game_pages/setting_page/setupSwitchMenuButton.js"
+import { setupSwitchMenuButton } from "./util/setupSwitchMenuButton.js"
 import { loadGamePage } from "../game_page/loadGamePage.js"
 
 export function loadSettingPage() {
