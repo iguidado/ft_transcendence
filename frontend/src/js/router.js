@@ -3,6 +3,7 @@ import { showRegister } from "./login.js";
 import { loadGame } from "./loadGame.js";
 import { loadLoginPage } from "./login.js";
 import { loadProfilePage } from "./profile.js";
+import { loadDashboardPage } from "./dashboard.js";
 // import { loadSocketTestPage } from "./socket-test";
 
 
@@ -26,11 +27,13 @@ const routeScripts = {
 	login: loadLoginPage,
 	register: showRegister,
 	profile: loadProfilePage,
+	dashboard: loadDashboardPage
 	// 'socket-test': loadSocketTestPage
 }
 
 
 export function load_page(url) {
+	console.log("TOTO")
 	fetchHTMLContent(url).then(htmlContent => {
 		const app = document.getElementById('app');
 		app.innerHTML = htmlContent;
@@ -44,6 +47,7 @@ export function load_page(url) {
 			app.appendChild(layout);
 			initBuildButtons(); 
 		});
+		console.log(url)
 		if (routeScripts[url]) routeScripts[url]();
 			history.pushState({page: url}, "", `/${url}`);
 	});
@@ -57,6 +61,6 @@ window.addEventListener('popstate', (event) => {
 
 export function getCurrentPageFromURL() {
 	const path = window.location.pathname.substring(1);
-	return path && routeScripts.hasOwnProperty(path) ? path : 'login';
+	return path || null;
 }
 
