@@ -346,7 +346,7 @@ class LeaderBoardView(APIView):
 			responses={200: LeaderboardSerializer(many=True)}
 	)
 	
-	def get(self):
+	def get(self, request):
 		users = User.objects.all().order_by('-win_ratio')[:10]
 		serializer = LeaderboardSerializer(users, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
