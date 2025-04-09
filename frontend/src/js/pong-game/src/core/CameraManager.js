@@ -57,7 +57,6 @@ export class CameraManager {
 		const boardGroup = this.game.boardManager.boardGroup;
 		const box = new THREE.Box3().setFromObject(boardGroup);
 		const margin = this.config.boundingBoxMargin || 0;
-		console.log("margin", margin)
 		const expandVector = new THREE.Vector3(margin, margin, margin);
 		box.expandByVector(expandVector);
 		return box;
