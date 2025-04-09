@@ -1,6 +1,7 @@
 import { registerRequest } from "./api/routes/registerRoute.js"
 import { load_page } from "./router.js"
 import { displayError } from "./utils/displayError.js"
+import { saveAccessToken } from "./utils/saveAccessToken.js"
 
 export function handleRegistration() {
 	const registerForm = document.getElementById("registerForm")
@@ -8,6 +9,7 @@ export function handleRegistration() {
 		return
 	registerForm.addEventListener("submit", async (e) => {
 		e.preventDefault()
+		saveAccessToken(null)
 		const username = registerForm.querySelector(
 			'input[placeholder="Choose your login"]'
 		).value

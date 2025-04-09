@@ -30,17 +30,22 @@ function fetchHandler(res) {
 				console.error("loginForm.js : pullProfile : ", err)
 			})
 	} else {
-		// validate2FA()
 		const valide2FAsection = document.getElementById("2FALoginModal")
 		console.log(valide2FAsection)
 		valide2FAsection.style.display = "block"
+		console.log(res)
+		if (!res.temp_token) {
+			console.warn("valide2FAsection !res.temp_token")
+			return
+		}
 		document
 			.getElementById("validate2FAFromLogin")
 			.addEventListener("click", (e) => {
 				e.preventDefault()
+				saveAccessToken(res.temp_token)
 				const otp = document.getElementById("code2FAInputLogin").value
 				verifyLoginOTP(otp, (res) => {
-					console.log("TEST",res)
+					console.log("validate2FAFromLogin",res)
 				})
 			})
 	}
@@ -77,6 +82,7 @@ export function loginForm() {
 		e.preventDefault()
 		const username = document.getElementById("loginInput").value
 		const password = document.getElementById("passwordInput").value
+		saveAccessToken(null)
 		loginRequest({ username, password }, fetchHandler, fetchErrorHandler)
 	})
 }
