@@ -22,7 +22,7 @@ from django.urls import path, re_path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView, LoginView, LeaderBoardView, TwoFAUpdateView, VerifyLoginOtpView, VerifyEmailOtpView
+from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView, LoginView, LeaderBoardView, TwoFAUpdateView, VerifyLoginOtpView, VerifyEmailOtpView, AvailableAvatarsView
 
 
 
@@ -63,6 +63,7 @@ urlpatterns = [
     path('api/users/', UserListView.as_view(), name='users_list'),
     path('api/user/<str:username>/profile/', UserProfileByUserNameView.as_view(), name='user_profile_by_id'),
     path('api/user/friends/', FriendListView.as_view(), name='friend-list'),
+    path('api/user/available-avatars/', AvailableAvatarsView.as_view(), name='available-avatars'),
 	
 	#PATCH
     path('api/user/2fa/update/', TwoFAUpdateView.as_view(), name='2fa-update'),
