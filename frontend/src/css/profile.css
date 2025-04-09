@@ -1,3 +1,56 @@
+/* --- Styles pour le conteneur principal --- */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Hauteur de la fenêtre */
+  background-color: rgba(252, 162, 79, 0.2); /* Couleur de fond */
+  padding: 0; /* Supprime le padding */
+  margin: 0 auto; /* Centre horizontalement */
+  width: 100%; /* S'assure que le conteneur ne dépasse pas la largeur de l'écran */
+  max-width: 320px; /* Limite la largeur au même niveau que la carte */
+  box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur */
+}
+
+/* --- Carte de profil --- */
+.profile-card {
+  width: 320px; /* Largeur fixe de la carte */
+  max-width: 100%; /* S'assure que la carte ne dépasse pas la largeur de l'écran */
+  background-color: rgb(255, 66, 198, 0.2);
+  box-shadow: #422445 0px 0px 20px;
+  border: 2px solid black;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* --- Modifications sur les images --- */
+img {
+    image-rendering: pixelated;
+}
+
+/* Si vous souhaitez supprimer les coins arrondis sur toutes les images Bootstrap */
+.rounded,
+.rounded-circle {
+    border-radius: 0 !important;
+}
+
+/* --- Boutons et autres éléments --- */
+.btn,
+.btn-close {
+    border-radius: 0; /* Boutons aux coins carrés */
+}
+
+/* --- Fenêtre modale --- */
+.modal-content {
+    background-color: rgba(255, 165, 0, 0.7);
+    border: 2px solid black;
+    border-radius: 0;
+}
+
+/* Vous pouvez ajouter d'autres classes personnalisées ou cibler davantage d'éléments selon vos besoins */
+
+
+
 .profile{
   background-color: rgba(255, 223, 186, 0.8);
   padding: 2rem;
