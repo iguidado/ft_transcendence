@@ -111,6 +111,12 @@ class UpdateAvatarSerializer(serializers.ModelSerializer):
 		model = get_user_model()
 		fields = ['avatar']
 
+	def validate_avatar(self,value):
+		valid_choices = [choice[0] for choice in User.DEFAULT_AVATAR_CHOICES]
+		if value not in valid_choices:
+			raise serializers.ValidationError(f"Invalid avatar choice. Valid choices are: {', '.join(valid_choices)}")
+		return value
+
 class UpdateUserHistoricSerializer(serializers.ModelSerializer):
 
 	class Meta:
