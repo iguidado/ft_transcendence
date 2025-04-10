@@ -31,6 +31,12 @@ export function handleRegistration() {
 			registerRequestErrorCallBack
 		)
 	})
+	const backToLoginButton = document.getElementById("backToLoginButton");
+	if (backToLoginButton) {
+		backToLoginButton.addEventListener("click", () => {
+			load_page("login");
+		});
+	}
 }
 
 function registerRequestCallBack(res) {
@@ -43,3 +49,4 @@ function registerRequestErrorCallBack(err) {
 	
 	displayError("An error occurred during registration. Please try again." + err);
 }
+
