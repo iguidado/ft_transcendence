@@ -1,4 +1,5 @@
-import { patchAvatar } from "../utils/patchAvatar.js"
+
+import { patchRequest } from "../utils/patchRequest.js"
 
 function toggle2faResponseHandler(response) {
     console.log(response)
@@ -12,7 +13,7 @@ function toggle2faErrorHandler(error) {
 
 export function updateAvatarRequest(avatarCode, responseHandler=toggle2faResponseHandler, errorHandler=toggle2faErrorHandler) {
     console.log("avatarCode :", avatarCode)
-    patchAvatar({
+    patchRequest({
         UrlPath: "/api/user/profile/update_avatar/",
         body: {avatar : avatarCode},
         responseHandler,

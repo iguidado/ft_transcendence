@@ -161,8 +161,8 @@ function loadAvailableAvatars() {
 
 
 function updateAvatarResponseHandler(data) {
-if (data.avatar_url) {
-	document.getElementById("userAvatar").src = data.avatar_url;
+if (data.avatar) {
+	document.getElementById("userAvatar").src = data.avatar;
 	console.log("Avatar mis à jour avec succès !");
   } else {
 	console.error("Erreur lors de la mise à jour de l'avatar", data);

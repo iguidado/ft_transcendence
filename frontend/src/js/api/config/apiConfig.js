@@ -56,7 +56,10 @@ export const getApiConfigPatchAvatar = () => {
 		fetchOptions: {
 			...apiConfigDefault.fetchOptions,
 			method: "PATCH",
-			// Retirez les headers Content-Type, ils seront ajoutés automatiquement
+			headers: {
+				...apiConfigDefault.fetchOptions.headers,
+				"Content-Type": "multipart/form-data",
+			},
 		},
 	}
 }

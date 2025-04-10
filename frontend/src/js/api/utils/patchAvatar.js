@@ -24,7 +24,7 @@ export async function patchAvatar({
         const requestOptions = {
             method: 'PATCH',
             headers: {
-                'Authorization': config.fetchOptions.headers.Authorization,
+				...config.fetchOptions.headers,
             },
             body: formData,
         }
