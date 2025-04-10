@@ -48,3 +48,15 @@ export const getApiConfigPatch = () => {
 		},
 	}
 }
+
+export const getApiConfigPatchAvatar = () => {
+	const apiConfigDefault = getApiConfigDefault()
+	return {
+		...apiConfigDefault,
+		fetchOptions: {
+			...apiConfigDefault.fetchOptions,
+			method: "PATCH",
+			// Retirez les headers Content-Type, ils seront ajoutés automatiquement
+		},
+	}
+}

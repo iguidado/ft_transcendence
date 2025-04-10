@@ -74,7 +74,14 @@
             style="background-color: rgba(255, 186, 106, 0.5)"
           />
         </div>
-        <div class="mb-3">
+        <div class="mb-3" id="avatarGalleryContainer">
+          <label class="form-label">Select an avatar:</label>
+          <div id="avatarGallery" class="d-flex flex-wrap gap-2">
+            <!-- La galerie d'avatars sera injectée ici par JS -->
+          </div>
+        </div>        
+
+        <!-- <div class="mb-3">
           <label for="newAvatarURL" class="form-label">Change avatar URL:</label>
           <input 
             type="text" 
@@ -83,7 +90,7 @@
             placeholder="Enter new avatar URL"
             style="background-color: rgba(255, 186, 106, 0.5)"
           />
-        </div>
+        </div> -->
         <div class="form-check mb-3">
           <input 
             class="form-check-input" 

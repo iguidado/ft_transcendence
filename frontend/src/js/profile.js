@@ -1,3 +1,6 @@
+import { getApiConfigDefault } from "./api/config/apiConfig.js"
+import { avatarRequest } from "./api/routes/avatarRoute.js"
+import { updateAvatarRequest } from "./api/routes/updateAvatar.js"
 import { toggle2faRequest } from "./api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "./api/routes/user/verifyEmailOTP.js"
 import { load_page } from "./router.js"
@@ -31,18 +34,37 @@ function noProfileData() {
 }
 
 function settingsModal() {
-	console.log("Profile data: ", getProfileData())
-	const settingsBtn = document.getElementById("openSettings")
-	const settingsModal = document.getElementById("settingsModal")
-	let isOpen = false
+	console.log("Profile data: ", getProfileData());
+	const settingsBtn = document.getElementById("openSettings");
+	const settingsModal = document.getElementById("settingsModal");
+	let isOpen = false;
 	settingsBtn.addEventListener("click", () => {
-		isOpen = !isOpen
-		settingsModal.style.display = isOpen ? "block" : "none"
-	})
-	twoFactorAuthSection()
-	saveSettings()
-	disconnectBtn()
-}
+	  isOpen = !isOpen;
+	  settingsModal.style.display = isOpen ? "block" : "none";
+	  if (isOpen) {
+		loadAvailableAvatars(); // Charge la galerie lorsque la modale s'ouvre
+	  }
+	});
+	
+	twoFactorAuthSection();
+	saveSettings();
+	disconnectBtn();
+  }
+  
+
+// function settingsModal() {
+// 	console.log("Profile data: ", getProfileData())
+// 	const settingsBtn = document.getElementById("openSettings")
+// 	const settingsModal = document.getElementById("settingsModal")
+// 	let isOpen = false
+// 	settingsBtn.addEventListener("click", () => {
+// 		isOpen = !isOpen
+// 		settingsModal.style.display = isOpen ? "block" : "none"
+// 	})
+// 	twoFactorAuthSection()
+// 	saveSettings()
+// 	disconnectBtn()
+// }
 
 function twoFactorAuthSection() {
 	const profileData = getProfileData()
@@ -104,4 +126,45 @@ function disconnectBtn() {
 		.addEventListener("click", () => {
 			disconnect()
 		})
+}
+
+function loadAvailableAvatars() {
+		avatarRequest(avatarResponseHandler, error => {
+			console.error("Erreur lors de la récupération des avatars disponibles", error);
+		})
+		
+
+  }
+
+  function updateAvatar(avatarCode) {
+	updateAvatarRequest(avatarCode, updateAvatarResponseHandler, error => {
+		console.error("Erreur lors de la mise à jour de l'avatar", error);})
+	
+  }
+  
+
+  function avatarResponseHandler(data) {
+  console.log("Avatars reçus :", data);
+  const avatarGallery = document.getElementById("avatarGallery");
+  avatarGallery.innerHTML = ''; // Vide le conteneur
+  data.forEach(avatar => {
+	const img = document.createElement("img");
+	img.src = getApiConfigDefault().url + avatar.url;
+	img.alt = avatar.name;
+	img.style.cursor = "pointer";
+	img.style.width = "50px";
+	img.style.height = "50px";
+	img.addEventListener("click", () => updateAvatar(avatar.code));
+	avatarGallery.appendChild(img);
+  })
+}
+
+
+function updateAvatarResponseHandler(data) {
+if (data.avatar_url) {
+	document.getElementById("userAvatar").src = data.avatar_url;
+	console.log("Avatar mis à jour avec succès !");
+  } else {
+	console.error("Erreur lors de la mise à jour de l'avatar", data);
+  }
 }
