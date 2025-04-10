@@ -9,13 +9,17 @@
 }
 
 .semi-transparent-card {
-  background-color: rgba(255, 107, 151, 0.7);
+  background-color: rgba(254, 109, 145, 0.36);
 
   border-radius: 8px;
 
 }
 
-.semi-transparent-card-inside {
-  background-color: rgba(255, 233, 107, 0.2) !important;
-  border-radius: 8px;
+
+
+.card-body{
+  box-shadow: #422445 0px 0px 20px;
+  border: 2px solid black;
+  border-radius: 0;
+  box-shadow: 0px 0px 20px #422445;
 }
