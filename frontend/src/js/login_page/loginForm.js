@@ -52,7 +52,7 @@ function fetchHandler(res) {
 }
 
 function fetchErrorHandler(err, response) {
-	// DONE login error actions ( a ameliorer l'erreur est en json pour le moment)
+	// DONE login error actions
 
 	if (response.status === 401) {
 		displayError(

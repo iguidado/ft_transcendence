@@ -1,39 +1,45 @@
+#loginSection,
+#registerSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+
 .form-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    /* min-height: 50vh; */
-    padding-top: 50px;
-    width: 50vw;
-    max-width: 350px;
-    background-color: rgb(249, 78, 155, 0.6); 
     padding: 1rem;
-    border: 7px dashed #422445;
-    gap: 1.2rem;
-    margin: auto;
-}
+    width: 320px;  
+    background-color: rgba(254, 109, 145, 0.36);
+    border: 2px solid #422445;
+    margin: 50px auto;
+    box-shadow: 0px 0px 20px #422445;
+  }
 
-.form-container__title {
-    font-size: 2rem;
+  .form-container__title {
+    font-size: 3rem;
     font-weight: bold;
     color: #fd9b5d;
-    text-shadow: #422445 2px 2px;
-}
+    text-shadow: 2px 2px #422445;
+    margin-bottom: 1rem;
+  }
 
 .form-container__field {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    width: 70%;
-    gap: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 .form-container__label {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #422445;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #422445;
+  margin-bottom: 0.3rem;
 }
 
 .form-container__input {
@@ -41,19 +47,33 @@
     padding: 0.5rem;
     font-size: 1rem;
     border: 2px solid #422445;
-    border-radius: 5px;
-}
+    border-radius: 4px;
+    background-color: #fff8f0;
+  }
 
-.form-container__button {
+  .form-container__button {
     width: 100%;
     padding: 0.5rem;
     font-size: 1rem;
     background-color: #422445;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-}
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 1rem;
+  }
+
+  .form-container__button:hover {
+    background-color: #ff9b9b;
+    box-shadow: 2px 2px #422445;
+    transform: translate(-2px, -2px);
+  }
+  
+  .form-container__button:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+  }
 
 .modale {
     display: none;

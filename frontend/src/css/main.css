@@ -11,59 +11,6 @@
   font-display: swap;
 }
 
-
-/* Bouton personnalise */
-.my-button {
-  position: relative;
-  /* color: #F2A65E; */
-  text-decoration: none;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 60px;
-  letter-spacing: 2px;
-  margin: 20px;
-  transition: 0.5s;
-  /* background-color: #422445;
-  color: #F2A65E;
-  border: none;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  border-radius: 8px;
-  border-style: outset;
-  border-style: inset;
-  box-shadow:#ff6b97b3;
-  text-shadow:rgba(255, 190, 91, 0.959); */
-}
-
-.my-button:hover {
-  background:url(../rsc/pixel2.png);
-  transition-delay: 0.8s;
-  background-size: 180px;
-  animation: animate 0.8s steps(8) forwards;
-
-  transform: scale(1.05);
-  background-color: #422445;
-  color: #F2A65E;
-  border: none;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  border-radius: 8px;
-  border-style: outset;
-  border-style: inset;
-  box-shadow:#ff6b97b3;
-  text-shadow:rgba(255, 190, 91, 0.959);
-}
-
-@keyframes animate {
-  0% {
-    background-position-y: 0;
-  }
-  100% {
-    background-position-y: -480px;
-  }
-}
-
-
 .themePink {
   background: url("../rsc/pinkcity.gif") no-repeat center center fixed;
   background-size: cover;

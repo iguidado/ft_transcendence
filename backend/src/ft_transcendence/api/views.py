@@ -1,5 +1,6 @@
 from .models import User
-from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyLoginOtpSerializer, TwoFAUpdateSerializer, LeaderboardSerializer, VerifyEmailOtpSerializer
+from django.templatetags.static import static
+from .serializers import UserRegistrationSerializer, UpdateDisplayNameSerializer, UpdateAvatarSerializer, UpdateUserHistoricSerializer, UserProfileSerializer, FriendSerializer, AddFriendSerializer, LoginSerializer, VerifyLoginOtpSerializer, TwoFAUpdateSerializer, LeaderboardSerializer, VerifyEmailOtpSerializer 
 from datetime import timedelta
 from django.utils import timezone
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -261,20 +262,10 @@ class VerifyEmailOtpView(APIView):
 class UserAvatarUpdateView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UpdateAvatarSerializer
-    parser_classes = [MultiPartParser, FormParser]
 
     @swagger_auto_schema(
         operation_description="Update user's avatar",
-        manual_parameters=[
-            openapi.Parameter(
-                name='avatar',
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_FILE,
-                required=True,
-                description='Upload the avatar image'
-            )
-        ],
-        consumes=['multipart/form-data']
+		request_body=UpdateAvatarSerializer,
     )
     
     def patch(self, request):
@@ -283,8 +274,26 @@ class UserAvatarUpdateView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AvailableAvatarsView(APIView):
+    permission_classes = [AllowAny]
+    
+    @swagger_auto_schema(
+        operation_description="Get default avatars with their URLs",
+    )
+    def get(self, request):
+        available_avatars = [
+            {
+                'code': choice[0],
+                'name': choice[1],
+                'url': static(f'api/images/{choice[0]}.png')
+            }
+            for choice in User.DEFAULT_AVATAR_CHOICES
+        ]
+        
+        return Response(available_avatars, status=status.HTTP_200_OK)
 
 class CreateMatchHistoricView(APIView):
     permission_classes = [IsAuthenticated]

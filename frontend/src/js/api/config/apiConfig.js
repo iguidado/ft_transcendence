@@ -48,3 +48,18 @@ export const getApiConfigPatch = () => {
 		},
 	}
 }
+
+export const getApiConfigPatchAvatar = () => {
+	const apiConfigDefault = getApiConfigDefault()
+	return {
+		...apiConfigDefault,
+		fetchOptions: {
+			...apiConfigDefault.fetchOptions,
+			method: "PATCH",
+			headers: {
+				...apiConfigDefault.fetchOptions.headers,
+				"Content-Type": "multipart/form-data",
+			},
+		},
+	}
+}
