@@ -49,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('default2', 'Avatar 2'),
         # ('default3', 'Avatar 3'),
     ]
-	avatar = models.CharField(max_length=50, choices=DEFAULT_AVATAR_CHOICES, default='default1')
+	avatar = models.CharField(max_length=50, choices=DEFAULT_AVATAR_CHOICES, default='default2')
 
 	date_joined = models.DateTimeField(default=timezone.now)
 

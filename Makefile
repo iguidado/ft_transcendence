@@ -40,12 +40,12 @@ VITE_CFG=vite.config.js
 # make fclean   : Complete cleanup (stops containers, removes images and dev folder)
 # make re       : Full rebuild (fclean + all) : Delete everything but the site
 # make monitoring: Starts monitoring services
+# make nuke     : ! Destroy every container and images on your system
 #
 
 # Frontend dev environment Setup:
 # ------------------------------------
 
-#all: $(DEV_CMP) $(DEV_DIR)$(PKG_FILE) .env
 all: $(DEV_CMP) dev .env
 	sed -i "s/\(.*=\).*/\1/" .env.dev
 
@@ -58,12 +58,6 @@ dev:
 
 # Dev environment Setup:
 # ------------------------------------
-
-#$(DEV_DIR)$(PKG_FILE): $(DEV_DIR)
-#	npm create vite@latest frontend/dev -- --template vanilla -y \
-#		&& cd $(DEV_DIR) && npm install && npm install --save $(NPM_DEPS)
-#	rm -f $(DEV_DIR)index.html
-#	rm -rf $(DEV_DIR)src $(DEV_DIR)public
 
 
 $(DEV_DIR):
@@ -99,12 +93,15 @@ $(CERT_DIR)$(CERT_FILE)  $(CERT_DIR)$(KEY_FILE): $(CERT_DIR)
 		-subj "/C=XX/ST=State/L=City/O=Organization/CN=localhost" \
 		-addext "subjectAltName=DNS:localhost,DNS:*.localhost,IP:127.0.0.1"
 
+# Down command  : To stop the project
+# -------------------------
+
+
 prod-down:
 	-$(DC) -f docker-compose.prod.yml down
 
-prod-re: prod-down prod
 
-# Cleaning command
+# Cleaning command : To do before pushing
 # ----------------------------------------
 
 clean:
@@ -116,15 +113,25 @@ clean:
 
 
 
+
 fclean: down prod-down
 	@-docker rmi frontend:prod frontend:dev backend:local postgres:15-alpine 2> /dev/null
 	@-docker rmi -f docker.elastic.co/kibana/kibana:$(STACK_V) docker.elastic.co/logstash/logstash:$(STACK_V) docker.elastic.co/elasticsearch/elasticsearch:$(STACK_V) ft_transcendence-setup 2> /dev/null
-	@echo "Deleted every images"
+	@echo "Deleted every images of project"
 	-@docker volume rm $$(docker volume ls -q) 2> /dev/null
 	@echo "Deleted every volumes"
 	-rm -rf frontend/dev
 
+# Utils : General purpose script
+# --------------------------------------------
+
+nuke:
+	docker rm -f $$(docker ps -qa) && docker rmi -f $$(docker images -qa)
+
+
 
 re: fclean all
 
-.PHONY: all dev down prod prod-down prod-re clean fclean re
+prod-re: fclean prod
+
+.PHONY: all dev down prod prod-down prod-re clean fclean re nuker
