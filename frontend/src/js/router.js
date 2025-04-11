@@ -7,7 +7,7 @@ import { loadDashboardPage } from "./dashboard.js";
 // import { loadSocketTestPage } from "./socket-test";
 
 
-async function fetchHTMLContent(url) {
+export async function fetchHTMLContent(url) {
 	try {
 		url = `./fragments/${url}.html`;
 		const response = await fetch(url);

@@ -18,17 +18,19 @@ import { saveAccessToken } from "../utils/saveAccessToken.js"
 // 	// suite: rediriger ou activer la 2FA etc.
 // }
 
-function fetchHandler(res) {
+function updateLocalProfile(res) {
+	saveAccessToken(res.access_token, res.refresh_token)
+	pullProfile()
+		.then(() => {
+			load_page("profile")
+		})
+}
+
+function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 	console.log("API Login response : ", res)
 	if (res.access_token) {
-		saveAccessToken(res.access_token, res.refresh_token)
-		pullProfile()
-			.then(() => {
-				load_page("profile")
-			})
-			.catch((err) => {
-				console.error("loginForm.js : pullProfile : ", err)
-			})
+		onloginSuccess(res)
+
 	} else {
 		const valide2FAsection = document.getElementById("2FALoginModal")
 		valide2FAsection.style.display = "block"
@@ -43,7 +45,7 @@ function fetchHandler(res) {
 				saveAccessToken(res.temp_token)
 				const otp = document.getElementById("code2FAInputLogin").value
 				verifyLoginOTP(otp, (res) => {
-					console.log("validate2FAFromLogin",res)
+					console.log("validate2FAFromLogin", res)
 				}, (err) => {
 					console.warn("loginForm", err)
 				})
@@ -52,8 +54,6 @@ function fetchHandler(res) {
 }
 
 function fetchErrorHandler(err, response) {
-	// DONE login error actions
-
 	if (response.status === 401) {
 		displayError(
 			"Wrong login or password. Please try again."
@@ -69,20 +69,24 @@ function fetchErrorHandler(err, response) {
 			"Bad request. Please check your input."
 		)
 	}
-	else{
+	else {
 		displayError(
 			"An error occurred. Please try again." + err
 		)
 	}
 }
 
-export function loginForm() {
+export function loginForm(onloginSuccess) {
 	const loginForm = document.getElementById("loginForm")
 	loginForm.addEventListener("submit", (e) => {
 		e.preventDefault()
 		const username = document.getElementById("loginInput").value
 		const password = document.getElementById("passwordInput").value
 		saveAccessToken(null)
-		loginRequest({ username, password }, fetchHandler, fetchErrorHandler)
+		loginRequest(
+			{ username, password },
+			res => fetchHandler(res, onloginSuccess),
+			fetchErrorHandler
+		)
 	})
 }
