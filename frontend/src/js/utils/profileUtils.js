@@ -19,14 +19,20 @@ export const deleteProfileData = () => {
 
 export const getProfileData = () => {
 	const data = JSON.parse(localStorage.getItem('userProfile'))
-	if (!data)
+	return formatProfileData(data)
+}
+
+
+
+export function formatProfileData(profile) {
+	console.log(profile)
+	if (!profile)
 		return null
-	if (!data.displayName)
-		data.displayName = data.username
-	// TODO Image qui fonctionne
-	data.avatar = getApiConfigDefault().url + data.avatar_url
+	if (!profile.displayName)
+		profile.displayName = profile.username
+	profile.avatar = getApiConfigDefault().url + profile.avatar_url
 	// TODO Calculate real values gamesPlayed and gamesWon
-	data.gamesPlayed = 0
-	data.gamesWon = 0
-	return data
+	profile.gamesPlayed = 0
+	profile.gamesWon = 0
+	return profile
 }

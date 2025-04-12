@@ -31,9 +31,7 @@ const routeScripts = {
 	// 'socket-test': loadSocketTestPage
 }
 
-
 export function load_page(url) {
-	console.log("LOL")
 	fetchHTMLContent(url).then(htmlContent => {
 		if (!htmlContent) {
 			load_page("profile")

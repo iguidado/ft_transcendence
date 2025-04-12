@@ -11,7 +11,7 @@ export const addGuestProfileToStore = (profile, errorHandler=console.error) => {
 		}
 	} catch (error) {
 		if (errorHandler) {
-			errorHandler('Error parsing stored profiles:', error)
+			errorHandler(error)
 		}
 	}
 	const profileWithTimestamp = {

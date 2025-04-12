@@ -2,7 +2,11 @@ import { gameRegistry } from "./GameRegistry.js";
 import * as THREE from "three"
 
 export class ScoreMonitor {
-    constructor(container) {
+    constructor(container, leftPlayer, rightPlayer) {
+		this.leftPlayer = leftPlayer
+		this.rightPlayer = rightPlayer
+		this.leftPlayerName = leftPlayer?.displayName || "Marvin"
+		this.rightPlayerName = rightPlayer?.displayName || "Marvin"
         this.context = gameRegistry.getCurrentContext();
         this.scores = {
             left: 0,
@@ -10,7 +14,7 @@ export class ScoreMonitor {
         };
 		this.container = container
 		if (this.container)
-			this.container.innerText = "0 - 0"
+			this.container.innerText = this.leftPlayerName + " " + this.scores.left + " VS " + this.rightPlayerName + " " + this.scores.right
     }
 
     update() {
@@ -45,7 +49,7 @@ export class ScoreMonitor {
             this.onScore(this.scores);
         }
 		if (this.container)
-			this.container.innerText = this.scores.left + " - " + this.scores.right
+			this.container.innerText = this.leftPlayerName + " " + this.scores.left + " VS " + this.rightPlayerName + " " + this.scores.right
     }
 
     reset() {
