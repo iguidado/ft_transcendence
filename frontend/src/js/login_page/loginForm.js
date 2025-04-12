@@ -1,9 +1,8 @@
 import { loginRequest } from "../api/routes/loginRoute.js"
 import { verifyLoginOTP } from "../api/routes/user/verifyLoginOTP.js"
-import { load_page } from "../router.js"
 import { displayError } from "../utils/displayError.js"
-import { pullProfile } from "../utils/profileUtils.js"
 import { saveAccessToken } from "../utils/saveAccessToken.js"
+import { updateLocalProfile } from "../utils/updateLocalProfile.js"
 
 // export function validate2FA() {
 // 	// const twoFACode = document.getElementById('twoFACodeInput').value
@@ -17,14 +16,6 @@ import { saveAccessToken } from "../utils/saveAccessToken.js"
 
 // 	// suite: rediriger ou activer la 2FA etc.
 // }
-
-function updateLocalProfile(res) {
-	saveAccessToken(res.access_token, res.refresh_token)
-	pullProfile()
-		.then(() => {
-			load_page("profile")
-		})
-}
 
 function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 	console.log("API Login response : ", res)
@@ -54,24 +45,24 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 }
 
 function fetchErrorHandler(err, response) {
-	if (response.status === 401) {
+	if (response?.status === 401) {
 		displayError(
 			"Wrong login or password. Please try again."
 		)
 	}
-	else if (response.status === 500) {
+	else if (response?.status === 500) {
 		displayError(
 			"Server error. Please try again later."
 		)
 	}
-	else if (response.status === 400) {
+	else if (response?.status === 400) {
 		displayError(
 			"Bad request. Please check your input."
 		)
 	}
 	else {
 		displayError(
-			"An error occurred. Please try again." + err
+			"An error occurred: " + err
 		)
 	}
 }

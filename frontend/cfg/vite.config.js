@@ -10,5 +10,15 @@ export default defineConfig({
     host: '0.0.0.0', // Bind to all network interface (needed for docker)
     port: 3000,  // Development server will run on port 3000
     hot: true,  // Enable hot module replacement (HMR)
+    fs: {
+      strict: false, // Allow serving files outside the root
+    },
+    middlewareMode: false, // Default mode
+    historyApiFallback: true, // Redirect all requests to index.html
+  },
+  build: {
+    rollupOptions: {
+      input: './src/index.html', // Reference only src/index.html
+    },
   },
 });

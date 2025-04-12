@@ -1,5 +1,5 @@
-import { getApiConfigDefault } from "../api/config/apiConfig.js";
-import { profileRequest } from "../api/routes/profileRoute.js";
+import { getApiConfigDefault } from "../api/config/apiConfig.js"
+import { profileRequest } from "../api/routes/profileRoute.js"
 
 
 export const pullProfile = () => {
@@ -11,7 +11,7 @@ export const pullProfile = () => {
 			(err) => resolve(false)
 		)
 	})
-};
+}
 
 export const deleteProfileData = () => {
 	localStorage.setItem("userProfile", null)
