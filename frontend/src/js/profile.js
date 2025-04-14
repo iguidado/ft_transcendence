@@ -42,6 +42,7 @@ function settingsModal() {
 	  isOpen = !isOpen;
 	  settingsModal.style.display = isOpen ? "block" : "none";
 	  if (isOpen) {
+		updateDisplayName();
 		loadAvailableAvatars(); // Charge la galerie lorsque la modale s'ouvre
 	  }
 	});
@@ -52,19 +53,23 @@ function settingsModal() {
   }
   
 
-// function settingsModal() {
-// 	console.log("Profile data: ", getProfileData())
-// 	const settingsBtn = document.getElementById("openSettings")
-// 	const settingsModal = document.getElementById("settingsModal")
-// 	let isOpen = false
-// 	settingsBtn.addEventListener("click", () => {
-// 		isOpen = !isOpen
-// 		settingsModal.style.display = isOpen ? "block" : "none"
-// 	})
-// 	twoFactorAuthSection()
-// 	saveSettings()
-// 	disconnectBtn()
-// }
+  function updateDisplayName() {
+	const actualDisplayName = document.getElementById("usernameDisplay").textContent;
+	
+	const newDisplayName = document.getElementById("newDisplayName").value;
+	console.log("Nouveau nom d'utilisateur :", newDisplayName);
+	if (!newDisplayName) {
+		console.error("Le champ du nouveau nom d'utilisateur est vide.");
+		return;
+	}
+
+	updateDisplayNameRequest(newDisplayName, (response) => {
+		console.log("Nom d'utilisateur mis à jour avec succès :", response);
+		document.getElementById("usernameDisplay").textContent = newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
+	}, (error) => {
+		console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
+	});
+}
 
 function twoFactorAuthSection() {
 	const profileData = getProfileData()
@@ -113,12 +118,16 @@ function toggle2faError(err, res) {
 }
 
 function saveSettings() {
-	const settingsModal = document.getElementById("settingsModal")
-	document.getElementById("saveSettings")
-		.addEventListener("click", () => {
-			// TODO Save settings
-			settingsModal.style.display = "none"
-		})
+    const saveButton = document.getElementById("saveSettings");
+    saveButton.addEventListener("click", () => {
+        // Close the modal using Bootstrap's API
+        const modal = document.getElementById('settingsModal');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        modalInstance.hide();
+
+        // Refresh the page to show updated changes
+        window.location.reload();
+    });
 }
 
 function disconnectBtn() {
@@ -160,11 +169,30 @@ function loadAvailableAvatars() {
 }
 
 
-function updateAvatarResponseHandler(data) {
-if (data.avatar) {
-	document.getElementById("userAvatar").src = data.avatar;
-	console.log("Avatar mis à jour avec succès !");
-  } else {
-	console.error("Erreur lors de la mise à jour de l'avatar", data);
-  }
+async function updateAvatarResponseHandler(data) {
+    if (data.avatar) {
+        const userAvatar = document.getElementById("userAvatar");
+        userAvatar.src = getApiConfigDefault().url + data.avatar;
+        console.log("Avatar mis à jour avec succès !");
+    } else {
+        console.error("Erreur lors de la mise à jour de l'avatar", data);
+    }
 }
+
+// function handleSaveChanges() {
+//     // Close the modal
+//     const profileModal = document.getElementById('profileSettingsModal');
+//     const modalInstance = bootstrap.Modal.getInstance(profileModal);
+//     modalInstance.hide();
+
+//     // Refresh the page
+//     window.location.reload();
+// }
+
+// // Add event listener to the save button
+// document.addEventListener('DOMContentLoaded', () => {
+//     const saveButton = document.querySelector('#profileSettingsModal .btn-primary');
+//     if (saveButton) {
+//         saveButton.addEventListener('click', handleSaveChanges);
+//     }
+// });
