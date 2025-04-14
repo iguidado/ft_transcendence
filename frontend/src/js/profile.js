@@ -1,6 +1,7 @@
 import { getApiConfigDefault } from "./api/config/apiConfig.js"
 import { avatarRequest } from "./api/routes/avatarRoute.js"
 import { updateAvatarRequest } from "./api/routes/updateAvatar.js"
+import { updateDisplayNameRequest } from "./api/routes/updateDisplayNameRequest.js"
 import { toggle2faRequest } from "./api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "./api/routes/user/verifyEmailOTP.js"
 import { load_page } from "./router.js"
@@ -34,17 +35,9 @@ function noProfileData() {
 }
 
 function settingsModal() {
-	console.log("Profile data: ", getProfileData());
-	const settingsBtn = document.getElementById("openSettings");
-	const settingsModal = document.getElementById("settingsModal");
-	let isOpen = false;
-	settingsBtn.addEventListener("click", () => {
-	  isOpen = !isOpen;
-	  settingsModal.style.display = isOpen ? "block" : "none";
-	  if (isOpen) {
-		updateDisplayName();
-		loadAvailableAvatars(); // Charge la galerie lorsque la modale s'ouvre
-	  }
+	const modalElement = document.getElementById("settingsModal");
+	modalElement.addEventListener('shown.bs.modal', () => {
+	  loadAvailableAvatars();
 	});
 	
 	twoFactorAuthSection();
@@ -52,24 +45,6 @@ function settingsModal() {
 	disconnectBtn();
   }
   
-
-  function updateDisplayName() {
-	const actualDisplayName = document.getElementById("usernameDisplay").textContent;
-	
-	const newDisplayName = document.getElementById("newDisplayName").value;
-	console.log("Nouveau nom d'utilisateur :", newDisplayName);
-	if (!newDisplayName) {
-		console.error("Le champ du nouveau nom d'utilisateur est vide.");
-		return;
-	}
-
-	updateDisplayNameRequest(newDisplayName, (response) => {
-		console.log("Nom d'utilisateur mis à jour avec succès :", response);
-		document.getElementById("usernameDisplay").textContent = newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
-	}, (error) => {
-		console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
-	});
-}
 
 function twoFactorAuthSection() {
 	const profileData = getProfileData()
@@ -118,8 +93,23 @@ function toggle2faError(err, res) {
 }
 
 function saveSettings() {
+
     const saveButton = document.getElementById("saveSettings");
     saveButton.addEventListener("click", () => {
+	const newDisplayName = document.getElementById("newDisplayName").value.trim();
+	console.log("Nouveau nom d'utilisateur :", newDisplayName);
+	if (newDisplayName) {
+		updateDisplayNameRequest(newDisplayName, (response) => {
+			console.log("Nom d'utilisateur mis à jour avec succès :", response);
+			document.getElementById("usernameDisplay").textContent =
+			  newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
+		  }, (error) => {
+			console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
+		  });
+		} else {
+		  console.log("Aucun nouveau nom fourni.");
+		}
+
         // Close the modal using Bootstrap's API
         const modal = document.getElementById('settingsModal');
         const modalInstance = bootstrap.Modal.getInstance(modal);
@@ -129,6 +119,7 @@ function saveSettings() {
         window.location.reload();
     });
 }
+
 
 function disconnectBtn() {
 	document.getElementById("disconnect")
