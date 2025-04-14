@@ -23,7 +23,7 @@ export const getProfileData = () => {
 		return null
 	if (!data.displayName)
 		data.displayName = data.username
-	// TODO Image qui fonctionne
+	// not TODO Image qui fonctionne DONE
 	data.avatar = getApiConfigDefault().url + data.avatar_url
 	// TODO Calculate real values gamesPlayed and gamesWon
 	data.gamesPlayed = 0

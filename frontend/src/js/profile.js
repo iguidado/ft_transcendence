@@ -4,6 +4,7 @@ import { updateAvatarRequest } from "./api/routes/updateAvatar.js"
 import { updateDisplayNameRequest } from "./api/routes/updateDisplayNameRequest.js"
 import { toggle2faRequest } from "./api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "./api/routes/user/verifyEmailOTP.js"
+import { usersListRequest } from "./api/routes/usersRoute.js"
 import { load_page } from "./router.js"
 import { disconnect } from "./utils/disconnect.js"
 import { getProfileData, pullProfile } from "./utils/profileUtils.js"
@@ -92,6 +93,7 @@ function toggle2faError(err, res) {
 	console.warn("API Response:", res)
 }
 
+//TODO save settings DONE
 function saveSettings() {
 
     const saveButton = document.getElementById("saveSettings");
@@ -110,12 +112,11 @@ function saveSettings() {
 		  console.log("Aucun nouveau nom fourni.");
 		}
 
-        // Close the modal using Bootstrap's API
         const modal = document.getElementById('settingsModal');
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
 
-        // Refresh the page to show updated changes
+		//TODO verifier si reload est ok avec SPA
         window.location.reload();
     });
 }
@@ -154,6 +155,7 @@ function loadAvailableAvatars() {
 	img.style.cursor = "pointer";
 	img.style.width = "50px";
 	img.style.height = "50px";
+	//TODO Leon tu peux check pourquoi a ce clic l'avatar ne s'affiche pas directement ?
 	img.addEventListener("click", () => updateAvatar(avatar.code));
 	avatarGallery.appendChild(img);
   })
@@ -170,20 +172,17 @@ async function updateAvatarResponseHandler(data) {
     }
 }
 
-// function handleSaveChanges() {
-//     // Close the modal
-//     const profileModal = document.getElementById('profileSettingsModal');
-//     const modalInstance = bootstrap.Modal.getInstance(profileModal);
-//     modalInstance.hide();
 
-//     // Refresh the page
-//     window.location.reload();
-// }
-
-// // Add event listener to the save button
-// document.addEventListener('DOMContentLoaded', () => {
-//     const saveButton = document.querySelector('#profileSettingsModal .btn-primary');
-//     if (saveButton) {
-//         saveButton.addEventListener('click', handleSaveChanges);
-//     }
-// });
+function loadUsersList() {
+	usersListRequest((users) => {
+		const friendUsernameElement = document.getElementById("friendUsername");
+		friendUsernameElement.innerHTML = ''; // Vide le conteneur avant d'ajouter les utilisateurs
+		users.forEach(user => {
+			const userItem = document.createElement("div");
+			userItem.textContent = user.username;
+			friendUsernameElement.appendChild(userItem);
+		});
+	}, (error) => {
+		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
+	});
+}
