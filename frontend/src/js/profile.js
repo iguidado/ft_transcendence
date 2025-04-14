@@ -31,7 +31,7 @@ function displayInformations() {
 }
 
 function noProfileData() {
-	// TODO showError("Session expired")
+	// TODO showError("Session expired") LEON epxlique ce que tu veux ici
 	disconnect()
 }
 
@@ -173,16 +173,31 @@ async function updateAvatarResponseHandler(data) {
 }
 
 
-function loadUsersList() {
-	usersListRequest((users) => {
-		const friendUsernameElement = document.getElementById("friendUsername");
-		friendUsernameElement.innerHTML = ''; // Vide le conteneur avant d'ajouter les utilisateurs
-		users.forEach(user => {
-			const userItem = document.createElement("div");
-			userItem.textContent = user.username;
-			friendUsernameElement.appendChild(userItem);
-		});
-	}, (error) => {
-		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
-	});
-}
+
+//TODO gestion modale addfriends
+
+// function addFriendModal() {
+// 	const addFriendBtn = document.getElementById("addFriendBtn");
+// 	addFriendBtn.addEventListener("click", () => {
+// 		const friendUsername = document.getElementById("friendUsernameInput").value;
+// 		if (friendUsername) {
+// 			addFriend(friendUsername);
+// 		} else {
+// 			console.error("Nom d'utilisateur vide");
+// 		}
+// 	});
+// }
+
+// function loadUsersList() {
+// 	usersListRequest((users) => {
+// 		const friendUsernameElement = document.getElementById("friendUsername");
+// 		friendUsernameElement.innerHTML = ''; // Vide le conteneur avant d'ajouter les utilisateurs
+// 		users.forEach(user => {
+// 			const userItem = document.createElement("div");
+// 			userItem.textContent = user.username;
+// 			friendUsernameElement.appendChild(userItem);
+// 		});
+// 	}, (error) => {
+// 		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
+// 	});
+// }
