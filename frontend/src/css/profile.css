@@ -41,7 +41,7 @@ img {
 
 /* --- Fenêtre modale --- */
 .modal-content {
-    background-color: rgba(254, 109, 145, 0.8);
+    background-color: rgba(254, 109, 145);
     border: 2 solid black;
     border-radius: 0;
 }
@@ -92,13 +92,13 @@ img {
     z-index: 999;
   }
   
-  .profile__settings-modal {
+  /* .profile__settings-modal {
     background: rgba(255,255,255,0.8);
     border: 2px dashed #422445;
     padding: 1rem;
     margin-top: 1rem;
   }
-  
+   */
   .profile__settings-field {
     margin-bottom: 1rem;
     display: flex;

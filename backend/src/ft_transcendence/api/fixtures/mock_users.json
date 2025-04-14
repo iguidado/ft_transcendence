@@ -6,7 +6,7 @@
 			"username": "spongebob",
 			"displayName": "SpongeBob SquarePants",
 			"email": "spongebob@email.com",
-			"avatar": "static/api/images/chavatar.png",
+			"avatar": "static/api/images/default1.png",
 			"wins": 10,
 			"looses": 5
 		}
@@ -18,7 +18,7 @@
 			"username": "patrick",
 			"displayName": "Patrick Star",
 			"email": "patrick@email.com",
-			"avatar": "static/api/images/defaults.png",
+			"avatar": "static/api/images/default1.png",
 			"wins": 3,
 			"looses": 5
 		}
@@ -30,7 +30,7 @@
 			"username": "squidward",
 			"displayName": "Squidward Q. Tentacles",
 			"email": "squidward@email.com",
-			"avatar": "static/api/images/defaults.png",
+			"avatar": "static/api/images/default1.png",
 			"wins": 23,
 			"looses": 0
 		}

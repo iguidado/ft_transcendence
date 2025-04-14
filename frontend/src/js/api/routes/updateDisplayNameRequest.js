@@ -11,7 +11,7 @@ function updateDisplayNameErrorHandler(error) {
 export function updateDisplayNameRequest(newDisplayName, responseHandler=updateDisplayNameResponseHandler, errorHandler=updateDisplayNameErrorHandler) {
     patchRequest({
         UrlPath: "/api/user/profile/update_displayname/",
-        body: { display_name: newDisplayName },
+        body: { displayName: newDisplayName },
         responseHandler,
         errorHandler
     })
