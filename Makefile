@@ -101,8 +101,11 @@ prod-down:
 	-$(DC) -f docker-compose.prod.yml down
 
 
-# Cleaning command : To do before pushing
+# Cleaning command : 
 # ----------------------------------------
+
+
+#	To do before pushing
 
 clean:
 	$(DC) -f docker-compose.dev.yml rm -f  #Clean stopped container
