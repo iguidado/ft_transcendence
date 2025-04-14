@@ -7,7 +7,7 @@ import { loadDashboardPage } from "./dashboard.js";
 // import { loadSocketTestPage } from "./socket-test";
 
 
-async function fetchHTMLContent(url) {
+export async function fetchHTMLContent(url) {
 	try {
 		url = `./fragments/${url}.html`;
 		const response = await fetch(url);
@@ -17,7 +17,7 @@ async function fetchHTMLContent(url) {
 		const htmlContent = await response.text();
 		return htmlContent;
 	} catch (error) {
-		console.error('Erreur lors de la récupération du fichier HTML:', error);
+		throw new Error(error);
 	}
 }
 
@@ -31,11 +31,20 @@ const routeScripts = {
 	// 'socket-test': loadSocketTestPage
 }
 
-
 export function load_page(url) {
 	fetchHTMLContent(url).then(htmlContent => {
+		if (!htmlContent) {
+			load_page("profile")
+			return
+		} 
 		const app = document.getElementById('app');
-		app.innerHTML = htmlContent;
+		let mainContainer = document.getElementById("main_container")
+		if (!mainContainer) {
+			mainContainer = document.createElement('div');
+			mainContainer.id = "main_container"
+			app.appendChild(mainContainer)
+		}
+		mainContainer.innerHTML = htmlContent;
 		fetchHTMLContent('layout').then(htmlContent => {
 			const layout = document.createElement('div');
 			layout.innerHTML = htmlContent;
@@ -48,7 +57,7 @@ export function load_page(url) {
 		});
 		if (routeScripts[url]) routeScripts[url]();
 			history.pushState({page: url}, "", `/${url}`);
-	});
+	}).catch(err => load_page("profile"))
 }
 
 window.addEventListener('popstate', (event) => {

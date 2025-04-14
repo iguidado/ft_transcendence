@@ -302,12 +302,13 @@ footer #switch-menu-btn {
 
 
 #game-container {
-	width: 100%;
+	width: 80vw;
 	height: 70vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	margin: auto;
 }
 
 #pong-game {

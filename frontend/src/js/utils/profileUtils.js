@@ -1,5 +1,5 @@
-import { getApiConfigDefault } from "../api/config/apiConfig.js";
-import { profileRequest } from "../api/routes/profileRoute.js";
+import { getApiConfigDefault } from "../api/config/apiConfig.js"
+import { profileRequest } from "../api/routes/profileRoute.js"
 
 
 export const pullProfile = () => {
@@ -11,7 +11,7 @@ export const pullProfile = () => {
 			(err) => resolve(false)
 		)
 	})
-};
+}
 
 export const deleteProfileData = () => {
 	localStorage.setItem("userProfile", null)
@@ -19,14 +19,18 @@ export const deleteProfileData = () => {
 
 export const getProfileData = () => {
 	const data = JSON.parse(localStorage.getItem('userProfile'))
-	if (!data)
+	return formatProfileData(data)
+}
+
+
+
+export function formatProfileData(profile) {
+	console.log(profile)
+	if (!profile)
 		return null
-	if (!data.displayName)
-		data.displayName = data.username
-	// not TODO Image qui fonctionne DONE
-	data.avatar = getApiConfigDefault().url + data.avatar_url
+	if (!profile.displayName)
+		profile.displayName = profile.username
+	profile.avatar = getApiConfigDefault().url + profile.avatar_url
 	// TODO Calculate real values gamesPlayed and gamesWon
-	data.gamesPlayed = 0
-	data.gamesWon = 0
-	return data
+	return profile
 }

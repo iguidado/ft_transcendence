@@ -1,6 +1,6 @@
 import { getAccessToken } from "../../utils/getAccessToken.js"
 
-export const getApiConfigDefault = () => {
+export const getApiConfigDefault = (token=null) => {
 	const obj = {
 		url: "http://127.0.0.1:8080",
 		fetchOptions: {
@@ -10,7 +10,9 @@ export const getApiConfigDefault = () => {
 			},
 		},
 	}
-	const access_token = getAccessToken()
+	let access_token = token
+	if (!access_token)
+		access_token = getAccessToken()
 	if (access_token)
 		obj.fetchOptions.headers["Authorization"] = `Bearer ${access_token}`
 	return obj
@@ -27,8 +29,8 @@ export const getApiConfigPost = () => {
 	}
 }
 
-export const getApiConfigGet = () => {
-	const apiConfigDefault = getApiConfigDefault()
+export const getApiConfigGet = (token=null) => {
+	const apiConfigDefault = getApiConfigDefault(token)
 	return {
 		...apiConfigDefault,
 		fetchOptions: {

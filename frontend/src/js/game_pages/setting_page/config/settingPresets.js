@@ -1,7 +1,9 @@
-import { soloPreset } from "../../../pong-game/src/config/preset/solo.js";
+import { soloViewsPreset } from "../../../pong-game/src/config/preset/soloViewsPreset.js";
+import { soloPaddlesPreset } from "../../../pong-game/src/config/preset/soloPaddlesPreset.js";
+import { versusPaddlesPreset } from "../../../pong-game/src/config/preset/versusPaddlesPreset.js";
+import { versusViewsPreset } from "../../../pong-game/src/config/preset/versusViewsPreset.js";
+import { horizontalPreset } from "../../../pong-game/src/config/preset/horizontal.js";
 import { perspectivePreset } from "../../../pong-game/src/config/preset/perspective.js";
-import { versus } from "../../../pong-game/src/config/preset/versus.js";
-import {horizontalPreset} from "../../../pong-game/src/config/preset/horizontal.js";
 // import {defaultConfig} from "../../pong-game/src/config/preset/defaultConfig.js"
 
 export const PRESET_TYPE = Object.freeze({
@@ -13,22 +15,43 @@ export const PRESET_TYPE = Object.freeze({
 export const settingPresets = [
 	{
 		name: "Player VS AI",
-		gameConfig: soloPreset,
-		type: PRESET_TYPE.players
+		gameConfigs: [
+			{
+				type: PRESET_TYPE.controls,
+				data: soloPaddlesPreset
+			},
+			{
+				type: PRESET_TYPE.camera,
+				data: soloViewsPreset
+			}
+		],
 	},
 	{
 		name: "Player VS Player",
-		gameConfig: versus,
-		type: PRESET_TYPE.players
+		gameConfigs: [
+			{
+				type: PRESET_TYPE.controls,
+				data: versusPaddlesPreset
+			},
+			{
+				type: PRESET_TYPE.camera,
+				data: versusViewsPreset
+			}
+		],
 	},
 	{
 		name: "Perspective",
-		gameConfig: perspectivePreset,
-		type: PRESET_TYPE.camera
+		gameConfigs: [{
+			data: perspectivePreset,
+			type: PRESET_TYPE.camera
+		}],
+		
 	},
 	{
 		name: "Horizontal",
-		gameConfig: horizontalPreset,
-		type: PRESET_TYPE.camera
+		gameConfigs: [{
+			data: horizontalPreset,
+			type: PRESET_TYPE.camera
+		}],
 	}
 ]

@@ -12,10 +12,11 @@ export async function getRequest({
 	UrlPath="",
 	responseHandler=responseHandlerDefault,
 	errorHandler=errorHandlerDefault,
-	config
+	config,
+	token=null
 }) {
 	if (!config)
-		config = getApiConfigGet()
+		config = getApiConfigGet(token)
 	try {
 		// Ajouter les bons en-têtes et transformer le corps en JSON
 		const requestOptions = {

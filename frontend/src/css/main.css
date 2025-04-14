@@ -17,3 +17,9 @@
   margin: 0;
   background-attachment: fixed;
 }
+
+#main_container {
+	width: 100vw;
+	height: 100vh;
+	margin: 0 auto;
+}

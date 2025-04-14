@@ -2,6 +2,7 @@ export default {
 	layout: "horizontal", // or "vertical", "grid"
 	cameraPresets: [
 		{  // Left paddle view
+			boundingBoxMargin: 25,
 			polar: {
 				rotateX: Math.PI/2,
 				rotateY: -Math.PI/4, 
@@ -12,6 +13,7 @@ export default {
 			}
 		},
 		{  // Right paddle view
+			boundingBoxMargin: 25,
 			polar: {
 				rotateX: Math.PI/2,
 				rotateY: Math.PI/4,

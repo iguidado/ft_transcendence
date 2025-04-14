@@ -1,9 +1,8 @@
 import { handleRegistration } from "./register.js";
 import { loginForm } from "./login_page/loginForm.js";
 
-export function loadLoginPage() {
-	// const app = document.getElementById("app");
-	loginForm();
+export function loadLoginPage(onloginSuccess) {
+	loginForm(onloginSuccess);
 	const registerBtn = document.getElementById("registerButton");
 	if (registerBtn) {
 		registerBtn.addEventListener("click", () => {
