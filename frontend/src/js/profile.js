@@ -280,20 +280,36 @@ function deleteFriend(username) {
 //Affichage liste d'amis
 
 function displayFriendsList() {
-	const friendsList = document.getElementById("friendsList");
-	if (!friendsList) {
+    const friendsList = document.getElementById("friendsList");
+    if (!friendsList) {
         console.error("Element with ID 'friendsList' not found in the DOM.");
         return;
     }
-	friendsList.innerHTML = ''; // Vide le conteneur avant d'ajouter les amis
-	const profileData = getProfileData();
-	
-	// Ajouter chaque ami dans la liste
-	profileData.friends.forEach(friend => {
-		const friendItem = document.createElement("li");
-		friendItem.textContent = friend.username;
-		friendsList.appendChild(friendItem);
-	});
+    friendsList.innerHTML = ''; // Vide le conteneur avant d'ajouter les amis
+    const profileData = getProfileData();
+    
+    // Ajouter chaque ami dans la liste
+    profileData.friends.forEach(friend => {
+        const friendItem = document.createElement("li");
+        friendItem.className = "list-group-item d-flex align-items-center";
+
+        // Indicateur de statut
+        const statusIndicator = document.createElement("span");
+        statusIndicator.style.width = "10px";
+        statusIndicator.style.height = "10px";
+        statusIndicator.style.marginRight = "10px";
+        statusIndicator.style.backgroundColor = friend.is_active ? "green" : "grey";
+
+        // Nom de l'ami
+        const friendName = document.createElement("span");
+        friendName.textContent = friend.username;
+
+        // Ajouter l'indicateur et le nom à l'élément de liste
+        friendItem.appendChild(statusIndicator);
+        friendItem.appendChild(friendName);
+
+        friendsList.appendChild(friendItem);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
