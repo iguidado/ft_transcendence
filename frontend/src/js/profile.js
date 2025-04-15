@@ -9,6 +9,7 @@ import { addFriendRequest } from "./api/routes/addFriendRoute.js"
 import { load_page } from "./router.js"
 import { disconnect } from "./utils/disconnect.js"
 import { getProfileData, pullProfile } from "./utils/profileUtils.js"
+import { deleteFriendRequest } from "./api/routes/deleteFriendRoute.js";
 
 export async function loadProfilePage() {
 	pullProfile().then((profile) => {
@@ -16,7 +17,7 @@ export async function loadProfilePage() {
 			return noProfileData()
 		displayInformations()
 		settingsModal()
-		addFriendModal()  // Ajoutez cette ligne
+		addFriendModal()
 	})
 }
 
@@ -199,10 +200,30 @@ function addFriendModal() {
             // Fermer la modale après l'ajout
             const modal = bootstrap.Modal.getInstance(addFriendModal);
             modal.hide();
+			load_page("profile");
         } else {
 			console.error("Aucun utilisateur sélectionné");
         }
     });
+	// Gestion du bouton de suppression d'ami
+	const deleteFriendBtn = document.getElementById("deleteFriendBtn");
+	deleteFriendBtn.addEventListener("click", () => {
+		// Récupérer l'utilisateur sélectionné
+		const friendUsernameSelect = document.getElementById("friendUsername");
+		const selectedUsername = friendUsernameSelect.value;
+
+		if (selectedUsername) {
+			console.log("Suppression d'ami:", selectedUsername);
+			deleteFriend(selectedUsername);
+
+			// Fermer la modale après la suppression
+			const modal = bootstrap.Modal.getInstance(addFriendModal);
+			modal.hide();
+			load_page("profile");
+		} else {
+			console.error("Aucun utilisateur sélectionné pour suppression");
+		}
+	});
 }
 
 function loadUsersList() {
@@ -242,6 +263,19 @@ function addFriend(username) {
 	})
 }
 
+function deleteFriend(username) {
+    const profileData = getProfileData();
+    if (username === profileData.username) {
+		//TODO Barbara ICI add modale error avec ce message
+        console.error("Vous ne pouvez pas vous retirer en tant qu'ami.");
+        return;
+    }
+    deleteFriendRequest({username}, response => {
+        console.log("Friend deleted successfully:", response);
+    }, error => {
+        console.error("Error during friend deletion:", error);
+    });
+}
 
 //Affichage liste d'amis
 
