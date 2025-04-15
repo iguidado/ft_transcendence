@@ -9,15 +9,16 @@ import { load_page } from "./router.js"
 import { disconnect } from "./utils/disconnect.js"
 import { getProfileData, pullProfile } from "./utils/profileUtils.js"
 
-export function loadProfilePage() {
-	displayInformations()
-	settingsModal()
+export async function loadProfilePage() {
+	pullProfile().then((profile) => {
+		if (!profile)
+			return noProfileData()
+		displayInformations()
+		settingsModal()
+	})
 }
 
-function displayInformations() {
-	pullProfile().then((isSuccess) => {
-		if (!isSuccess)
-			return noProfileData()
+async function displayInformations() {
 		const profileData = getProfileData()
 		document.getElementById("usernameDisplay")
 		.textContent = profileData.displayName.charAt(0).toUpperCase() + profileData.displayName.slice(1)
@@ -27,11 +28,9 @@ function displayInformations() {
 			.textContent = profileData.gamesPlayed
 		document.getElementById("gamesWon")
 			.textContent = profileData.gamesWon
-	})
 }
 
 function noProfileData() {
-	// TODO showError("Session expired") LEON epxlique ce que tu veux ici
 	disconnect()
 }
 

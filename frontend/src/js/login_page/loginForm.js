@@ -90,8 +90,8 @@ export function loginForm(onloginSuccess) {
 		e.preventDefault()
 		const username = document.getElementById("loginInput").value
 		const password = document.getElementById("passwordInput").value
-		if (!onloginSuccess)
-			saveAccessToken(null)
+		// if (!onloginSuccess)
+		// 	saveAccessToken(null)
 		if (usernameAlreadyLogin(username)) {
 			displayError("User already logged in")
 			return

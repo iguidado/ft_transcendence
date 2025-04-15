@@ -6,9 +6,9 @@ export const pullProfile = () => {
 	return new Promise((resolve, reject) => {
 		profileRequest((data) => {
 				localStorage.setItem("userProfile", JSON.stringify(data))
-				resolve(true)
+				resolve(data)
 			},
-			(err) => resolve(false)
+			(err) => resolve(null)
 		)
 	})
 }
