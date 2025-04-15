@@ -57,7 +57,7 @@ export function load_page(url) {
 		});
 		if (routeScripts[url]) routeScripts[url]();
 			history.pushState({page: url}, "", `/${url}`);
-	}).catch(err => load_page("profile"))
+	}).catch(err => {console.log(err)})
 }
 
 window.addEventListener('popstate', (event) => {
