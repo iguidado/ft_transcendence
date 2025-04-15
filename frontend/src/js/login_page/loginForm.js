@@ -68,12 +68,13 @@ function fetchErrorHandler(err, response) {
 }
 
 export function loginForm(onloginSuccess) {
-	const loginForm = document.getElementById("loginForm")
-	loginForm.addEventListener("submit", (e) => {
+	const loginFormElem = document.getElementById("loginForm")
+	loginFormElem.addEventListener("submit", (e) => {
 		e.preventDefault()
 		const username = document.getElementById("loginInput").value
 		const password = document.getElementById("passwordInput").value
-		saveAccessToken(null)
+		if (!onloginSuccess)
+			saveAccessToken(null)
 		loginRequest(
 			{ username, password },
 			res => fetchHandler(res, onloginSuccess),
