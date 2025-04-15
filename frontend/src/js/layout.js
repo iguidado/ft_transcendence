@@ -1,4 +1,5 @@
 import { load_page } from "./router.js";
+import { disconnect } from "./utils/disconnect.js";
 
 
 function toggleLayerPair(event) {
@@ -25,6 +26,10 @@ export function initBuildButtons() {
 		const loaddest = btn.getAttribute("data-load");
 		if (loaddest) {
 			btn.addEventListener("click", () => {
+				if (loaddest === "login") {
+					disconnect();
+					return;
+				}
 				load_page(loaddest);
 			});
 		}
