@@ -5,6 +5,7 @@ import { updateDisplayNameRequest } from "./api/routes/updateDisplayNameRequest.
 import { toggle2faRequest } from "./api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "./api/routes/user/verifyEmailOTP.js"
 import { usersListRequest } from "./api/routes/usersRoute.js"
+import { addFriendRequest } from "./api/routes/addFriendRoute.js"
 import { load_page } from "./router.js"
 import { disconnect } from "./utils/disconnect.js"
 import { getProfileData, pullProfile } from "./utils/profileUtils.js"
@@ -15,6 +16,7 @@ export async function loadProfilePage() {
 			return noProfileData()
 		displayInformations()
 		settingsModal()
+		addFriendModal()  // Ajoutez cette ligne
 	})
 }
 
@@ -43,8 +45,7 @@ function settingsModal() {
 	twoFactorAuthSection();
 	saveSettings();
 	disconnectBtn();
-  }
-  
+}
 
 function twoFactorAuthSection() {
 	const profileData = getProfileData()
@@ -173,30 +174,63 @@ async function updateAvatarResponseHandler(data) {
 
 
 
+function addFriend(username) {
+  addFriendRequest({username}, response => {
+    console.log("Friend added successfully:", response);
+  }, error => {
+    console.error("ERROR during friend add", error);
+  })
+}
+
 //TODO gestion modale addfriends
 
-// function addFriendModal() {
-// 	const addFriendBtn = document.getElementById("addFriendBtn");
-// 	addFriendBtn.addEventListener("click", () => {
-// 		const friendUsername = document.getElementById("friendUsernameInput").value;
-// 		if (friendUsername) {
-// 			addFriend(friendUsername);
-// 		} else {
-// 			console.error("Nom d'utilisateur vide");
-// 		}
-// 	});
-// }
+function addFriendModal() {
+    const addFriendModal = document.getElementById("addFriendModal");
+    // Chargez la liste des utilisateurs quand la modale s'ouvre
+    addFriendModal.addEventListener('shown.bs.modal', () => {
+        loadUsersList();
+    });
+    
+    // Gestion du bouton de confirmation d'ajout d'ami
+    const addFriendBtn = document.getElementById("addFriendConfirmBtn");
+    addFriendBtn.addEventListener("click", () => {
+        // Récupérer l'utilisateur sélectionné
+        const friendUsernameSelect = document.getElementById("friendUsername");
+        const selectedUsername = friendUsernameSelect.value;
+        
+        if (selectedUsername) {
+            console.log("Ajout d'ami:", selectedUsername);
+            // TODO: Implémenter la fonction addFriend
+            addFriend(selectedUsername);
+            
+            // Fermer la modale après l'ajout
+            const modal = bootstrap.Modal.getInstance(addFriendModal);
+            modal.hide();
+        } else {
+            console.error("Aucun utilisateur sélectionné");
+        }
+    });
+}
 
-// function loadUsersList() {
-// 	usersListRequest((users) => {
-// 		const friendUsernameElement = document.getElementById("friendUsername");
-// 		friendUsernameElement.innerHTML = ''; // Vide le conteneur avant d'ajouter les utilisateurs
-// 		users.forEach(user => {
-// 			const userItem = document.createElement("div");
-// 			userItem.textContent = user.username;
-// 			friendUsernameElement.appendChild(userItem);
-// 		});
-// 	}, (error) => {
-// 		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
-// 	});
-// }
+function loadUsersList() {
+	usersListRequest((users) => {
+		const friendUsernameElement = document.getElementById("friendUsername");
+		friendUsernameElement.innerHTML = ''; // Vide le conteneur avant d'ajouter les utilisateurs
+		
+		// Ajouter une option vide par défaut
+		const defaultOption = document.createElement("option");
+		defaultOption.value = "";
+		defaultOption.textContent = "Select a username";
+		friendUsernameElement.appendChild(defaultOption);
+		
+		// Ajouter chaque utilisateur comme option dans le select
+		users.forEach(user => {
+			const option = document.createElement("option");
+			option.value = user.username;
+			option.textContent = user.username;
+			friendUsernameElement.appendChild(option);
+		});
+	}, (error) => {
+		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
+	});
+}

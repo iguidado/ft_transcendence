@@ -154,7 +154,7 @@ class UserProfileView(APIView):
 class UserListView(ListAPIView):
 	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserProfileSerializer
-	permission_classes = [AllowAny]
+	permission_classes = [IsAuthenticated]
 
 	@swagger_auto_schema(
         operation_description="Retrieve the list of all users",
