@@ -15,10 +15,28 @@
 </form>
 </div>
 
-<div id="2FALoginModal" class="profile" style="display: none;">
-	<input type="text" id="code2FAInputLogin" placeholder="Enter your 2FA code" />
-	<button id="validate2FAFromLogin">Validate</button>
-</div>
+
+</div><div class="modal fade" id="2FALoginModal" style="display: none;">
+	  <div class="modal-content">
+		<!-- En-tête de la modal -->
+		<div class="modal-header">
+		  <h1 class="modal-title fs-5" id="2FAModalLabel">2FA</h1>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<!-- Corps de la modal : champs de réglages -->
+		<div class="modal-body">
+		  <div class="mb-3">
+			<label for="Code2FA" class="form-label">Code:</label>
+			<input type="text" id="code2FAInputLogin" class="form-control" placeholder="Enter 2FA code"
+			  style="background-color: rgba(255, 186, 106, 0.5)" />
+		  </div>
+  
+		<!-- Pied de la modal : bouton de sauvegarde -->
+		<div class="modal-footer">
+		  <button id="validate2FAFromLogin" class="btn btn-primary">Validate</button>
+		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	  </div>
+  </div>
 
 <div id="registerSection" style="display: none;">
 	<form class="form-container" id="registerForm">
