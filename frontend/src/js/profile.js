@@ -30,6 +30,7 @@ async function displayInformations() {
 			.textContent = profileData.gamesPlayed
 		document.getElementById("gamesWon")
 			.textContent = profileData.gamesWon
+		displayFriendsList()
 }
 
 function noProfileData() {
@@ -174,18 +175,11 @@ async function updateAvatarResponseHandler(data) {
 
 
 
-function addFriend(username) {
-  addFriendRequest({username}, response => {
-    console.log("Friend added successfully:", response);
-  }, error => {
-    console.error("ERROR during friend add", error);
-  })
-}
 
 //TODO gestion modale addfriends
 
 function addFriendModal() {
-    const addFriendModal = document.getElementById("addFriendModal");
+	const addFriendModal = document.getElementById("addFriendModal");
     // Chargez la liste des utilisateurs quand la modale s'ouvre
     addFriendModal.addEventListener('shown.bs.modal', () => {
         loadUsersList();
@@ -200,14 +194,13 @@ function addFriendModal() {
         
         if (selectedUsername) {
             console.log("Ajout d'ami:", selectedUsername);
-            // TODO: Implémenter la fonction addFriend
             addFriend(selectedUsername);
             
             // Fermer la modale après l'ajout
             const modal = bootstrap.Modal.getInstance(addFriendModal);
             modal.hide();
         } else {
-            console.error("Aucun utilisateur sélectionné");
+			console.error("Aucun utilisateur sélectionné");
         }
     });
 }
@@ -234,3 +227,42 @@ function loadUsersList() {
 		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
 	});
 }
+
+function addFriend(username) {
+	const profileData = getProfileData();
+	if (username === profileData.username) {
+		//TODO Barbara ICI add modale error avec ce message
+		console.error("Vous ne pouvez pas vous ajouter en tant qu'ami.");
+		return;
+	}
+	addFriendRequest({username}, response => {
+	console.log("Friend added successfully:", response);
+	}, error => {
+	console.error("ERROR during friend add", error);
+	})
+}
+
+
+//Affichage liste d'amis
+
+function displayFriendsList() {
+	const friendsList = document.getElementById("friendsList");
+	if (!friendsList) {
+        console.error("Element with ID 'friendsList' not found in the DOM.");
+        return;
+    }
+	friendsList.innerHTML = ''; // Vide le conteneur avant d'ajouter les amis
+	const profileData = getProfileData();
+	
+	// Ajouter chaque ami dans la liste
+	profileData.friends.forEach(friend => {
+		const friendItem = document.createElement("li");
+		friendItem.textContent = friend.username;
+		friendsList.appendChild(friendItem);
+	});
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    displayFriendsList();
+});
+
