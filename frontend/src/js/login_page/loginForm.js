@@ -37,11 +37,10 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 		document
 			.getElementById("validate2FAFromLogin")
 			.addEventListener("click", (e) => {
-				
 				e.preventDefault()
 				saveAccessToken(res.temp_token)
 				const otp = document.getElementById("code2FAInputLogin").value
-				verifyLoginOTP(otp, (res) => {
+				verifyLoginOTP({otp, temp_token: res.temp_token}, (res) => {
 					console.log("validate2FAFromLogin", res)
 					twoFAModal.hide()
 				}, (err) => {
