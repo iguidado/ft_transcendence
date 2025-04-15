@@ -1,6 +1,8 @@
 import { loginRequest } from "../api/routes/loginRoute.js"
 import { verifyLoginOTP } from "../api/routes/user/verifyLoginOTP.js"
+import { getGuestList } from "../game_pages/loginGuestPage/utils/getGuestList.js"
 import { displayError } from "../utils/displayError.js"
+import { getProfileData } from "../utils/profileUtils.js"
 import { saveAccessToken } from "../utils/saveAccessToken.js"
 import { updateLocalProfile } from "../utils/updateLocalProfile.js"
 
@@ -67,6 +69,21 @@ function fetchErrorHandler(err, response) {
 	}
 }
 
+function usernameAlreadyLogin(username) {
+	const profile = getProfileData()
+	if (!profile)
+		return false
+	if (username == profile.username)
+		return true
+	const profiles = getGuestList()
+	if (!profiles)
+		return false
+	for (const p of profiles) {
+		if (p.username == username)
+			return true
+	}
+}
+
 export function loginForm(onloginSuccess) {
 	const loginFormElem = document.getElementById("loginForm")
 	loginFormElem.addEventListener("submit", (e) => {
@@ -75,6 +92,10 @@ export function loginForm(onloginSuccess) {
 		const password = document.getElementById("passwordInput").value
 		if (!onloginSuccess)
 			saveAccessToken(null)
+		if (usernameAlreadyLogin(username)) {
+			displayError("User already logged in")
+			return
+		}
 		loginRequest(
 			{ username, password },
 			res => fetchHandler(res, onloginSuccess),
