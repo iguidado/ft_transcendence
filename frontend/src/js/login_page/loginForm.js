@@ -19,6 +19,8 @@ import { updateLocalProfile } from "../utils/updateLocalProfile.js"
 // 	// suite: rediriger ou activer la 2FA etc.
 // }
 
+
+  
 function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 	console.log("API Login response : ", res)
 	if (res.access_token) {
@@ -26,7 +28,8 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 
 	} else {
 		const valide2FAsection = document.getElementById("2FALoginModal")
-		valide2FAsection.style.display = "block"
+		const twoFAModal = new bootstrap.Modal(valide2FAsection)
+		twoFAModal.show()
 		if (!res.temp_token) {
 			console.warn("valide2FAsection !res.temp_token")
 			return
@@ -34,11 +37,13 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 		document
 			.getElementById("validate2FAFromLogin")
 			.addEventListener("click", (e) => {
+				
 				e.preventDefault()
 				saveAccessToken(res.temp_token)
 				const otp = document.getElementById("code2FAInputLogin").value
 				verifyLoginOTP(otp, (res) => {
 					console.log("validate2FAFromLogin", res)
+					twoFAModal.hide()
 				}, (err) => {
 					console.warn("loginForm", err)
 				})
@@ -90,8 +95,8 @@ export function loginForm(onloginSuccess) {
 		e.preventDefault()
 		const username = document.getElementById("loginInput").value
 		const password = document.getElementById("passwordInput").value
-		// if (!onloginSuccess)
-		// 	saveAccessToken(null)
+		if (!onloginSuccess)
+			saveAccessToken(null)
 		if (usernameAlreadyLogin(username)) {
 			displayError("User already logged in")
 			return

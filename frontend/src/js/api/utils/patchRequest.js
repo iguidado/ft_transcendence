@@ -41,3 +41,4 @@ export async function patchRequest({
 		errorHandler(error)
 	}
 }
+
