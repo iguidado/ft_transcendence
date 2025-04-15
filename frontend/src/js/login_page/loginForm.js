@@ -6,20 +6,7 @@ import { getProfileData } from "../utils/profileUtils.js"
 import { saveAccessToken } from "../utils/saveAccessToken.js"
 import { updateLocalProfile } from "../utils/updateLocalProfile.js"
 
-// export function validate2FA() {
-// 	// const twoFACode = document.getElementById('twoFACodeInput').value
-
-// 	// Si tu veux fermer le modal après validation manuelle
-// 	// 1) Récupérer l'instance du modal
-// 	const myModal = document.getElementById('twoFAModal')
-// 	const modalInstance = bootstrap.Modal.getInstance(myModal)
-// 	// 2) on le ferme
-// 	modalInstance.hide()
-
-// 	// suite: rediriger ou activer la 2FA etc.
-// }
-
-
+//TODO verif 2fa access token probleme
   
 function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 	console.log("API Login response : ", res)
