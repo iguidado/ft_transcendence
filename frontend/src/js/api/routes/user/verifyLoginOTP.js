@@ -8,10 +8,10 @@ function toggle2faErrorHandler(error) {
 	console.log(error)
 }
 
-export function verifyLoginOTP(otp, responseHandler=toggle2faResponseHandler, errorHandler=toggle2faErrorHandler) {
+export function verifyLoginOTP(body, responseHandler=toggle2faResponseHandler, errorHandler=toggle2faErrorHandler) {
 	patchRequest({
 		UrlPath: "/api/user/verify-login-otp/",
-		body: {otp},
+		body: body,
 		responseHandler,
 		errorHandler
 	})
