@@ -23,3 +23,36 @@
 	height: 100vh;
 	margin: 0 auto;
 }
+
+.list-group{
+  background-color: rgba(255, 233, 107, 0.1) !important;
+}
+
+#tournamentVersus__startbtn {
+  margin-top: 1.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #ff9b9b;
+  color: #422445;
+  border: 2px solid #422445;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#tournamentVersus__startbtn:hover {
+  background-color: #ff7777;
+  box-shadow: 2px 2px #422445;
+  transform: translate(-2px, -2px);
+}
+
+#tournamentVersus__startbtn:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+#tournamentVersus__text {
+  font-size: 4rem;
+  font-weight: bold;
+  color: rgb(254, 109, 145);
+  text-shadow: 2px 2px #422445;
+}

@@ -195,6 +195,7 @@ function addFriendModal() {
         } else {
 			console.error("Aucun utilisateur sélectionné");
         }
+		displayFriendsList();
     });
 	// Gestion du bouton de suppression d'ami
 	const deleteFriendBtn = document.getElementById("deleteFriendBtn");
@@ -214,6 +215,7 @@ function addFriendModal() {
 		} else {
 			console.error("Aucun utilisateur sélectionné pour suppression");
 		}
+		displayFriendsList();
 	});
 }
 
@@ -260,11 +262,7 @@ function deleteFriend(username) {
 
 function displayFriendsList() {
     const friendsList = document.getElementById("friendsList");
-    if (!friendsList) {
-        console.error("Element with ID 'friendsList' not found in the DOM.");
-        return;
-    }
-    friendsList.innerHTML = ''; // Vide le conteneur avant d'ajouter les amis
+    friendsList.innerHTML = '';
     const profileData = getProfileData();
     
     // Ajouter chaque ami dans la liste

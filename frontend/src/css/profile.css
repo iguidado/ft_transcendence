@@ -1,20 +1,18 @@
-/* --- Styles pour le conteneur principal --- */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Hauteur de la fenêtre */
-  padding: 0; /* Supprime le padding */
-  margin: 0 auto; /* Centre horizontalement */
-  width: 100%; /* S'assure que le conteneur ne dépasse pas la largeur de l'écran */
-  max-width: 320px; /* Limite la largeur au même niveau que la carte */
-  box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur */
+  min-height: 100vh;
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 320px;
+  box-sizing: border-box;
 }
 
-/* --- Carte de profil --- */
 .profile-card {
-  width: 320px; /* Largeur fixe de la carte */
-  max-width: 100%; /* S'assure que la carte ne dépasse pas la largeur de l'écran */
+  width: 320px;
+  max-width: 100%;
   background-color: rgba(254, 109, 145, 0.36);
   box-shadow: #422445 0px 0px 20px;
   border: 2px solid black;
@@ -22,24 +20,20 @@
   box-shadow: 0px 0px 20px #422445;
 }
 
-/* --- Modifications sur les images --- */
 img {
     image-rendering: pixelated;
 }
 
-/* Si vous souhaitez supprimer les coins arrondis sur toutes les images Bootstrap */
 .rounded,
 .rounded-circle {
     border-radius: 0 !important;
 }
 
-/* --- Boutons et autres éléments --- */
 .btn,
 .btn-close {
-    border-radius: 0; /* Boutons aux coins carrés */
+    border-radius: 0;
 }
 
-/* --- Fenêtre modale --- */
 .modal-content {
     background-color: rgba(254, 109, 145);
     border: 2 solid black;
@@ -65,7 +59,6 @@ img {
     width: 120px;
     height: 120px;
     border-radius: 8px;
-    /* border: 3px dashed #422445; */
     image-rendering: pixelated;
 }
 
@@ -92,13 +85,7 @@ img {
     z-index: 999;
   }
   
-  /* .profile__settings-modal {
-    background: rgba(255,255,255,0.8);
-    border: 2px dashed #422445;
-    padding: 1rem;
-    margin-top: 1rem;
-  }
-   */
+
   .profile__settings-field {
     margin-bottom: 1rem;
     display: flex;
@@ -149,3 +136,10 @@ img {
   transform: translate(0, 0);
   box-shadow: none;
 }
+
+.list-group-item{
+  background-color: rgba(255, 233, 107, 0.1) !important;
+  border-radius: 0 !important;
+  border: #422445 2px solid !important;
+}
+
