@@ -6,6 +6,7 @@ import { defaultConfig } from "../../pong-game/src/config/preset/defaultConfig.j
 import { initConfig } from "../../pong-game/src/config/initConfig.js"
 import { setupSwitchMenuButton } from "./util/setupSwitchMenuButton.js"
 import { setupStartBtn } from "./util/setupStartBtn.js"
+import { setupTournamentBtn } from "./util/setupTournamentBtn.js"
 
 export function loadSettingPage() {
 	const game_container = document.getElementById("game-preview")
@@ -18,5 +19,6 @@ export function loadSettingPage() {
 	appendPresetButtons(ctx)
 	setupSwitchMenuButton(ctx)
 	setupStartBtn(ctx)
+	setupTournamentBtn(ctx)
 	ctx.game.start()
 }
