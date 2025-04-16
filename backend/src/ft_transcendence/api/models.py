@@ -57,6 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	wins = models.IntegerField(default=0)
 	looses = models.IntegerField(default=0)
+	game_played = models.IntegerField(default=0)
 
 	objects = CustomeUserManager()
 
@@ -71,9 +72,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 		else:
 			if(boolean==True):
 				self.wins += 1
-			else:
-				self.looses += 1
-			self.win_ratio = round((self.wins / (self.wins + self.looses)) * 100, 2)
+			# else:
+			# 	self.looses += 1
+			self.game_played += 1
+			self.win_ratio = round((self.wins / (self.game_played)) * 100, 2)
 			self.save()
 
 	def get_avatar_url(self):

@@ -8,11 +8,9 @@ function deleteFriendErrorHandler(error) {
     console.error("Error while deleting friend:", error);
 }
 
-//TODO Lauryn jai fait ca pour delete si tu peux creer une route delete? :)
-
 export function deleteFriendRequest({username}, responseHandler=deleteFriendResponseHandler, errorHandler=deleteFriendErrorHandler) {
     postRequest({
-        UrlPath: "/api/user/friends/delete/",
+        UrlPath: "/api/user/friends/remove/",
         body: {username},
         responseHandler,
         errorHandler

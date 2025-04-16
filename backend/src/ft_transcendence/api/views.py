@@ -20,26 +20,26 @@ import os
 from rest_framework.parsers import MultiPartParser, FormParser
 
 class OTPService:
-    @staticmethod
-    def generate_otp(n=6):
-        return "".join(map(str, random.sample(range(0,10), n)))
-    
-    @staticmethod
-    def send_otp_email(email, otp):
-        try:
-            admin_email = os.getenv('EMAIL_HOST_USER')
-            
-            send_mail(
-                'Verification Code',
-                f'Your verification code is: {otp}',
-                admin_email,
-                [email],
-                fail_silently=False
-            )
-            return True
-        except Exception as e:
-            print(f"Error sending email: {str(e)}")
-            return False
+	@staticmethod
+	def generate_otp(n=6):
+		return "".join(map(str, random.sample(range(0,10), n)))
+	
+	@staticmethod
+	def send_otp_email(email, otp):
+		try:
+			admin_email = os.getenv('EMAIL_HOST_USER')
+			
+			send_mail(
+				'Verification Code',
+				f'Your verification code is: {otp}',
+				admin_email,
+				[email],
+				fail_silently=False
+			)
+			return True
+		except Exception as e:
+			print(f"Error sending email: {str(e)}")
+			return False
 
 class LoginView(APIView):
 	permission_classes = [AllowAny]
@@ -48,8 +48,8 @@ class LoginView(APIView):
 	@swagger_auto_schema(
 			request_body=LoginSerializer,
 			request_body_example={
-            "username": "user",
-            "password": "password123"
+			"username": "user",
+			"password": "password123"
 			}
 		)
 	
@@ -92,53 +92,53 @@ class LoginView(APIView):
 			user.save()
 
 			return Response({
-                    'access_token': user.jwt_token,
-                    'refresh_token': str(refresh),
-                    'detail': 'Login successful.'
-                }, status=status.HTTP_200_OK)
+					'access_token': user.jwt_token,
+					'refresh_token': str(refresh),
+					'detail': 'Login successful.'
+				}, status=status.HTTP_200_OK)
 	
 		return Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class VerifyLoginOtpView(APIView):
-    permission_classes = [AllowAny]
-    serializer_class = VerifyLoginOtpSerializer
+	permission_classes = [AllowAny]
+	serializer_class = VerifyLoginOtpSerializer
 
-    @swagger_auto_schema(
-            request_body=VerifyLoginOtpSerializer
-    )
+	@swagger_auto_schema(
+			request_body=VerifyLoginOtpSerializer
+	)
 	
-    def patch(self, request):
-        serializer = VerifyLoginOtpSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        otp = serializer.validated_data['otp']
-        temp_token = serializer.validated_data['temp_token']
+	def patch(self, request):
+		serializer = VerifyLoginOtpSerializer(data=request.data)
+		if not serializer.is_valid():
+			return Response({'detail': 'Invalid data.'}, status=status.HTTP_400_BAD_REQUEST)
+		
+		otp = serializer.validated_data['otp']
+		temp_token = serializer.validated_data['temp_token']
 
-        try:
-            user = User.objects.get(temp_auth_token=temp_token)
-            
-            if user.otp_2fa == otp and user.otp_2fa_expiry_time > timezone.now():
-                django_login(request, user)
+		try:
+			user = User.objects.get(temp_auth_token=temp_token)
+			
+			if user.otp_2fa == otp and user.otp_2fa_expiry_time > timezone.now():
+				django_login(request, user)
 
-                refresh = RefreshToken.for_user(user)
-                access_token = str(refresh.access_token)
+				refresh = RefreshToken.for_user(user)
+				access_token = str(refresh.access_token)
 
-                user.otp_2fa = ''
-                user.otp_2fa_expiry_time = None
-                user.temp_auth_token = ''
-                user.save()
+				user.otp_2fa = ''
+				user.otp_2fa_expiry_time = None
+				user.temp_auth_token = ''
+				user.save()
 
-                return Response({
-                    'access_token': access_token,
-                    'refresh_token': str(refresh),
-                    'detail': 'OTP verified successfully.'
-                }, status=status.HTTP_200_OK)
+				return Response({
+					'access_token': access_token,
+					'refresh_token': str(refresh),
+					'detail': 'OTP verified successfully.'
+				}, status=status.HTTP_200_OK)
 
-            return Response({'detail': 'Invalid or expired OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'detail': 'Invalid or expired OTP.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        except User.DoesNotExist:
-            return Response({'detail': 'Invalid session.'}, status=status.HTTP_404_NOT_FOUND)
+		except User.DoesNotExist:
+			return Response({'detail': 'Invalid session.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class UserProfileView(APIView):
@@ -152,17 +152,18 @@ class UserProfileView(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserListView(ListAPIView):
-	queryset = User.objects.all().order_by('-date_joined')
 	serializer_class = UserProfileSerializer
 	permission_classes = [IsAuthenticated]
 
 	@swagger_auto_schema(
-        operation_description="Retrieve the list of all users",
-        responses={200: UserProfileSerializer(many=True)}
-    )
-
+		operation_description="Retrieve the list of all users except the current user",
+		responses={200: UserProfileSerializer(many=True)}
+	)
 	def get(self, request, *args, **kwargs):
 		return super().get(request, *args, **kwargs)
+	
+	def get_queryset(self):
+		return User.objects.exclude(id=self.request.user.id).order_by('-date_joined')
 
 class UserProfileByUserNameView(RetrieveAPIView):
 	queryset = User.objects.all()
@@ -201,39 +202,39 @@ class UserDisplayNameUpdateView(APIView):
 
 
 class TwoFAUpdateView(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = TwoFAUpdateSerializer
+	permission_classes = [IsAuthenticated]
+	serializer_class = TwoFAUpdateSerializer
 
-    @swagger_auto_schema(request_body=TwoFAUpdateSerializer)
-    def patch(self, request):
-        user = request.user
-        serializer = self.serializer_class(user, data=request.data, partial=True)
+	@swagger_auto_schema(request_body=TwoFAUpdateSerializer)
+	def patch(self, request):
+		user = request.user
+		serializer = self.serializer_class(user, data=request.data, partial=True)
 
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		if not serializer.is_valid():
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        action = serializer.validated_data['action']
+		action = serializer.validated_data['action']
 
-        if action == 'disable':
-            user.is_2fa_enabled = False
-            user.save()
-            return Response({'detail': 'Two-factor authentication disabled.'}, status=status.HTTP_200_OK)
+		if action == 'disable':
+			user.is_2fa_enabled = False
+			user.save()
+			return Response({'detail': 'Two-factor authentication disabled.'}, status=status.HTTP_200_OK)
 
-        elif action == 'enable':
-            email = serializer.validated_data['email']
-            if email:
-                verification_code = OTPService.generate_otp()
-                user.otp_email = verification_code
-                user.email = email
-                user.otp_email_expiry_time = timezone.now() + timedelta(minutes=15)
-                user.save()
+		elif action == 'enable':
+			email = serializer.validated_data['email']
+			if email:
+				verification_code = OTPService.generate_otp()
+				user.otp_email = verification_code
+				user.email = email
+				user.otp_email_expiry_time = timezone.now() + timedelta(minutes=15)
+				user.save()
 
-                OTPService.send_otp_email(email, verification_code)
-                return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
-            else:
-                return Response({'detail': 'Email is required for 2FA activation.'}, status=status.HTTP_400_BAD_REQUEST)
-            
-        return Response({'detail': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
+				OTPService.send_otp_email(email, verification_code)
+				return Response({'detail': 'Verification code sent successfully.'}, status=status.HTTP_200_OK)
+			else:
+				return Response({'detail': 'Email is required for 2FA activation.'}, status=status.HTTP_400_BAD_REQUEST)
+			
+		return Response({'detail': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyEmailOtpView(APIView):
 
@@ -260,61 +261,61 @@ class VerifyEmailOtpView(APIView):
 
 
 class UserAvatarUpdateView(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = UpdateAvatarSerializer
+	permission_classes = [IsAuthenticated]
+	serializer_class = UpdateAvatarSerializer
 
-    @swagger_auto_schema(
-        operation_description="Update user's avatar",
+	@swagger_auto_schema(
+		operation_description="Update user's avatar",
 		request_body=UpdateAvatarSerializer,
-    )
-    
-    def patch(self, request):
-        user = request.user
-        serializer = self.serializer_class(user, data=request.data, partial=True)
+	)
+	
+	def patch(self, request):
+		user = request.user
+		serializer = self.serializer_class(user, data=request.data, partial=True)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AvailableAvatarsView(APIView):
-    permission_classes = [AllowAny]
-    
-    @swagger_auto_schema(
-        operation_description="Get default avatars with their URLs",
-    )
-    def get(self, request):
-        available_avatars = [
-            {
-                'code': choice[0],
-                'name': choice[1],
-                'url': static(f'api/images/{choice[0]}.png')
-            }
-            for choice in User.DEFAULT_AVATAR_CHOICES
-        ]
-        
-        return Response(available_avatars, status=status.HTTP_200_OK)
+	permission_classes = [AllowAny]
+	
+	@swagger_auto_schema(
+		operation_description="Get default avatars with their URLs",
+	)
+	def get(self, request):
+		available_avatars = [
+			{
+				'code': choice[0],
+				'name': choice[1],
+				'url': static(f'api/images/{choice[0]}.png')
+			}
+			for choice in User.DEFAULT_AVATAR_CHOICES
+		]
+		
+		return Response(available_avatars, status=status.HTTP_200_OK)
 
 class CreateMatchHistoricView(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = UpdateUserHistoricSerializer
+	permission_classes = [IsAuthenticated]
+	serializer_class = UpdateUserHistoricSerializer
 
-    @swagger_auto_schema(
+	@swagger_auto_schema(
 			operation_description="Create a match and update the user statistics",
-        request_body=UpdateUserHistoricSerializer,
-        responses={201: "Match created and stats updated", 400: "Invalid request"}
-    )
+		request_body=UpdateUserHistoricSerializer,
+		responses={201: "Match created and stats updated", 400: "Invalid request"}
+	)
 	
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        
-        if serializer.is_valid():
-            match = serializer.save()
-            return Response({
-                "message": "Match created and stats updated",
-                "match": UpdateUserHistoricSerializer(match).data
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	def post(self, request):
+		serializer = self.serializer_class(data=request.data)
+		
+		if serializer.is_valid():
+			match = serializer.save()
+			return Response({
+				"message": "Match created and stats updated",
+				"match": UpdateUserHistoricSerializer(match).data
+			}, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FriendListView(APIView):
 	permission_classes = [IsAuthenticated]
@@ -339,12 +340,36 @@ class AddFriendView(APIView):
 		if not username_to_add:
 			return Response({"detail": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
 		
-		friend = get_object_or_404(User, username=username_to_add)
-
-		if friend == user:
-			return Response({"detail": "You cannot add yourself as a friend."}, status=status.HTTP_400_BAD_REQUEST)
-
+		try:
+			friend = get_object_or_404(User, username=username_to_add)
+		except User.DoesNotExist:
+			return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+		
 		user.friends.add(friend)
+		return Response({"detail": "Friend added successfully."}, status=status.HTTP_200_OK)
+	  
+class RemoveFriendView(APIView):
+	permisssion_classes = [IsAuthenticated]
+	@swagger_auto_schema(
+				operation_description="Remove a friend by username",
+				request_body=AddFriendSerializer
+		)
+	
+	def post(self, request):
+		user = request.user
+		username_to_remove = request.data.get('username')
+		if not username_to_remove:
+			return Response({"detail": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
+		
+		try:
+			friend = get_object_or_404(User, username=username_to_remove)
+		except User.DoesNotExist:
+			return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+		
+		if friend not in user.friends.all():
+			return Response({"detail": "User is not in your friend list."}, status=status.HTTP_400_BAD_REQUEST)
+		
+		user.friends.remove(friend)
 		return Response({"detail": "Friend added successfully."}, status=status.HTTP_200_OK)
 
 class LeaderBoardView(APIView):

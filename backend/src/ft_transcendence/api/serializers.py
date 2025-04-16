@@ -41,7 +41,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','displayName', 'avatar_url', 'date_joined', 'wins', 'looses', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio', 'temp_auth_token']
+		fields = ['id', 'username', 'email','displayName', 'avatar_url', 'date_joined', 'wins', 'game_played', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio', 'temp_auth_token']
 
 	def get_match_history(seld, obj):
 		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')

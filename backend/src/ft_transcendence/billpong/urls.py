@@ -22,7 +22,7 @@ from django.urls import path, re_path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView, LoginView, LeaderBoardView, TwoFAUpdateView, VerifyLoginOtpView, VerifyEmailOtpView, AvailableAvatarsView
+from api.views import RegisterView, UserDisplayNameUpdateView, UserAvatarUpdateView, CreateMatchHistoricView, UserProfileView, UserListView, UserProfileByUserNameView, AddFriendView, FriendListView, LoginView, LeaderBoardView, TwoFAUpdateView, VerifyLoginOtpView, VerifyEmailOtpView, AvailableAvatarsView, RemoveFriendView
 
 
 
@@ -73,6 +73,7 @@ urlpatterns = [
     
 	#POST
     path('api/user/friends/add/', AddFriendView.as_view(), name='add-friend'),
+    path('api/user/friends/remove/', RemoveFriendView.as_view(), name='remove-friend'),
     path('api/users/create-match-history', CreateMatchHistoricView.as_view(), name='user-stats-update'),
 
     

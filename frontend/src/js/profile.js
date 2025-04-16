@@ -250,12 +250,12 @@ function loadUsersList() {
 }
 
 function addFriend(username) {
-	const profileData = getProfileData();
-	if (username === profileData.username) {
+	// const profileData = getProfileData();
+	// if (username === profileData.username) {
 		//TODO Barbara ICI add modale error avec ce message
-		console.error("Vous ne pouvez pas vous ajouter en tant qu'ami.");
-		return;
-	}
+	// 	console.error("Vous ne pouvez pas vous ajouter en tant qu'ami.");
+	// 	return;
+	// }
 	addFriendRequest({username}, response => {
 	console.log("Friend added successfully:", response);
 	}, error => {
@@ -264,12 +264,12 @@ function addFriend(username) {
 }
 
 function deleteFriend(username) {
-    const profileData = getProfileData();
-    if (username === profileData.username) {
-		//TODO Barbara ICI add modale error avec ce message
-        console.error("Vous ne pouvez pas vous retirer en tant qu'ami.");
-        return;
-    }
+    // const profileData = getProfileData();
+    // if (username === profileData.username) {
+		// TODO Barbara ICI add modale error avec ce message
+        // console.error("Vous ne pouvez pas vous retirer en tant qu'ami.");
+        // return;
+    // }
     deleteFriendRequest({username}, response => {
         console.log("Friend deleted successfully:", response);
     }, error => {
