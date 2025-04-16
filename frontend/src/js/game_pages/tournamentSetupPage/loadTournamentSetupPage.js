@@ -19,7 +19,7 @@ export async function loadTournamentSetupPage(ctx) {
 	setupProfiles()
 	displayPlayerList()
 	setupAddPlayerBtn(ctx)
-	setupStartBtn()
+	setupStartBtn(ctx)
 }
 
 /* <li
