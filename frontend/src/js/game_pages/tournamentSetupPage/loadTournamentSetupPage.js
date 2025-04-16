@@ -1,5 +1,6 @@
-import { loadLoginPage } from "../../login";
+import { loadLoginPage, showLogin } from "../../login";
 import { fetchHTMLContent } from "../../router";
+import { displayError } from "../../utils/displayError";
 import { getAccessToken } from "../../utils/getAccessToken";
 import { getProfileData } from "../../utils/profileUtils";
 import { updateLocalProfile } from "../../utils/updateLocalProfile";
@@ -7,6 +8,7 @@ import { addGuestProfileToStore } from "../loginGuestPage/utils/addGuestProfileT
 import { getGuestList } from "../loginGuestPage/utils/getGuestList";
 import { getProfileFromToken } from "../loginGuestPage/utils/getProfileFromToken";
 import { rmGuest } from "../loginGuestPage/utils/rmGuest";
+import { loadTournamentNextMatchPage } from "../tournamentNextMatch/tournamentNextMatch";
 
 var players = []
 
@@ -28,11 +30,12 @@ export async function loadTournamentSetupPage(ctx) {
 
 function setupProfiles() {
 	players = getGuestList()
-	const localProfile = getProfileData()
-	if (localProfile) {
-		localProfile.access_token = getAccessToken()
-		players = [localProfile, ...players]
-	}
+	// console.log(players)
+	// const localProfile = getProfileData()
+	// if (localProfile) {
+	// 	localProfile.access_token = getAccessToken()
+	// 	players = [localProfile, ...players]
+	// }
 }
 
 function addPlayerToList(playerName, id) {
@@ -93,10 +96,25 @@ function setupAddPlayerBtn(ctx) {
 	}
 }
 
-function setupStartBtn() {
+function setupStartBtn(ctx) {
 	const btn = document.getElementById("tournament__startbtn")
 	btn.onclick = e => {
 		e.preventDefault()
-		console.log("TODO")
+		if (players.length % 2) {
+			displayError("odd player count")
+			return
+		}
+		loadTournamentNextMatchPage(ctx, generatePlanning())
 	}
+}
+
+function generatePlanning() {
+	const random_order = players.sort(() => Math.random() - 0.5)
+	const planning = []
+	for (let i = 0; i < random_order.length; i+=2) {
+		const p1 = random_order[i];
+		const p2 = random_order[i+1];
+		planning.push([p1, p2])
+	}
+	return planning
 }
