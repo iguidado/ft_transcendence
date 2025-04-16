@@ -1,17 +1,17 @@
 
 import { patchRequest } from "../utils/patchRequest.js"
 
-function toggle2faResponseHandler(response) {
+export function updateAvatarResponseHandler(response) {
     console.log(response)
 }
 
-function toggle2faErrorHandler(error) {
+function updateAvatarErrorHandler(error) {
     console.log(error)
 }
 
 
 
-export function updateAvatarRequest(avatarCode, responseHandler=toggle2faResponseHandler, errorHandler=toggle2faErrorHandler) {
+export function updateAvatarRequest(avatarCode, responseHandler=updateAvatarResponseHandler, errorHandler=updateAvatarErrorHandler) {
     console.log("avatarCode :", avatarCode)
     patchRequest({
         UrlPath: "/api/user/profile/update_avatar/",

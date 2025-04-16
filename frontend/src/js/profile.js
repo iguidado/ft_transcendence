@@ -1,6 +1,6 @@
 import { getApiConfigDefault } from "./api/config/apiConfig.js"
 import { avatarRequest } from "./api/routes/avatarRoute.js"
-import { updateAvatarRequest } from "./api/routes/updateAvatar.js"
+import { updateAvatarRequest, updateAvatarResponseHandler } from "./api/routes/updateAvatar.js"
 import { updateDisplayNameRequest } from "./api/routes/updateDisplayNameRequest.js"
 import { toggle2faRequest } from "./api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "./api/routes/user/verifyEmailOTP.js"
@@ -118,9 +118,6 @@ function saveSettings() {
         const modal = document.getElementById('settingsModal');
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();
-
-		//TODO verifier si reload est ok avec SPA
-        window.location.reload();
     });
 }
 
@@ -132,23 +129,22 @@ function disconnectBtn() {
 		})
 }
 
-function loadAvailableAvatars() {
-		avatarRequest(avatarResponseHandler, error => {
-			console.error("Erreur lors de la récupération des avatars disponibles", error);
-		})
-		
 
-  }
-
-  function updateAvatar(avatarCode) {
+function updateAvatar(avatarCode) {
 	updateAvatarRequest(avatarCode, updateAvatarResponseHandler, error => {
 		console.error("Erreur lors de la mise à jour de l'avatar", error);})
+		
+	}
 	
-  }
-  
+	function loadAvailableAvatars() {
+			avatarRequest(avatarResponseHandler, error => {
+				console.error("Erreur lors de la récupération des avatars disponibles", error);
+			})
+			
+	
+	  }
 
   function avatarResponseHandler(data) {
-  console.log("Avatars reçus :", data);
   const avatarGallery = document.getElementById("avatarGallery");
   avatarGallery.innerHTML = ''; // Vide le conteneur
   data.forEach(avatar => {
@@ -159,21 +155,16 @@ function loadAvailableAvatars() {
 	img.style.width = "50px";
 	img.style.height = "50px";
 	//TODO Leon tu peux check pourquoi a ce clic l'avatar ne s'affiche pas directement ?
-	img.addEventListener("click", () => updateAvatar(avatar.code));
+	img.addEventListener("click", () => {
+		updateAvatar(avatar.code)
+		document.getElementById("userAvatar")
+		.src = img.src
+		console.log("test", img.src)
+	});
 	avatarGallery.appendChild(img);
   })
 }
 
-
-async function updateAvatarResponseHandler(data) {
-    if (data.avatar) {
-        const userAvatar = document.getElementById("userAvatar");
-        userAvatar.src = getApiConfigDefault().url + data.avatar;
-        console.log("Avatar mis à jour avec succès !");
-    } else {
-        console.error("Erreur lors de la mise à jour de l'avatar", data);
-    }
-}
 
 
 
