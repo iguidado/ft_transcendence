@@ -1,5 +1,5 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-from asgiref.sync import database_sync_to_async
+from asgiref.sync import async_to_sync, sync_to_async
 from channels.layers import get_channel_layer
 import json
 from api.models import User
@@ -40,7 +40,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
         
         await self.channel_layer.group_discard("status_updates", self.channel_name)
 
-    @database_sync_to_async
+    @sync_to_async
     def set_user_status(self, status):
         self.user.is_active = status
         self.user.save()

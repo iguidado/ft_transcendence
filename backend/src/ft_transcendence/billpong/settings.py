@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 	'rest_framework_simplejwt',
 	'django_crontab',
 	'channels',
-	'corsheaders'
+	'corsheaders',
 ]
 
 AUTH_USER_MODEL = 'api.User'
