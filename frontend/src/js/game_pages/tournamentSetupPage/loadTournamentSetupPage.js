@@ -99,8 +99,8 @@ function setupStartBtn(ctx) {
 	const btn = document.getElementById("tournament__startbtn")
 	btn.onclick = e => {
 		e.preventDefault()
-		if (players.length % 2) {
-			displayError("odd player count")
+		if (players.length < 2) {
+			displayError("why are you solo ???")
 			return
 		}
 		loadTournamentNextMatchPage(ctx, generatePlanning())
@@ -110,10 +110,12 @@ function setupStartBtn(ctx) {
 function generatePlanning() {
 	const random_order = players.sort(() => Math.random() - 0.5)
 	const planning = []
-	for (let i = 0; i < random_order.length; i+=2) {
+	for (let i = 0; i < random_order.length-1; i+=2) {
 		const p1 = random_order[i];
 		const p2 = random_order[i+1];
 		planning.push([p1, p2])
 	}
+	if (random_order.length % 2)
+		planning.push([random_order[random_order.length-1]])
 	return planning
 }
