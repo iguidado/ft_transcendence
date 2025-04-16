@@ -6,6 +6,9 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from channels.db import database_sync_to_async
 from django.db import close_old_connections
 from api.models import User
+import logging
+
+logger = logging.getLogger('api.middleware')
 
 @database_sync_to_async
 def get_user(token_key):
@@ -30,11 +33,22 @@ class JWTAuthMiddleware:
         # Fermez les anciennes connexions pour éviter tout problème
         close_old_connections()
         
-        # Récupérez le token des paramètres de requête
-        query_string = scope.get('query_string', b'').decode()
-        query_params = parse_qs(query_string)
-        token = query_params.get('token', [''])[0]
+        # Extraction du token
+        query_string = scope.get("query_string", b"").decode()
+        query_params = dict(qp.split("=") for qp in query_string.split("&") if "=" in qp)
         
+        token = query_params.get("token", None)
+        logger.info(f"WebSocket connection attempt with token: {'present' if token else 'missing'}")
+
+        if not token:
+            logger.warning("WebSocket connection rejected: No token provided")
+            await send({
+                "type": "websocket.close",
+                "code": 4001,
+                "reason": "No authentication token provided",
+            })
+            return
+
         if token:
             # Utilisez le token pour authentifier l'utilisateur
             scope['user'] = await get_user(token)

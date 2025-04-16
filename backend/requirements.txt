@@ -11,6 +11,7 @@ daphne>=4.0.0
 channels_redis>=4.0.0
 asgiref>=3.7.0
 legacy-cgi==0.1.0
+whitenoise
 
 # Database
 psycopg==3.1.18

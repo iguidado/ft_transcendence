@@ -1,8 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-from asgiref.sync import async_to_sync, sync_to_async
-from channels.layers import get_channel_layer
+from asgiref.sync import sync_to_async
 import json
-from api.models import User
 
 class UserStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -18,7 +16,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "status_update",
                     "username": self.user.username,
-                    "is_active": True
+                    "is_online": True
                 }
             )
             await self.accept()
@@ -26,7 +24,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
             await self.close()
 
     async def disconnect(self, close_code):
-        if hasattr(self, 'user'): #and self.user.is_authenticated:
+        if hasattr(self, 'user') and self.user.is_authenticated:
             await self.set_user_status(False)
             
             await self.channel_layer.group_send(
@@ -34,7 +32,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
                 {
                     "type": "status_update",
                     "username": self.user.username,
-                    "is_active": False
+                    "is_online": False
                 }
             )
         
@@ -42,7 +40,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def set_user_status(self, status):
-        self.user.is_active = status
+        self.user.is_online = status
         self.user.save()
     
     async def status_update(self, event):
@@ -50,5 +48,5 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "status_update",
             "username": event["username"],
-            "is_active": event["is_active"]
+            "is_online": event["is_online"]
         }))

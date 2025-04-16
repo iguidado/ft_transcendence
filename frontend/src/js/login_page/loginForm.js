@@ -5,36 +5,43 @@ import { displayError } from "../utils/displayError.js"
 import { getProfileData } from "../utils/profileUtils.js"
 import { saveAccessToken } from "../utils/saveAccessToken.js"
 import { updateLocalProfile } from "../utils/updateLocalProfile.js"
+import { initializeWebSocketConnection } from "../utils/webSocketManager.js" // nouveau import
 
 //TODO verif 2fa access token probleme
-  
-function fetchHandler(res, onloginSuccess = updateLocalProfile) {
-	console.log("API Login response : ", res)
-	if (res.access_token) {
-		onloginSuccess(res)
 
-	} else {
-		const valide2FAsection = document.getElementById("2FALoginModal")
-		const twoFAModal = new bootstrap.Modal(valide2FAsection)
-		twoFAModal.show()
-		if (!res.temp_token) {
-			console.warn("valide2FAsection !res.temp_token")
-			return
-		}
-		document
-			.getElementById("validate2FAFromLogin")
-			.addEventListener("click", (e) => {
-				e.preventDefault()
-				saveAccessToken(res.temp_token)
-				const otp = document.getElementById("code2FAInputLogin").value
-				verifyLoginOTP({otp, temp_token: res.temp_token}, (res) => {
-					console.log("validate2FAFromLogin", res)
-					twoFAModal.hide()
-				}, (err) => {
-					console.warn("loginForm", err)
-				})
-			})
-	}
+function fetchHandler(res, onloginSuccess = updateLocalProfile) {
+    console.log("API Login response : ", res)
+    if (res.access_token) {
+        saveAccessToken(res.access_token);
+        onloginSuccess(res);
+        console.log("WebSocket initialized after login");
+    } else {
+        const valide2FAsection = document.getElementById("2FALoginModal")
+        const twoFAModal = new bootstrap.Modal(valide2FAsection)
+        twoFAModal.show()
+        if (!res.temp_token) {
+            console.warn("valide2FAsection !res.temp_token")
+            return
+        }
+        document
+            .getElementById("validate2FAFromLogin")
+            .addEventListener("click", (e) => {
+                e.preventDefault()
+                saveAccessToken(res.temp_token)
+                const otp = document.getElementById("code2FAInputLogin").value
+                verifyLoginOTP({otp, temp_token: res.temp_token}, (res) => {
+                    console.log("validate2FAFromLogin", res);
+                    if (res.access_token) {
+                        saveAccessToken(res.access_token);
+                        onloginSuccess(res);
+                    }
+                    
+                    twoFAModal.hide();
+                }, (err) => {
+                    console.warn("loginForm", err)
+                })
+            })
+    }
 }
 
 function fetchErrorHandler(err, response) {
@@ -76,21 +83,21 @@ function usernameAlreadyLogin(username) {
 }
 
 export function loginForm(onloginSuccess) {
-	const loginFormElem = document.getElementById("loginForm")
-	loginFormElem.addEventListener("submit", (e) => {
-		e.preventDefault()
-		const username = document.getElementById("loginInput").value
-		const password = document.getElementById("passwordInput").value
-		if (!onloginSuccess)
-			saveAccessToken(null)
-		if (usernameAlreadyLogin(username)) {
-			displayError("User already logged in")
-			return
-		}
-		loginRequest(
-			{ username, password },
-			res => fetchHandler(res, onloginSuccess),
-			fetchErrorHandler
-		)
-	})
+    const loginFormElem = document.getElementById("loginForm")
+    loginFormElem.addEventListener("submit", (e) => {
+        e.preventDefault()
+        const username = document.getElementById("loginInput").value
+        const password = document.getElementById("passwordInput").value
+        if (!onloginSuccess)
+            saveAccessToken(null)
+        if (usernameAlreadyLogin(username)) {
+            displayError("User already logged in")
+            return
+        }
+        loginRequest(
+            { username, password },
+            res => fetchHandler(res, onloginSuccess),
+            fetchErrorHandler
+        )
+    })
 }

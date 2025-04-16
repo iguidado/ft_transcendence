@@ -36,6 +36,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_superuser = models.BooleanField(default=False)
 	win_ratio = models.FloatField(default=0.0)
 
+	is_online = models.BooleanField(default=False)
+
 	jwt_token = models.CharField(max_length=512, blank=True, null=True)
 	otp_2fa = models.CharField(max_length=6, blank=True)
 	otp_email = models.CharField(max_length=6, blank=True)
