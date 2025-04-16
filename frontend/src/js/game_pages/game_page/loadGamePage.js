@@ -1,3 +1,4 @@
+import { displayResults } from "../../layout.js";
 import { Game } from "../../pong-game/src/core/Game.js";
 import { load_page } from "../../router.js";
 import { playersCount } from "../setting_page/util/playersCount.js";
@@ -44,10 +45,25 @@ export function loadGamePage({game, container, config, players=[]}) {
 	// 	console.log("scores", scores)
 	// }
 	game.scoreMonitor.onEndMatch = (winnerSide) => {
-		// TODO END MATCH PAGE
+		// TODO  push history
 		console.log(winnerSide);
 		game.cleanup();
 		load_page("pong");
+		displayResults(resultMsg(winnerSide));
+		
 	}
 	game.start();
+
+
+	function resultMsg(winnerSide) {
+		let winnerName = ""; 
+		if (winnerSide === "left") {
+			winnerName = leftPlayer.displayName;
+		}
+		else if (winnerSide === "right") {
+			winnerName = rightPlayer.displayName;
+		}
+		return `Winner is ${winnerName}!`;
+	}
 }
+
