@@ -311,7 +311,7 @@ function displayFriendsList() {
     if (!profileData.friends || profileData.friends.length === 0) {
         const noFriendsItem = document.createElement("li");
         noFriendsItem.className = "list-group-item";
-        noFriendsItem.textContent = "Vous n'avez pas encore d'amis";
+        noFriendsItem.textContent = "You have no friends yet.";
         friendsList.appendChild(noFriendsItem);
         return;
     }
