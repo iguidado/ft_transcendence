@@ -290,8 +290,3 @@ function displayFriendsList() {
         friendsList.appendChild(friendItem);
     });
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    displayFriendsList();
-});
-
