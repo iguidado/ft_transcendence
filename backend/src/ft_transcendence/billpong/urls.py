@@ -74,7 +74,7 @@ urlpatterns = [
 	#POST
     path('api/user/friends/add/', AddFriendView.as_view(), name='add-friend'),
     path('api/user/friends/remove/', RemoveFriendView.as_view(), name='remove-friend'),
-    path('api/users/create-match-history', CreateMatchHistoricView.as_view(), name='user-stats-update'),
+    path('api/users/create-match-history/', CreateMatchHistoricView.as_view(), name='user-stats-update'),
 
     
 ]

@@ -1,3 +1,4 @@
+import { pushHistoryRequest } from "../../api/routes/pushHistoryRequest.js";
 import { displayResults } from "../../layout.js";
 import { Game } from "../../pong-game/src/core/Game.js";
 import { load_page } from "../../router.js";
@@ -47,16 +48,27 @@ export function loadGamePage({game, container, config, players=[]}) {
 	game.scoreMonitor.onEndMatch = (winnerSide) => {
 		// TODO  push history
 		console.log(winnerSide);
+		if (players.length > 1)
+			pushHistory()
 		game.cleanup();
 		load_page("pong");
 		displayResults(resultMsg(winnerSide));
-		
 	}
 	game.start();
 
+	function pushHistory() {
+		const body = {
+			player_one: leftPlayer.id,
+			player_two: rightPlayer.id,
+			score_p1: game.scoreMonitor.scores.left,
+			score_p2: game.scoreMonitor.scores.right
+		}
+		console.log(body)
+		pushHistoryRequest(body)
+	}
 
 	function resultMsg(winnerSide) {
-		let winnerName = ""; 
+		let winnerName = "";
 		if (winnerSide === "left") {
 			winnerName = leftPlayer.displayName;
 		}

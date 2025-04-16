@@ -23,14 +23,15 @@ export async function loadProfilePage() {
 
 async function displayInformations() {
 		const profileData = getProfileData()
+		console.log("profileData", profileData)
 		document.getElementById("usernameDisplay")
 		.textContent = profileData.displayName.charAt(0).toUpperCase() + profileData.displayName.slice(1)
 		document.getElementById("userAvatar")
 			.src = profileData.avatar
 		document.getElementById("gamesPlayed")
-			.textContent = profileData.gamesPlayed
+			.innerHTML = profileData?.match_history.length | 0
 		document.getElementById("gamesWon")
-			.textContent = profileData.gamesWon
+			.textContent = profileData.wins | 0
 		displayFriendsList()
 }
 
