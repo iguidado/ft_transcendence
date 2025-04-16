@@ -31,6 +31,5 @@ export function formatProfileData(profile) {
 	if (!profile.displayName)
 		profile.displayName = profile.username
 	profile.avatar = getApiConfigDefault().url + profile.avatar_url
-	// TODO Calculate real values gamesPlayed and gamesWon
 	return profile
 }

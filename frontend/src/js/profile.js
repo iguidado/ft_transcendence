@@ -96,7 +96,7 @@ function toggle2faError(err, res) {
 	console.warn("API Response:", res)
 }
 
-//TODO save settings DONE
+//save settings DONE
 function saveSettings() {
 
     const saveButton = document.getElementById("saveSettings");
@@ -154,7 +154,6 @@ function updateAvatar(avatarCode) {
 	img.style.cursor = "pointer";
 	img.style.width = "50px";
 	img.style.height = "50px";
-	//TODO Leon tu peux check pourquoi a ce clic l'avatar ne s'affiche pas directement ?
 	img.addEventListener("click", () => {
 		updateAvatar(avatar.code)
 		document.getElementById("userAvatar")
@@ -169,7 +168,7 @@ function updateAvatar(avatarCode) {
 
 
 
-//TODO gestion modale addfriends
+//DONE gestion modale addfriends
 
 function addFriendModal() {
 	const addFriendModal = document.getElementById("addFriendModal");
@@ -242,12 +241,6 @@ function loadUsersList() {
 }
 
 function addFriend(username) {
-	// const profileData = getProfileData();
-	// if (username === profileData.username) {
-		//TODO Barbara ICI add modale error avec ce message
-	// 	console.error("Vous ne pouvez pas vous ajouter en tant qu'ami.");
-	// 	return;
-	// }
 	addFriendRequest({username}, response => {
 	console.log("Friend added successfully:", response);
 	}, error => {
@@ -256,12 +249,6 @@ function addFriend(username) {
 }
 
 function deleteFriend(username) {
-    // const profileData = getProfileData();
-    // if (username === profileData.username) {
-		// TODO Barbara ICI add modale error avec ce message
-        // console.error("Vous ne pouvez pas vous retirer en tant qu'ami.");
-        // return;
-    // }
     deleteFriendRequest({username}, response => {
         console.log("Friend deleted successfully:", response);
     }, error => {
