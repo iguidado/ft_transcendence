@@ -291,7 +291,3 @@ function displayFriendsList() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    displayFriendsList();
-});
-
