@@ -29,13 +29,12 @@ export async function loadTournamentSetupPage(ctx) {
 </li> */
 
 function setupProfiles() {
-	players = getGuestList()
-	// console.log(players)
-	// const localProfile = getProfileData()
-	// if (localProfile) {
-	// 	localProfile.access_token = getAccessToken()
-	// 	players = [localProfile, ...players]
-	// }
+	players = getGuestList() || []
+	const localProfile = getProfileData()
+	if (localProfile) {
+		localProfile.access_token = getAccessToken()
+		players = [localProfile, ...players]
+	}
 }
 
 function addPlayerToList(playerName, id) {
