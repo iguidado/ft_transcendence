@@ -6,13 +6,17 @@ import { updateLocalProfile } from "../../utils/updateLocalProfile";
 import { addGuestProfileToStore } from "../loginGuestPage/utils/addGuestProfileToStore";
 import { getGuestList } from "../loginGuestPage/utils/getGuestList";
 import { getProfileFromToken } from "../loginGuestPage/utils/getProfileFromToken";
+import { rmGuest } from "../loginGuestPage/utils/rmGuest";
+
+var players = []
 
 export async function loadTournamentSetupPage(ctx) {
 	const app = document.getElementById("main_container");
 	const torunamentHtml = await fetchHTMLContent("tournament")
 	app.innerHTML = torunamentHtml
+	setupProfiles()
 	displayPlayerList()
-	setupAddPlayerBtn()
+	setupAddPlayerBtn(ctx)
 	setupStartBtn()
 }
 
@@ -22,8 +26,18 @@ export async function loadTournamentSetupPage(ctx) {
 	<button class="btn btn-danger btn-sm tournament__playerlist__item__removebtn">Remove</button>
 </li> */
 
-function addPlayerToList(playerName) {
-	const container = document.getElementById(tournament__playerlist);
+function setupProfiles() {
+	players = getGuestList()
+	const localProfile = getProfileData()
+	if (localProfile) {
+		localProfile.access_token = getAccessToken()
+		players = [localProfile, ...players]
+	}
+}
+
+function addPlayerToList(playerName, id) {
+	console.log(playerName)
+	const container = document.getElementById("tournament__playerlist");
 	if (!container) {
 		console.error(`Container with id "tournament__playerlist" not found.`);
 		return;
@@ -35,33 +49,29 @@ function addPlayerToList(playerName) {
 	const span = document.createElement("span");
 	span.className = "tournament__playerlist__item__name";
 	span.textContent = playerName;
-
+	const localProfile = getProfileData()
 	const button = document.createElement("button");
 	button.className = "btn btn-danger btn-sm tournament__playerlist__item__removebtn";
 	button.textContent = "Remove";
 	button.onclick = () => {
-		container.removeChild(li);
-	};
-
+		rmGuest(id)
+		players = players.filter(p => p.id != id)
+		container.removeChild(li)
+	}
 	li.appendChild(span);
-	li.appendChild(button);
+	if (!localProfile || id != localProfile.id)
+		li.appendChild(button);
+
 	container.appendChild(li);
 }
 
 function displayPlayerList() {
-	let players = getGuestList()
-	const localProfile = getProfileData()
-	if (localProfile) {
-		localProfile.access_token = getAccessToken()
-		players = [localProfile, ...players]
-	}
-	console.log("players", players)
 	for (const player of players) {
-		addPlayerToList(player.displayName)
+		addPlayerToList(player.displayName, player.id)
 	}
 }
 
-function setupAddPlayerBtn() {
+function setupAddPlayerBtn(ctx) {
 	const btn = document.getElementById("tournament__addplayerbtn")
 	btn.onclick = e => {
 		e.preventDefault()
@@ -75,7 +85,7 @@ function setupAddPlayerBtn() {
 					getProfileFromToken(res.access_token).then(profile => {
 						profile.access_token = res.access_token
 						addGuestProfileToStore(profile, console.error)
-						resolve(true)
+						loadTournamentSetupPage(ctx)
 					})
 				}
 			})
