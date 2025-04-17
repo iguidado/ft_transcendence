@@ -31,10 +31,10 @@ const routeScripts = {
 	// 'socket-test': loadSocketTestPage
 }
 
-export function load_page(url) {
+export function load_page(url, props) {
 	fetchHTMLContent(url).then(htmlContent => {
 		if (!htmlContent) {
-			load_page("profile")
+			load_page("profile", props)
 			return
 		} 
 		const app = document.getElementById('app');
@@ -55,7 +55,7 @@ export function load_page(url) {
 			app.appendChild(layout);
 			initBuildButtons(); 
 		});
-		if (routeScripts[url]) routeScripts[url]();
+		if (routeScripts[url]) routeScripts[url](props);
 			history.pushState({page: url}, "", `/${url}`);
 	}).catch(err => {console.log(err)})
 }
