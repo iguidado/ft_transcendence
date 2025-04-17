@@ -285,7 +285,7 @@ function displayFriendsList(profileData) {
 		statusIndicator.style.height = "10px";
 		statusIndicator.style.borderRadius = "50%";
 		statusIndicator.style.marginRight = "10px";
-		statusIndicator.style.backgroundColor = friend.is_online ? "green" : "grey";
+		statusIndicator.style.backgroundColor = friend.is_online ? "green" : "red";
 
 		// Nom de l'ami
 		const friendName = document.createElement("span");
