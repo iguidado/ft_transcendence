@@ -11,8 +11,8 @@ fi
 
 . /app/venv/bin/activate
 pip install whitenoise
-
-python -m pip install --no-cache-dir -r /root/requirements.txt 2> /dev/null
+pip install daphne
+python -m pip install --no-cache-dir -r /root/requirements.txt #2> /dev/null
 
 if ! [ -d /app/ft_transcendence ]
 then
