@@ -8,5 +8,5 @@ window.addEventListener("DOMContentLoaded", () => {
 	clearGuestStore()
 	pullProfile()
 	const currentPage = getCurrentPageFromURL()
-	load_page(currentPage, null, false)
+	load_page(currentPage, undefined, false)
 })
