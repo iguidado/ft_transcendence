@@ -22,22 +22,39 @@ export async function fetchHTMLContent(url) {
 }
 
 // url name: script to load
-const routeScripts = {
-	pong: loadGame,
-	login: loadLoginPage,
-	register: showRegister,
-	profile: loadProfilePage,
-	dashboard: loadDashboardPage
-	// 'socket-test': loadSocketTestPage
-}
+const routeConfigs = {
+	pong: {
+		script: loadGame,
+		htmlFrag: "pong"
+	},
+	login: {
+		script: loadLoginPage,
+		htmlFrag: "login"
+	},
+	register: {
+		script: showRegister,
+		htmlFrag: "register"
+	},
+	profile: {
+		script: loadProfilePage,
+		htmlFrag: "profile"
+	},
+	dashboard: {
+		script: loadDashboardPage,
+		htmlFrag: "dashboard"
+	}
+	// 'socket-test': { script: loadSocketTestPage }
+};
 
-export function load_page(url, props) {
-	fetchHTMLContent(url).then(htmlContent => {
-		if (!htmlContent) {
-			load_page("profile", props)
-			return
-		} 
-		const app = document.getElementById('app');
+export async function load_page(url, props) {
+	const config = routeConfigs[url]
+	if (!config) {
+		load_page("profile", props)
+		return
+	}
+	const app = document.getElementById('app');
+	if (config.htmlFrag) {
+		const htmlContent = await fetchHTMLContent(config.htmlFrag);
 		let mainContainer = document.getElementById("main_container")
 		if (!mainContainer) {
 			mainContainer = document.createElement('div');
@@ -45,19 +62,18 @@ export function load_page(url, props) {
 			app.appendChild(mainContainer)
 		}
 		mainContainer.innerHTML = htmlContent;
-		fetchHTMLContent('layout').then(htmlContent => {
-			const layout = document.createElement('div');
-			layout.innerHTML = htmlContent;
-			const groupElement = layout.querySelector(`#${url}Group`);
-			if (groupElement) {
-				groupElement.style.display = 'none';
-			}
-			app.appendChild(layout);
-			initBuildButtons(); 
-		});
-		if (routeScripts[url]) routeScripts[url](props);
-			history.pushState({page: url}, "", `/${url}`);
-	}).catch(err => {console.log(err)})
+	}
+	const htmlLayout = await fetchHTMLContent('layout')
+	const layout = document.createElement('div');
+	layout.innerHTML = htmlLayout;
+	const groupElement = layout.querySelector(`#${url}Group`);
+	if (groupElement) {
+		groupElement.style.display = 'none';
+	}
+	app.appendChild(layout);
+	initBuildButtons();
+	if (config.script) config.script(props);
+	history.pushState({ page: url }, "", `/${url}`)
 }
 
 window.addEventListener('popstate', (event) => {

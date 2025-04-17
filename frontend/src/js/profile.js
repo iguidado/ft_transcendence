@@ -11,50 +11,43 @@ import { disconnect } from "./utils/disconnect.js"
 import { getProfileData, pullProfile } from "./utils/profileUtils.js"
 import { deleteFriendRequest } from "./api/routes/deleteFriendRoute.js";
 import { initializeWebSocketConnection } from "./utils/webSocketManager.js";
+import { getProfileByUsername } from "./utils/getProfileByUsername.js"
 
-export async function loadProfilePage() {
-    // Enlever les anciens écouteurs pour éviter les doublons
-    window.removeEventListener('userStatusUpdate', handleUserStatusUpdate);
-    
-    // Initialiser le WebSocket si ce n'est pas déjà fait
-    if (!window.userStatusSocket || window.userStatusSocket.readyState !== WebSocket.OPEN) {
-        initializeWebSocketConnection();
-    }
-    
-    // Ajouter l'écouteur d'événements pour les mises à jour de statut
-    window.addEventListener('userStatusUpdate', handleUserStatusUpdate);
-
-    await pullProfile().then((profile) => {
-        if (!profile)
-            return noProfileData()
-        displayInformations()
-        settingsModal()
-        addFriendModal()
-    });
-
-    // Nettoyer l'écouteur lorsqu'on quitte la page
-    return function cleanup() {
-        window.removeEventListener('userStatusUpdate', handleUserStatusUpdate);
-    };
+export async function loadProfilePage(username=null) {
+	console.log("username", username)
+    const localProfile = await pullProfile()
+	if (!localProfile)
+		return noProfileData()
+	let profileData = null
+	if (!username)
+		profileData = getProfileData()
+	else
+		profileData = await getProfileByUsername(username)
+	setupUserStatus()
+	displayInformations(profileData)
+	if (!username) {
+		settingsModal(profileData)
+		addFriendModal()
+	}
 }
 
-// Gestion des mises à jour de statut d'utilisateur
+function setupUserStatus() {
+	window.removeEventListener('userStatusUpdate', handleUserStatusUpdate);
+	if (!window.userStatusSocket || window.userStatusSocket.readyState !== WebSocket.OPEN)
+        initializeWebSocketConnection()
+	window.addEventListener('userStatusUpdate', handleUserStatusUpdate);
+}
+
 function handleUserStatusUpdate(event) {
     const { username, isOnline } = event.detail;
     console.log(`Status update received: ${username} is ${isOnline ? 'online' : 'offline'}`);
-    
-    // Mettre à jour la liste des amis si elle est affichée
     updateFriendStatusInUI(username, isOnline);
 }
 
-// Fonction pour mettre à jour le statut d'un ami dans l'interface
 function updateFriendStatusInUI(username, isOnline) {
-    // Méthode plus robuste pour trouver l'élément de liste correspondant au bon ami
     const friendItems = document.querySelectorAll('#friendsList li[data-username]');
-    
     friendItems.forEach(item => {
         if (item.getAttribute('data-username') === username) {
-            // Mettre à jour l'indicateur de statut (premier enfant supposé être l'indicateur)
             const statusIndicator = item.querySelector('.status-indicator');
             if (statusIndicator) {
                 statusIndicator.style.backgroundColor = isOnline ? "green" : "grey";
@@ -64,8 +57,7 @@ function updateFriendStatusInUI(username, isOnline) {
     });
 }
 
-async function displayInformations() {
-    const profileData = getProfileData()
+async function displayInformations(profileData) {
     console.log("profileData", profileData)
     document.getElementById("usernameDisplay")
     .textContent = profileData.displayName.charAt(0).toUpperCase() + profileData.displayName.slice(1)
@@ -75,26 +67,24 @@ async function displayInformations() {
         .innerHTML = profileData?.match_history.length | 0
     document.getElementById("gamesWon")
         .textContent = profileData.wins | 0
-    displayFriendsList()
+    displayFriendsList(profileData)
 }
 
 function noProfileData() {
     disconnect()
 }
 
-function settingsModal() {
+function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
     modalElement.addEventListener('shown.bs.modal', () => {
       loadAvailableAvatars();
     });
-    
-    twoFactorAuthSection();
+    twoFactorAuthSection(profileData);
     saveSettings();
     disconnectBtn();
 }
 
-function twoFactorAuthSection() {
-    const profileData = getProfileData()
+function twoFactorAuthSection(profileData) {
     const settingsModal = document.getElementById("settingsModal")
     const enable2FA = document.getElementById("enable2FA")
     const email2FASection = document.getElementById("email2FASection")
@@ -240,42 +230,33 @@ function addFriendModal() {
         } else {
             console.error("Aucun utilisateur sélectionné");
         }
-        displayFriendsList();
+        displayFriendsList(profileData);
     });
-    // Gestion du bouton de suppression d'ami
     const deleteFriendBtn = document.getElementById("deleteFriendBtn");
     deleteFriendBtn.addEventListener("click", () => {
-        // Récupérer l'utilisateur sélectionné
         const friendUsernameSelect = document.getElementById("friendUsername");
         const selectedUsername = friendUsernameSelect.value;
-
         if (selectedUsername) {
             console.log("Suppression d'ami:", selectedUsername);
             deleteFriend(selectedUsername);
-
-            // Fermer la modale après la suppression
             const modal = bootstrap.Modal.getInstance(addFriendModal);
             modal.hide();
             load_page("profile");
         } else {
             console.error("Aucun utilisateur sélectionné pour suppression");
         }
-        displayFriendsList();
+        displayFriendsList(profileData);
     });
 }
 
 function loadUsersList() {
     usersListRequest((users) => {
         const friendUsernameElement = document.getElementById("friendUsername");
-        friendUsernameElement.innerHTML = ''; // Vide le conteneur avant d'ajouter les utilisateurs
-        
-        // Ajouter une option vide par défaut
+        friendUsernameElement.innerHTML = '';
         const defaultOption = document.createElement("option");
         defaultOption.value = "";
         defaultOption.textContent = "Select a username";
         friendUsernameElement.appendChild(defaultOption);
-        
-        // Ajouter chaque utilisateur comme option dans le select
         users.forEach(user => {
             const option = document.createElement("option");
             option.value = user.username;
@@ -303,13 +284,9 @@ function deleteFriend(username) {
     });
 }
 
-//Affichage liste d'amis
-
-function displayFriendsList() {
+function displayFriendsList(profileData) {
     const friendsList = document.getElementById("friendsList");
     friendsList.innerHTML = '';
-    const profileData = getProfileData();
-    
     if (!profileData.friends || profileData.friends.length === 0) {
         const noFriendsItem = document.createElement("li");
         noFriendsItem.className = "list-group-item";
@@ -317,14 +294,11 @@ function displayFriendsList() {
         friendsList.appendChild(noFriendsItem);
         return;
     }
-    
-    // Ajouter chaque ami dans la liste
     profileData.friends.forEach(friend => {
+		console.log("TEST")
         const friendItem = document.createElement("li");
         friendItem.className = "list-group-item d-flex align-items-center";
-        friendItem.setAttribute("data-username", friend.username); // Ajouter attribut data-username
-        
-        // Indicateur de statut
+        friendItem.setAttribute("data-username", friend.username);
         const statusIndicator = document.createElement("span");
         statusIndicator.className = "status-indicator";
         statusIndicator.style.width = "10px";
@@ -342,6 +316,10 @@ function displayFriendsList() {
         friendItem.appendChild(friendName);
         
         friendsList.appendChild(friendItem);
+		friendItem.onclick = e => {
+			e.preventDefault()
+			load_page("profile", friend.username)
+		}
     });
 }
 
