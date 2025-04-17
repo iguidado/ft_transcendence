@@ -9,19 +9,19 @@ import { loadDashboardPage } from "./dashboard.js";
 
 export async function fetchHTMLContent(url) {
 	try {
-		url = `./fragments/${url}.html`;
+		url = `/fragments/${url}.html`;
 		const response = await fetch(url);
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
 		const htmlContent = await response.text();
+		console.log(htmlContent)
 		return htmlContent;
 	} catch (error) {
 		throw new Error(error);
 	}
 }
 
-// url name: script to load
 const routeConfigs = {
 	pong: {
 		script: loadGame,
@@ -43,10 +43,14 @@ const routeConfigs = {
 		script: loadDashboardPage,
 		htmlFrag: "dashboard"
 	}
-	// 'socket-test': { script: loadSocketTestPage }
 };
 
-export async function load_page(url, props) {
+export async function load_page(url, props=null, pushHistory=true) {
+	const tmp = url.split("/")
+	if (tmp.length == 2) {
+		url = tmp[0]
+		props = tmp[1]
+	}
 	const config = routeConfigs[url]
 	if (!config) {
 		load_page("profile", props)
@@ -63,6 +67,16 @@ export async function load_page(url, props) {
 		}
 		mainContainer.innerHTML = htmlContent;
 	}
+	appendBuildingSideMenu(url)
+	if (config.script) config.script(props);
+	if (pushHistory)
+		history.pushState({ page: tmp.join("/") }, "", `/${tmp.join("/")}`)
+}
+
+
+
+async function appendBuildingSideMenu(url) {
+	const app = document.getElementById('app');
 	const htmlLayout = await fetchHTMLContent('layout')
 	const layout = document.createElement('div');
 	layout.innerHTML = htmlLayout;
@@ -72,19 +86,18 @@ export async function load_page(url, props) {
 	}
 	app.appendChild(layout);
 	initBuildButtons();
-	if (config.script) config.script(props);
-	history.pushState({ page: url }, "", `/${url}`)
 }
 
 window.addEventListener('popstate', (event) => {
-	const path = window.location.pathname.substring(1);
-	const page = path || 'login';
-	load_page(page);
+    const path = window.location.pathname.substring(1);
+    load_page(path, props, false);
 });
 
 export function getCurrentPageFromURL() {
-	const path = window.location.pathname.substring(1);
-	return path || null;
+	const path = window.location.pathname;
+	if (path && path.startsWith("/"))
+		return path.substring(1);
+	return path;
 }
 
 

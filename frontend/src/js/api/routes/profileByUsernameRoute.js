@@ -5,11 +5,10 @@ function usersResponseHandler(response) {
 }
 
 function usersErrorHandler(error) {
-	console.log(error)
+	console.error(error)
 }
 
 export async function profileByUsernameRoute(username, responseHandler=usersResponseHandler, errorHandler=usersErrorHandler) {
-	console.log("YUUUU", username)
 	await getRequest({
 		UrlPath: "/api/user/"+username+"/profile/",
 		responseHandler,
