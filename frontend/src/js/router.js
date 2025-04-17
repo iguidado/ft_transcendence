@@ -89,7 +89,7 @@ async function appendBuildingSideMenu(url) {
 
 window.addEventListener('popstate', (event) => {
     const path = window.location.pathname.substring(1);
-    load_page(path, props, false);
+    load_page(path, undefined, false);
 });
 
 export function getCurrentPageFromURL() {
