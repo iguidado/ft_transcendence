@@ -139,6 +139,7 @@ function toggle2faError(err, res) {
     console.warn("API Response:", res)
 }
 
+//TODO modale settings pour tournament
 //save settings DONE
 function saveSettings() {
 
@@ -151,6 +152,7 @@ function saveSettings() {
             console.log("Nom d'utilisateur mis à jour avec succès :", response);
             document.getElementById("usernameDisplay").textContent =
               newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
+			  pullProfile();
           }, (error) => {
             console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
           });
