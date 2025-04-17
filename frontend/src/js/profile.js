@@ -298,7 +298,7 @@ function displayFriendsList(profileData) {
 		friendsList.appendChild(friendItem);
 		friendItem.onclick = e => {
 			e.preventDefault()
-			load_page("profile", friend.username)
+			load_page("profile/"+friend.username)
 		}
 	});
 }
