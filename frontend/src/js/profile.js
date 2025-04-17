@@ -129,19 +129,25 @@ function toggle2faError(err, res) {
 }
 
 //TODO modale settings pour tournament
+//TODO modale settings pour tournament
 //save settings DONE
 function saveSettings() {
-	const saveButton = document.getElementById("saveSettings");
-	saveButton.addEventListener("click", () => {
-		const newDisplayName = document.getElementById("newDisplayName").value.trim();
-		if (newDisplayName) {
-			updateDisplayNameRequest(newDisplayName, (response) => {
-				document.getElementById("usernameDisplay").textContent =
-					newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
-				pullProfile();
-			}, (error) => {
-				console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
-			});
+
+    const saveButton = document.getElementById("saveSettings");
+    saveButton.addEventListener("click", () => {
+	const newDisplayName = document.getElementById("newDisplayName").value.trim();
+	console.log("Nouveau nom d'utilisateur :", newDisplayName);
+	if (newDisplayName) {
+		updateDisplayNameRequest(newDisplayName, (response) => {
+			console.log("Nom d'utilisateur mis à jour avec succès :", response);
+			document.getElementById("usernameDisplay").textContent =
+			  newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
+			  pullProfile();
+		  }, (error) => {
+			console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
+		  });
+		} else {
+		  console.log("Aucun nouveau nom fourni.");
 		}
 		const modal = document.getElementById('settingsModal');
 		const modalInstance = bootstrap.Modal.getInstance(modal);
