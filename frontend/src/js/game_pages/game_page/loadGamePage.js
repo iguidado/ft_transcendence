@@ -68,7 +68,10 @@ export function loadGamePage({game, container, config, players=[], onEndMatch}) 
 	}
 
 	function resultMsg(winner) {
-		return `Winner is ${winner.displayName}!`;
+		let name = "Marvin"
+		if (winner)
+			name = winner.displayName
+		return `Winner is ${name}!`;
 	}
 }
 

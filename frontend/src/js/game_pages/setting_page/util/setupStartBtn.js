@@ -15,8 +15,9 @@ export const setupStartBtn = (ctx) => {
 		if (ctx.game)
 			ctx.game.cleanup();
 		let playerCount = playersCount(ctx.config)
-		if (!playerCount) {
-			loadGamePage(ctx)
+		const localProfile = getProfileData()
+		if (!playerCount || (playerCount && localProfile)) {
+			loadGamePage({...ctx, players: [localProfile]})
 			return
 		}
 		clearGuestStore()
@@ -25,7 +26,6 @@ export const setupStartBtn = (ctx) => {
 				load_page("pong")
 				return
 			}
-			const localProfile = getProfileData()
 			if (!localProfile) {
 				load_page("pong")
 				return
