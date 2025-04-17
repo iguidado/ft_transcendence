@@ -85,7 +85,7 @@ function noProfileData() {
 function settingsModal() {
     const modalElement = document.getElementById("settingsModal");
     modalElement.addEventListener('shown.bs.modal', () => {
-      loadAvailableAvatars();
+    //   loadAvailableAvatars();
     });
     
     twoFactorAuthSection();
