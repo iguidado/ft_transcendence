@@ -37,11 +37,10 @@ class FriendSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
 	match_history = serializers.SerializerMethodField()
 	friends = serializers.SerializerMethodField()
-	avatar_url = serializers.SerializerMethodField()
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','displayName', 'avatar_url', 'date_joined', 'wins', 'game_played', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio', 'temp_auth_token']
+		fields = ['id', 'username', 'email','displayName', 'avatar', 'date_joined', 'wins', 'game_played', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio', 'temp_auth_token']
 
 	def get_match_history(seld, obj):
 		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
@@ -50,9 +49,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
 	def get_friends(self, obj):
 		friends = obj.friends.all()
 		return FriendSerializer(friends, many=True).data
-	
-	def get_avatar_url(self, obj):
-		return obj.get_avatar_url()
 
 
 
@@ -106,16 +102,16 @@ class TwoFAUpdateSerializer(serializers.ModelSerializer):
 		return data
 
 class UpdateAvatarSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(required=False, allow_null=True)
 
-	class Meta:
-		model = get_user_model()
-		fields = ['avatar']
-
-	def validate_avatar(self,value):
-		valid_choices = [choice[0] for choice in User.DEFAULT_AVATAR_CHOICES]
-		if value not in valid_choices:
-			raise serializers.ValidationError(f"Invalid avatar choice. Valid choices are: {', '.join(valid_choices)}")
-		return value
+    class Meta:
+        model = get_user_model()
+        fields = ['avatar']
+        
+    def validate_avatar(self, value):
+        if value is None:
+            raise serializers.ValidationError("Avatar is required")
+        return value
 
 class UpdateUserHistoricSerializer(serializers.ModelSerializer):
 
