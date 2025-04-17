@@ -89,76 +89,76 @@ export function CustomBtnsList(ctx) {
 				return ctx.config.board.width
 			}
 		},
-		{
-			title: 'Camera Phi',
-			defaultValue: ctx.config.camera.polar.phi,
-			minusCallback: async () => {
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.phiDown())
-				ctx.config.camera.polar.phi = ctx.game.config.camera.polar.phi
-				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.phi
-			},
-			plusCallback: async () => {
-				ctx.config.camera.polar.phi = ctx.game.config.camera.polar.phi
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.phiUp())
-				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.phi
-			}
-		},
-		{
-			title: 'Camera Theta',
-			defaultValue: ctx.config.camera.polar.theta,
-			minusCallback: async () => {
-				ctx.config.camera.polar.theta = ctx.game.config.camera.polar.theta
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.thetaDown())
-				return ctx.game.config.camera.polar.theta
-			},
-			plusCallback: async () => {
-				ctx.config.camera.polar.theta = ctx.game.config.camera.polar.theta
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.thetaUp())
-				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.theta
-			}
-		},
-		{
-			title: 'Camera Rotate X',
-			defaultValue: ctx.config.camera.polar.rotateX,
-			minusCallback: async () => {
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateDownX())
-				ctx.config.camera.polar.rotateX = ctx.game.config.camera.polar.rotateX
-				return ctx.game.config.camera.polar.rotateX
-			},
-			plusCallback: async () => {
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateUpX())
-				ctx.config.camera.polar.rotateX = ctx.game.config.camera.polar.rotateX
-				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateX
-			}
-		},
-		{
-			title: 'Camera Rotate Y',
-			defaultValue: ctx.config.camera.polar.rotateY,
-			minusCallback: async () => {
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateDownY())
-				ctx.config.camera.polar.rotateY = ctx.game.config.camera.polar.rotateY
-				return ctx.game.config.camera.polar.rotateY
-			},
-			plusCallback: async () => {
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateUpY())
-				ctx.config.camera.polar.rotateY = ctx.game.config.camera.polar.rotateY
-				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateY
-			}
-		},
-		{
-			title: 'Camera Rotate Z',
-			defaultValue: ctx.config.camera.polar.rotateZ,
-			minusCallback: async () => {
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateDownZ())
-				ctx.config.camera.polar.rotateZ = ctx.game.config.camera.polar.rotateZ
-				return ctx.game.config.camera.polar.rotateZ
-			},
-			plusCallback: async () => {
-				ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateUpZ())
-				ctx.config.camera.polar.rotateZ = ctx.game.config.camera.polar.rotateZ
-				return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateZ
-			}
-		},
+		// {
+		// 	title: 'Camera Phi',
+		// 	defaultValue: ctx.config.camera.polar.phi,
+		// 	minusCallback: async () => {
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.phiDown())
+		// 		ctx.config.camera.polar.phi = ctx.game.config.camera.polar.phi
+		// 		return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.phi
+		// 	},
+		// 	plusCallback: async () => {
+		// 		ctx.config.camera.polar.phi = ctx.game.config.camera.polar.phi
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.phiUp())
+		// 		return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.phi
+		// 	}
+		// },
+		// {
+		// 	title: 'Camera Theta',
+		// 	defaultValue: ctx.config.camera.polar.theta,
+		// 	minusCallback: async () => {
+		// 		ctx.config.camera.polar.theta = ctx.game.config.camera.polar.theta
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.thetaDown())
+		// 		return ctx.game.config.camera.polar.theta
+		// 	},
+		// 	plusCallback: async () => {
+		// 		ctx.config.camera.polar.theta = ctx.game.config.camera.polar.theta
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.thetaUp())
+		// 		return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.theta
+		// 	}
+		// },
+		// {
+		// 	title: 'Camera Rotate X',
+		// 	defaultValue: ctx.config.camera.polar.rotateX,
+		// 	minusCallback: async () => {
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateDownX())
+		// 		ctx.config.camera.polar.rotateX = ctx.game.config.camera.polar.rotateX
+		// 		return ctx.game.config.camera.polar.rotateX
+		// 	},
+		// 	plusCallback: async () => {
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateUpX())
+		// 		ctx.config.camera.polar.rotateX = ctx.game.config.camera.polar.rotateX
+		// 		return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateX
+		// 	}
+		// },
+		// {
+		// 	title: 'Camera Rotate Y',
+		// 	defaultValue: ctx.config.camera.polar.rotateY,
+		// 	minusCallback: async () => {
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateDownY())
+		// 		ctx.config.camera.polar.rotateY = ctx.game.config.camera.polar.rotateY
+		// 		return ctx.game.config.camera.polar.rotateY
+		// 	},
+		// 	plusCallback: async () => {
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateUpY())
+		// 		ctx.config.camera.polar.rotateY = ctx.game.config.camera.polar.rotateY
+		// 		return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateY
+		// 	}
+		// },
+		// {
+		// 	title: 'Camera Rotate Z',
+		// 	defaultValue: ctx.config.camera.polar.rotateZ,
+		// 	minusCallback: async () => {
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateDownZ())
+		// 		ctx.config.camera.polar.rotateZ = ctx.game.config.camera.polar.rotateZ
+		// 		return ctx.game.config.camera.polar.rotateZ
+		// 	},
+		// 	plusCallback: async () => {
+		// 		ctx.game.viewManager.views.forEach(({ cameraManager }) => cameraManager.rotateUpZ())
+		// 		ctx.config.camera.polar.rotateZ = ctx.game.config.camera.polar.rotateZ
+		// 		return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateZ
+		// 	}
+		// },
 		{
 			title: 'Camera margin',
 			defaultValue: ctx.config.camera.boundingBoxMargin,

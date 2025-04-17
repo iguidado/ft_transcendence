@@ -11,8 +11,8 @@ export default {
 		keys: {
 			leftUp: 'w',
 			leftDown: 's',
-			rightUp: 'ArrowRight',
-			rightDown: 'ArrowLeft'
+			rightUp: 'ArrowUp',
+			rightDown: 'ArrowDown'
 		},
 		bots: {
 			reactionDelay: 0,  // Délai de réaction (secondes)
