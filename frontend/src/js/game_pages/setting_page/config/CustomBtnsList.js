@@ -1,6 +1,14 @@
 import { updatePreview } from "../util/updatePreview.js";
 import { createKeyCaptureOverlay } from '../util/createKeyCaptureOverlay.js';
 
+// Global min and max values
+const MIN_BOARD_HEIGHT = 30;
+const MAX_BOARD_HEIGHT = 90;
+const MIN_BOARD_WIDTH = 100;
+const MAX_BOARD_WIDTH = 150;
+const MIN_SCORE = 1;
+const MAX_SCORE = 100;
+
 function captureKey(callback) {
 	const overlay = createKeyCaptureOverlay();
 	document.body.appendChild(overlay);
@@ -21,16 +29,18 @@ export function CustomBtnsList(ctx) {
 			title: 'Score Max',
 			defaultValue: ctx.config.score.max,
 			minusCallback: async () => {
-				if (!ctx.config.score.max)
-					return 0
-				ctx.config.score.max -= 1
-				updatePreview(ctx)
-				return ctx.config.score.max
+				if (ctx.config.score.max > MIN_SCORE) {
+					ctx.config.score.max -= 1;
+					updatePreview(ctx);
+				}
+				return ctx.config.score.max;
 			},
 			plusCallback: async () => {
-				ctx.config.score.max += 1
-				updatePreview(ctx)
-				return ctx.config.score.max
+				if (ctx.config.score.max < MAX_SCORE) {
+					ctx.config.score.max += 1;
+					updatePreview(ctx);
+				}
+				return ctx.config.score.max;
 			}
 		},
 		{
@@ -65,28 +75,36 @@ export function CustomBtnsList(ctx) {
 			title: 'Board Height',
 			defaultValue: ctx.config.board.height,
 			minusCallback: async () => {
-				ctx.config.board.height -= 1
-				updatePreview(ctx)
-				return ctx.config.board.height
+				if (ctx.config.board.height > MIN_BOARD_HEIGHT) {
+					ctx.config.board.height -= 1;
+					updatePreview(ctx);
+				}
+				return ctx.config.board.height;
 			},
 			plusCallback: async () => {
-				ctx.config.board.height += 1
-				updatePreview(ctx)
-				return ctx.config.board.height
+				if (ctx.config.board.height < MAX_BOARD_HEIGHT) {
+					ctx.config.board.height += 1;
+					updatePreview(ctx);
+				}
+				return ctx.config.board.height;
 			}
 		},
 		{
 			title: 'Board Width',
 			defaultValue: ctx.config.board.width,
 			minusCallback: async () => {
-				ctx.config.board.width -= 1
-				updatePreview(ctx)
-				return ctx.config.board.width
+				if (ctx.config.board.width > MIN_BOARD_WIDTH) {
+					ctx.config.board.width -= 1;
+					updatePreview(ctx);
+				}
+				return ctx.config.board.width;
 			},
 			plusCallback: async () => {
-				ctx.config.board.width += 1
-				updatePreview(ctx)
-				return ctx.config.board.width
+				if (ctx.config.board.width < MAX_BOARD_WIDTH) {
+					ctx.config.board.width += 1;
+					updatePreview(ctx);
+				}
+				return ctx.config.board.width;
 			}
 		},
 		// {
@@ -159,20 +177,24 @@ export function CustomBtnsList(ctx) {
 		// 		return ctx.game.viewManager.views.length > 1 ? "-" : ctx.game.config.camera.polar.rotateZ
 		// 	}
 		// },
-		{
-			title: 'Camera margin',
-			defaultValue: ctx.config.camera.boundingBoxMargin,
-			minusCallback: async () => {
-				ctx.config.camera.boundingBoxMargin -= 1
-				updatePreview(ctx)
-				return ctx.config.camera.boundingBoxMargin
-			},
-			plusCallback: async () => {
-				ctx.config.camera.boundingBoxMargin += 1
-				updatePreview(ctx)
-				return ctx.config.camera.boundingBoxMargin
-			}
-		},
+		// {
+		// 	title: 'Camera margin',
+		// 	defaultValue: ctx.config.camera.boundingBoxMargin,
+		// 	minusCallback: async () => {
+		// 		if (ctx.config.camera.boundingBoxMargin > MIN_CAMERA_MARGIN) {
+		// 			ctx.config.camera.boundingBoxMargin -= 1;
+		// 			updatePreview(ctx);
+		// 		}
+		// 		return ctx.config.camera.boundingBoxMargin;
+		// 	},
+		// 	plusCallback: async () => {
+		// 		if (ctx.config.camera.boundingBoxMargin < MAX_CAMERA_MARGIN) {
+		// 			ctx.config.camera.boundingBoxMargin += 1;
+		// 			updatePreview(ctx);
+		// 		}
+		// 		return ctx.config.camera.boundingBoxMargin;
+		// 	}
+		// },
 		{
 			title: 'Left Paddle Up',
 			defaultValue: ctx.config.paddles.controls.keys.leftUp,
