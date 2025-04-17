@@ -26,6 +26,11 @@ then
     chmod -R 755 /app/ft_transcendence/media
 fi
 
+if ! [ -d /app/ft_transcendence/media/avatars/default1.png ]
+then
+    cp /app/ft_transcendence/api/static/api/images/default1.png /app/ft_transcendence/media/avatars/
+fi
+
 if ! [ -d /app/ft_transcendence/static ]
 then
     mkdir -p /app/ft_transcendence/static

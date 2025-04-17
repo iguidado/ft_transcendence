@@ -266,45 +266,33 @@ class UserAvatarUpdateView(APIView):
 	parser_classes = (MultiPartParser, FormParser)  # Pour gérer les fichiers uploadés
 
 	@swagger_auto_schema(
-		operation_description="Mettre à jour l'avatar de l'utilisateur",
+		operation_description="Update user avatar",
 		request_body=UpdateAvatarSerializer,
 	)
 	
 	def patch(self, request):
 		user = request.user
+		
+		if 'avatar' not in request.data:
+			return Response({
+				'error': 'Avatar file is required'
+			}, status=status.HTTP_400_BAD_REQUEST)
+		
 		serializer = self.serializer_class(user, data=request.data, partial=True)
 
 		if serializer.is_valid():
 			if 'avatar' in serializer.validated_data and serializer.validated_data['avatar']:
-				user.avatar_choice = '' 
-			if 'avatar_choice' in serializer.validated_data and serializer.validated_data['avatar_choice']:
-				user.avatar = None
-			
-			serializer.save()
-			return Response({
-				'avatar_url': user.get_avatar_url(),
-				'message': 'Avatar mis à jour avec succès'
-			}, status=status.HTTP_200_OK)
-			
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class AvailableAvatarsView(APIView):
-	permission_classes = [AllowAny]
-	
-	@swagger_auto_schema(
-		operation_description="Get default avatars with their URLs",
-	)
-	def get(self, request):
-		available_avatars = [
-			{
-				'code': choice[0],
-				'name': choice[1],
-				'url': static(f'api/images/{choice[0]}.png')
-			}
-			for choice in User.DEFAULT_AVATAR_CHOICES
-		]
+				serializer.save()
+				return Response({
+					'avatar_url': user.get_avatar_url(),
+					'message': 'Avatar updated successfully'
+				}, status=status.HTTP_200_OK)
+			else:
+				return Response({
+					'error': 'Avatar file is required'
+				}, status=status.HTTP_400_BAD_REQUEST)
 		
-		return Response(available_avatars, status=status.HTTP_200_OK)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateMatchHistoricView(APIView):
 	permission_classes = [IsAuthenticated]
