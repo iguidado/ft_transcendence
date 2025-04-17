@@ -5,14 +5,16 @@ djangorestframework-simplejwt==5.2.2
 django-crontab==0.7.1
 django-cors-headers==4.3.1
 drf-yasg<1.22
-channels>=4.0,<5.0
+channels>=4.0.0
 python-decouple==3.8
-# daphne>=4.0,<5.0
-channels_redis>=3.0,<4.0
+daphne>=4.0.0
+channels_redis>=4.0.0
+asgiref>=3.7.0
+legacy-cgi==0.1.0
+whitenoise
 
 # Database
 psycopg==3.1.18
-
 
 # Test
 pytest==7.4.3
@@ -21,9 +23,8 @@ pytest-django==4.7.0
 # CoreAPI
 coreapi==2.3.1
 
-#utils
-django-cors-headers
+# utils
 python-dotenv
 setuptools
 wheel
-Pillow		
+Pillow

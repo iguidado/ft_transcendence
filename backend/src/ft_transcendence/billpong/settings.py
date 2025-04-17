@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 	'rest_framework_simplejwt',
 	'django_crontab',
 	'channels',
-	'corsheaders'
+	'corsheaders',
 ]
 
 AUTH_USER_MODEL = 'api.User'
@@ -58,11 +58,8 @@ AUTH_USER_MODEL = 'api.User'
 ASGI_APPLICATION = 'billpong.asgi.application'
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
 
@@ -101,6 +98,7 @@ SWAGGER_SETTINGS = {
 MIDDLEWARE = [
 	'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -113,6 +111,11 @@ PORT = os.getenv("FRONT_PORT")
 CORS_ALLOWED_ORIGINS = [
     f"http://localhost:{PORT}",
     f"http://127.0.0.1:{PORT}",
+]
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://localhost:[0-9]+$",
+    r"^http://127\.0\.0\.1:[0-9]+$",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -223,8 +226,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'api/static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
