@@ -30,6 +30,36 @@ export function handleRegistration(onloginSuccess) {
 			registerRequestCallBack,
 			registerRequestErrorCallBack
 		)
+		function registerRequestErrorCallBack(err, response) {
+			if (response?.status === 400) {
+				if (username.length < 3 || username.length > 20) {
+					displayError(
+						"Username must be at least 3 characters long."
+					);
+				} else if (!/^[a-zA-Z0-9]+$/.test(username)) {
+					displayError(
+						"Usename must contain only letters and numbers."
+					);
+				} else if (password.length < 6) {
+					displayError(
+						"Password must be at least 6 characters long."
+					);
+				} else if (password !== confirm_password) {
+					displayError(
+						"Passwords do not match. Please try again."
+					);
+				}
+			} else if (response?.status === 409) {
+				displayError(
+					"Username already exists. Please choose another one."
+				);
+			} else {
+				displayError(
+					"An error occurred: " + err
+				);
+			}
+		}
+		
 	})
 	const backToLoginButton = document.getElementById("backToLoginButton");
 	if (backToLoginButton) {
@@ -44,9 +74,4 @@ export function handleRegistration(onloginSuccess) {
 }
 
 
-function registerRequestErrorCallBack(err) {
-	// DONE Register error actions
-	
-	displayError("An error occurred during registration. Please try again." + err);
-}
 
