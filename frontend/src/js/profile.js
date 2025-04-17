@@ -59,6 +59,8 @@ function updateFriendStatusInUI(username, isOnline) {
 async function displayInformations(profileData) {
 	document.getElementById("usernameDisplay")
 		.textContent = profileData.displayName.charAt(0).toUpperCase() + profileData.displayName.slice(1)
+	document.getElementById("realUsername")
+		.textContent = profileData.username.charAt(0).toUpperCase() + profileData.username.slice(1)
 	document.getElementById("userAvatar")
 		.src = profileData.avatar
 	document.getElementById("gamesPlayed")
