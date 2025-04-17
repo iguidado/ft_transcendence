@@ -30,6 +30,6 @@ export function formatProfileData(profile) {
 		return null
 	if (!profile.displayName)
 		profile.displayName = profile.username
-	profile.avatar = getApiConfigDefault().url + profile.avatar_url
+	profile.avatar = getApiConfigDefault().url + profile.avatar
 	return profile
 }
