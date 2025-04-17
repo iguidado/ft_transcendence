@@ -284,7 +284,6 @@ class UserAvatarUpdateView(APIView):
 			if 'avatar' in serializer.validated_data and serializer.validated_data['avatar']:
 				serializer.save()
 				return Response({
-					'avatar_url': user.get_avatar_url(),
 					'message': 'Avatar updated successfully'
 				}, status=status.HTTP_200_OK)
 			else:
