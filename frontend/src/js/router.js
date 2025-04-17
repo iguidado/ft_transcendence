@@ -9,7 +9,7 @@ import { loadDashboardPage } from "./dashboard.js";
 
 export async function fetchHTMLContent(url) {
 	try {
-		url = `./fragments/${url}.html`;
+		url = `/fragments/${url}.html`;
 		const response = await fetch(url);
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
@@ -21,23 +21,43 @@ export async function fetchHTMLContent(url) {
 	}
 }
 
-// url name: script to load
-const routeScripts = {
-	pong: loadGame,
-	login: loadLoginPage,
-	register: showRegister,
-	profile: loadProfilePage,
-	dashboard: loadDashboardPage
-	// 'socket-test': loadSocketTestPage
-}
+const routeConfigs = {
+	pong: {
+		script: loadGame,
+		htmlFrag: "pong"
+	},
+	login: {
+		script: loadLoginPage,
+		htmlFrag: "login"
+	},
+	register: {
+		script: showRegister,
+		htmlFrag: "register"
+	},
+	profile: {
+		script: loadProfilePage,
+		htmlFrag: "profile"
+	},
+	dashboard: {
+		script: loadDashboardPage,
+		htmlFrag: "dashboard"
+	}
+};
 
-export function load_page(url, props) {
-	fetchHTMLContent(url).then(htmlContent => {
-		if (!htmlContent) {
-			load_page("profile", props)
-			return
-		} 
-		const app = document.getElementById('app');
+export async function load_page(url, props=undefined, pushHistory=true) {
+	const tmp = url.split("/")
+	if (tmp.length == 2) {
+		url = tmp[0]
+		props = tmp[1]
+	}
+	const config = routeConfigs[url]
+	if (!config) {
+		load_page("profile", props)
+		return
+	}
+	const app = document.getElementById('app');
+	if (config.htmlFrag) {
+		const htmlContent = await fetchHTMLContent(config.htmlFrag);
 		let mainContainer = document.getElementById("main_container")
 		if (!mainContainer) {
 			mainContainer = document.createElement('div');
@@ -45,31 +65,39 @@ export function load_page(url, props) {
 			app.appendChild(mainContainer)
 		}
 		mainContainer.innerHTML = htmlContent;
-		fetchHTMLContent('layout').then(htmlContent => {
-			const layout = document.createElement('div');
-			layout.innerHTML = htmlContent;
-			const groupElement = layout.querySelector(`#${url}Group`);
-			if (groupElement) {
-				groupElement.style.display = 'none';
-			}
-			app.appendChild(layout);
-			initBuildButtons(); 
-		});
-		if (routeScripts[url]) routeScripts[url](props);
-			history.pushState({page: url}, "", `/${url}`);
-	}).catch(err => {console.log(err)})
+	}
+	appendBuildingSideMenu(url)
+	if (config.script) config.script(props);
+	if (pushHistory)
+		history.pushState({ page: tmp.join("/") }, "", `/${tmp.join("/")}`)
+}
+
+
+
+async function appendBuildingSideMenu(url) {
+	const app = document.getElementById('app');
+	const htmlLayout = await fetchHTMLContent('layout')
+	const layout = document.createElement('div');
+	layout.innerHTML = htmlLayout;
+	const groupElement = layout.querySelector(`#${url}Group`);
+	if (groupElement) {
+		groupElement.style.display = 'none';
+	}
+	app.appendChild(layout);
+	initBuildButtons();
 }
 
 window.addEventListener('popstate', (event) => {
-	const path = window.location.pathname.substring(1);
-	const page = path || 'login';
-	load_page(page);
+    const path = window.location.pathname.substring(1);
+    load_page(path, props, false);
 });
 
 export function getCurrentPageFromURL() {
-	const path = window.location.pathname.substring(1);
-	return path || null;
+	const path = window.location.pathname;
+	if (path && path.startsWith("/"))
+		return path.substring(1);
+	return path;
 }
 
 
-// TODO debug forward
+// TODO FORWARD

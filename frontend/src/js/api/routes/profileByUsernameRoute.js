@@ -1,0 +1,17 @@
+import { getRequest } from "../utils/getRequest"
+
+function usersResponseHandler(response) {
+	console.log(response)
+}
+
+function usersErrorHandler(error) {
+	console.error(error)
+}
+
+export async function profileByUsernameRoute(username, responseHandler=usersResponseHandler, errorHandler=usersErrorHandler) {
+	await getRequest({
+		UrlPath: "/api/user/"+username+"/profile/",
+		responseHandler,
+		errorHandler
+	})
+}
