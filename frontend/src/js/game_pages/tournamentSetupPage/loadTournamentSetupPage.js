@@ -187,21 +187,21 @@ function saveTDNbtn(modal, id, newTDNInput) {
 	};
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	const modal = document.getElementById("TDNsettingsModal");
+// document.addEventListener("DOMContentLoaded", () => {
+// 	const modal = document.getElementById("TDNsettingsModal");
 
-	// Écouter l'événement de fermeture de la modale
-	modal.addEventListener("hidden.bs.modal", () => {
-		// Détruire l'instance de la modale
-		const modalInstance = bootstrap.Modal.getInstance(modal);
-		if (modalInstance) {
-			modalInstance.dispose();
-		}
+// 	// Écouter l'événement de fermeture de la modale
+// 	modal.addEventListener("hidden.bs.modal", () => {
+// 		// Détruire l'instance de la modale
+// 		const modalInstance = bootstrap.Modal.getInstance(modal);
+// 		if (modalInstance) {
+// 			modalInstance.dispose();
+// 		}
 
-		// Déplacer le focus vers un élément en dehors de la modale
-		const openButton = document.querySelector('[data-bs-target="#TDNsettingsModal"]');
-		if (openButton) {
-			openButton.focus();
-		}
-	});
-});
+// 		// Déplacer le focus vers un élément en dehors de la modale
+// 		const openButton = document.querySelector('[data-bs-target="#TDNsettingsModal"]');
+// 		if (openButton) {
+// 			openButton.focus();
+// 		}
+// 	});
+// });
