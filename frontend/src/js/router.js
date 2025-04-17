@@ -15,7 +15,6 @@ export async function fetchHTMLContent(url) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
 		const htmlContent = await response.text();
-		console.log(htmlContent)
 		return htmlContent;
 	} catch (error) {
 		throw new Error(error);
@@ -45,7 +44,7 @@ const routeConfigs = {
 	}
 };
 
-export async function load_page(url, props=null, pushHistory=true) {
+export async function load_page(url, props=undefined, pushHistory=true) {
 	const tmp = url.split("/")
 	if (tmp.length == 2) {
 		url = tmp[0]
