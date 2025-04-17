@@ -139,8 +139,6 @@ function toggle2faError(err, res) {
     console.warn("API Response:", res)
 }
 
-//TODO modale settings pour tournament
-//save settings DONE
 function saveSettings() {
 
     const saveButton = document.getElementById("saveSettings");
