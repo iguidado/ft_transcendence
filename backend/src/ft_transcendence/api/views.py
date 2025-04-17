@@ -172,18 +172,27 @@ class UserProfileByUserNameView(RetrieveAPIView):
 	lookup_field = "username"
 
 class RegisterView(APIView):
-	permission_classes = [AllowAny]
-	serializer_class = UserRegistrationSerializer
+    permission_classes = [AllowAny]
+    serializer_class = UserRegistrationSerializer
 
-	@swagger_auto_schema(request_body=UserRegistrationSerializer)
-
-	def post(self, request):
-		serializer = self.serializer_class(data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    @swagger_auto_schema(request_body=UserRegistrationSerializer)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        try:
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Vérifier si l'erreur est due à un username déjà pris
+            elif 'username' in serializer.errors and any('already exists' in error for error in serializer.errors['username']):
+                return Response(
+                    {"error": "username already exists"},
+                    status=status.HTTP_409_CONFLICT
+                )
+            # Pour toutes les autres erreurs
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            # Gérer les autres exceptions possibles
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserDisplayNameUpdateView(APIView):
 	permission_classes = [IsAuthenticated]
