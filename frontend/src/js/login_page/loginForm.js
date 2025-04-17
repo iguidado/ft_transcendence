@@ -17,7 +17,7 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
         console.log("WebSocket initialized after login");
     } else {
         const valide2FAsection = document.getElementById("2FALoginModal")
-        const twoFAModal = new bootstrap.Modal(valide2FAsection)
+        const twoFAModal = new bootstrap.getOrCreateInstance(valide2FAsection)
         twoFAModal.show()
         if (!res.temp_token) {
             console.warn("valide2FAsection !res.temp_token")

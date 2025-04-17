@@ -33,55 +33,55 @@ function setupProfiles() {
 }
 
 function addPlayerToList(playerName, id) {
-    const container = document.getElementById("tournament__playerlist");
-    if (!container) {
-        console.error(`Container with id "tournament__playerlist" not found.`);
-        return;
-    }
+	const container = document.getElementById("tournament__playerlist");
+	if (!container) {
+		console.error(`Container with id "tournament__playerlist" not found.`);
+		return;
+	}
 
-    const li = document.createElement("li");
-    li.className = "list-group-item d-flex justify-content-between align-items-center tournament__playerlist__item";
-    li.setAttribute("data-id", id); // Ajout de l'attribut data-id
+	const li = document.createElement("li");
+	li.className = "list-group-item d-flex justify-content-between align-items-center tournament__playerlist__item";
+	li.setAttribute("data-id", id); // Ajout de l'attribut data-id
 
-    const span = document.createElement("span");
-    span.className = "tournament__playerlist__item__name";
-    span.textContent = playerName;
+	const span = document.createElement("span");
+	span.className = "tournament__playerlist__item__name";
+	span.textContent = playerName;
 
-    const buttonContainer = document.createElement("div");
-    buttonContainer.className = "d-flex gap-2";
+	const buttonContainer = document.createElement("div");
+	buttonContainer.className = "d-flex gap-2";
 
-    const removeButton = document.createElement("button");
-    removeButton.className = "btn btn-danger btn-sm";
-    removeButton.textContent = "Remove";
-    removeButton.onclick = () => {
-        rmGuest(id);
-        players = players.filter(p => p.id !== id);
-        container.removeChild(li);
-    };
+	const removeButton = document.createElement("button");
+	removeButton.className = "btn btn-danger btn-sm";
+	removeButton.textContent = "Remove";
+	removeButton.onclick = () => {
+		rmGuest(id);
+		players = players.filter(p => p.id !== id);
+		container.removeChild(li);
+	};
 
-    const paramButton = document.createElement("button");
-    paramButton.className = "btn gear-btn";
-    paramButton.setAttribute("data-bs-toggle", "modal");
-    paramButton.setAttribute("data-bs-target", "#TDNsettingsModal");
-    paramButton.style.backgroundImage = "url('./rsc/param.png')";
-    paramButton.style.backgroundSize = "contain";
-    paramButton.style.backgroundRepeat = "no-repeat";
-    paramButton.style.backgroundPosition = "center";
-    paramButton.style.width = "40px";
-    paramButton.style.height = "40px";
-    paramButton.style.padding = "0";
-    paramButton.onclick = () => {
-        const modal = document.getElementById("TDNsettingsModal");
-        openTDNSettingsModal(modal, playerName, id);
-    };
+	const paramButton = document.createElement("button");
+	paramButton.className = "btn gear-btn";
+	paramButton.setAttribute("data-bs-toggle", "modal");
+	paramButton.setAttribute("data-bs-target", "#TDNsettingsModal");
+	paramButton.style.backgroundImage = "url('./rsc/param.png')";
+	paramButton.style.backgroundSize = "contain";
+	paramButton.style.backgroundRepeat = "no-repeat";
+	paramButton.style.backgroundPosition = "center";
+	paramButton.style.width = "40px";
+	paramButton.style.height = "40px";
+	paramButton.style.padding = "0";
+	paramButton.onclick = () => {
+		const modal = document.getElementById("TDNsettingsModal");
+		openTDNSettingsModal(modal, playerName, id);
+	};
 
-    buttonContainer.appendChild(removeButton);
-    buttonContainer.appendChild(paramButton);
+	buttonContainer.appendChild(removeButton);
+	buttonContainer.appendChild(paramButton);
 
-    li.appendChild(span);
-    li.appendChild(buttonContainer);
+	li.appendChild(span);
+	li.appendChild(buttonContainer);
 
-    container.appendChild(li);
+	container.appendChild(li);
 }
 
 function displayPlayerList() {
@@ -142,63 +142,66 @@ function setupStartBtn(ctx) {
 
 
 function openTDNSettingsModal(modal, playerName, id) {
-    const modalTitle = modal.querySelector(".modal-title");
-    const newTDNInput = modal.querySelector("#newTDN");
+	const modalTitle = modal.querySelector(".modal-title");
+	const newTDNInput = modal.querySelector("#newTDN");
 
-    // Mettre à jour le titre de la modale et le placeholder
-    modalTitle.textContent = `Edit Display Name for ${playerName}`;
-    newTDNInput.value = playerName;
-	
+	// Mettre à jour le titre de la modale et le placeholder
+	modalTitle.textContent = `Edit Display Name for ${playerName}`;
+	newTDNInput.value = playerName;
+
 	// Afficher la modale
-	const modalInstance = new bootstrap.Modal(modal);
+	const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
 	modalInstance.show();
-	
-    // Ajouter un gestionnaire pour le bouton "Save"
-    saveTDNbtn(modal, id, newTDNInput);
+
+	// Ajouter un gestionnaire pour le bouton "Save"
+	saveTDNbtn(modal, id, newTDNInput);
 }
 
-    function saveTDNbtn(modal, id, newTDNInput) {
-        const saveButton = modal.querySelector("#saveTDNSettings");
-    saveButton.onclick = () => {
-        const newDisplayName = newTDNInput.value.trim();
-        if (newDisplayName) {
-            // Mettre à jour le display name du joueur
-            const player = players.find(p => p.id === id);
-            if (player) {
-                player.displayName = newDisplayName;
-                console.log(`Display name updated for player ${id}: ${newDisplayName}`);
+function saveTDNbtn(modal, id, newTDNInput) {
+	const saveButton = modal.querySelector("#saveTDNSettings");
+	saveButton.onclick = () => {
+		const newDisplayName = newTDNInput.value.trim();
+		if (newDisplayName) {
+			// Mettre à jour le display name du joueur
+			const player = players.find(p => p.id === id);
+			if (player) {
+				player.displayName = newDisplayName;
+				console.log(`Display name updated for player ${id}: ${newDisplayName}`);
 
-                // Mettre à jour l'affichage dans la liste
-                const playerListItem = document.querySelector(`#tournament__playerlist li[data-id="${id}"]`);
-                if (playerListItem) {
-                    const nameSpan = playerListItem.querySelector(".tournament__playerlist__item__name");
-                    nameSpan.textContent = newDisplayName;
-                }
-            } else {
-                console.error(`Player with ID ${id} not found.`);
-            }
-        } else {
-            console.error("Display name cannot be empty.");
-        }
+				// Mettre à jour l'affichage dans la liste
+				const playerListItem = document.querySelector(`#tournament__playerlist li[data-id="${id}"]`);
+				if (playerListItem) {
+					const nameSpan = playerListItem.querySelector(".tournament__playerlist__item__name");
+					nameSpan.textContent = newDisplayName;
+				}
+			} else {
+				console.error(`Player with ID ${id} not found.`);
+			}
+		} else {
+			console.error("Display name cannot be empty.");
+		}
 
-        // Fermer la modale
-        const modalInstance = bootstrap.Modal.getInstance(modal);
-        modalInstance.hide();
-    };
+		// Fermer la modale
+		const modalInstance = bootstrap.Modal.getInstance(modal);
+		modalInstance.hide();
+	};
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("TDNsettingsModal");
+	const modal = document.getElementById("TDNsettingsModal");
 
-    // Écouter l'événement de fermeture de la modale
-    modal.addEventListener("hidden.bs.modal", () => {
-		const modalInstance = new bootstrap.Modal(modal);
-	modalInstance.show();
+	// Écouter l'événement de fermeture de la modale
+	modal.addEventListener("hidden.bs.modal", () => {
+		// Détruire l'instance de la modale
+		const modalInstance = bootstrap.Modal.getInstance(modal);
+		if (modalInstance) {
+			modalInstance.dispose();
+		}
 
-        // Déplacer le focus vers un élément en dehors de la modale
-        const openButton = document.querySelector('[data-bs-target="#TDNsettingsModal"]');
-        if (openButton) {
-            openButton.focus();
-        }
-    });
+		// Déplacer le focus vers un élément en dehors de la modale
+		const openButton = document.querySelector('[data-bs-target="#TDNsettingsModal"]');
+		if (openButton) {
+			openButton.focus();
+		}
+	});
 });
