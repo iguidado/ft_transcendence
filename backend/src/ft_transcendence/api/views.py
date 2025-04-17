@@ -263,9 +263,10 @@ class VerifyEmailOtpView(APIView):
 class UserAvatarUpdateView(APIView):
 	permission_classes = [IsAuthenticated]
 	serializer_class = UpdateAvatarSerializer
+	parser_classes = (MultiPartParser, FormParser)  # Pour gérer les fichiers uploadés
 
 	@swagger_auto_schema(
-		operation_description="Update user's avatar",
+		operation_description="Mettre à jour l'avatar de l'utilisateur",
 		request_body=UpdateAvatarSerializer,
 	)
 	
@@ -274,8 +275,17 @@ class UserAvatarUpdateView(APIView):
 		serializer = self.serializer_class(user, data=request.data, partial=True)
 
 		if serializer.is_valid():
+			if 'avatar' in serializer.validated_data and serializer.validated_data['avatar']:
+				user.avatar_choice = '' 
+			if 'avatar_choice' in serializer.validated_data and serializer.validated_data['avatar_choice']:
+				user.avatar = None
+			
 			serializer.save()
-			return Response(serializer.data, status=status.HTTP_200_OK)
+			return Response({
+				'avatar_url': user.get_avatar_url(),
+				'message': 'Avatar mis à jour avec succès'
+			}, status=status.HTTP_200_OK)
+			
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AvailableAvatarsView(APIView):

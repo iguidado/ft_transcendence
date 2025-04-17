@@ -11,7 +11,7 @@ fi
 
 . /app/venv/bin/activate
 pip install whitenoise
-pip install daphne
+# pip install daphne
 python -m pip install --no-cache-dir -r /root/requirements.txt #2> /dev/null
 
 if ! [ -d /app/ft_transcendence ]
@@ -87,17 +87,11 @@ if not User.objects.filter(username=USERNAME).exists():
 	User.objects.create_superuser(username=USERNAME, password=PASSWORD)
 EOF
 
-echo "Recherche du fichier asgi.py..."
-ASGI_FILE=$(find /app/ft_transcendence -name "asgi.py" -type f | grep -v "site-packages")
-echo "Fichier asgi.py trouvé à : $ASGI_FILE"
+ASGI_FILE=$(find /app/ft_transcendence -name "asgi.py" -type f | grep -v "site-packages")   
 
 cd /app/ft_transcendence
-echo "Dossier courant : $(pwd)"
 
-echo "Structure du projet :"
 find . -type f -name "*.py" | grep -v "__pycache__" | sort
 
-# Définir la variable d'environnement explicitement et lancer Daphne
-echo "Lancement de Daphne depuis $(pwd)"
 export DJANGO_SETTINGS_MODULE=billpong.settings
 exec daphne -b 0.0.0.0 -p 8000 --verbosity 2 billpong.asgi:application

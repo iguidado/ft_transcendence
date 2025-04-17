@@ -37,7 +37,7 @@ class FriendSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
 	match_history = serializers.SerializerMethodField()
 	friends = serializers.SerializerMethodField()
-	avatar_url = serializers.SerializerMethodField()
+	avatar_url = serializers.CharField(source='get_avatar_url', read_only=True)
 
 	class Meta:
 		model = get_user_model()
@@ -52,7 +52,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 		return FriendSerializer(friends, many=True).data
 	
 	def get_avatar_url(self, obj):
-		return obj.get_avatar_url()
+		avatar_url = obj.get_avatar_url()
+		return avatar_url
 
 
 
@@ -106,16 +107,24 @@ class TwoFAUpdateSerializer(serializers.ModelSerializer):
 		return data
 
 class UpdateAvatarSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(required=False)
+    avatar_choice = serializers.CharField(required=False)
 
-	class Meta:
-		model = get_user_model()
-		fields = ['avatar']
+    class Meta:
+        model = get_user_model()
+        fields = ['avatar', 'avatar_choice']
 
-	def validate_avatar(self,value):
-		valid_choices = [choice[0] for choice in User.DEFAULT_AVATAR_CHOICES]
-		if value not in valid_choices:
-			raise serializers.ValidationError(f"Invalid avatar choice. Valid choices are: {', '.join(valid_choices)}")
-		return value
+    def validate_avatar_choice(self, value):
+        valid_choices = [choice[0] for choice in User.DEFAULT_AVATAR_CHOICES]
+        if value and value not in valid_choices:
+            raise serializers.ValidationError(f"Choix d'avatar invalide. Les choix valides sont : {', '.join(valid_choices)}")
+        return value
+        
+    def validate(self, data):
+        # Si ni avatar ni avatar_choice n'est fourni, c'est une erreur
+        if 'avatar' not in data and 'avatar_choice' not in data:
+            raise serializers.ValidationError("Vous devez fournir soit 'avatar' soit 'avatar_choice'")
+        return data
 
 class UpdateUserHistoricSerializer(serializers.ModelSerializer):
 

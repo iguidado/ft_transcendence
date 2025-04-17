@@ -51,7 +51,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('default2', 'Avatar 2'),
         # ('default3', 'Avatar 3'),
     ]
-	avatar = models.CharField(max_length=50, choices=DEFAULT_AVATAR_CHOICES, default='default2')
+	avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+	avatar_choice = models.CharField(max_length=50, choices=DEFAULT_AVATAR_CHOICES, default='default2')
 
 	date_joined = models.DateTimeField(default=timezone.now)
 
@@ -69,9 +70,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 		
 
 	def	UpdateUserStats(self, boolean : bool):
-		if (isinstance(boolean, bool)==False):
-			print("Error: boolean must be a boolean")
-		else:
+		# if (isinstance(boolean, bool)==False):
+			# print("Error: boolean must be a boolean")
+		# else:
 			if(boolean==True):
 				self.wins += 1
 			# else:
@@ -81,7 +82,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 			self.save()
 
 	def get_avatar_url(self):
-		return static(f'api/images/{self.avatar}.png')
+		if self.avatar and hasattr(self.avatar, 'url'):
+			return self.avatar.url
+		return static(f'api/images/{self.avatar_choice}.png')
 
 	class Meta:
 		verbose_name = 'User'
