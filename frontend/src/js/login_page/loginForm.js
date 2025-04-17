@@ -12,7 +12,6 @@ import { initializeWebSocketConnection } from "../utils/webSocketManager.js" // 
 function fetchHandler(res, onloginSuccess = updateLocalProfile) {
     console.log("API Login response : ", res)
     if (res.access_token) {
-        saveAccessToken(res.access_token);
         onloginSuccess(res);
         console.log("WebSocket initialized after login");
     } else {
@@ -32,7 +31,6 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
                 verifyLoginOTP({otp, temp_token: res.temp_token}, (res) => {
                     console.log("validate2FAFromLogin", res);
                     if (res.access_token) {
-                        saveAccessToken(res.access_token);
                         onloginSuccess(res);
                     }
                     
