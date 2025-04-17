@@ -110,11 +110,15 @@ function twoFactorAuthSection(profileData) {
 		)
 	})
 	confirm2FABtn.addEventListener("click", () => {
-		const otp = document.getElementById("code2FAInput").value
+		const otp = document.getElementById("code2FAInput").value;
 		verifyEmailOTP(otp, (res) => {
-			load_page("profile")
-		})
-	})
+			const modal = document.getElementById("settingsModal");
+			const modalInstance = bootstrap.Modal.getInstance(modal);
+			modalInstance.hide(); // Cacher la modale
+			modal.querySelectorAll("input").forEach(input => input.value = ""); // Nettoyer les champs de la modale
+			load_page("profile");
+		});
+	});
 }
 
 function displayCodeValidation(res) {
