@@ -9,10 +9,10 @@ import { perspectiveControls } from "../../../pong-game/src/config/paddles/persp
 // import {defaultConfig} from "../../pong-game/src/config/preset/defaultConfig.js"
 
 export const PRESET_TYPE = Object.freeze({
-	players: 'players',
-	camera: 'camera',
-	controls: 'controls',
-	isBot: 'isBot'
+	players: 'Players',
+	camera: 'Camera',
+	controls: 'Controls',
+	isBot: 'VS'
 });
 
 export const settingPresets = [
