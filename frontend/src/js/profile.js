@@ -22,7 +22,7 @@ export async function loadProfilePage(username = null) {
 		profileData = getProfileData()
 	else
 		profileData = await getProfileByUsername(username)
-	setupUserStatus()
+	setupUserStatus(profileData)
 	displayInformations(profileData)
 	if (!username) {
 		settingsModal(profileData)
@@ -72,13 +72,13 @@ function noProfileData() {
 	disconnect()
 }
 
-function settingsModal() {
+function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
     modalElement.addEventListener('shown.bs.modal', () => {
     //   loadAvailableAvatars();
     });
     
-    twoFactorAuthSection();
+    twoFactorAuthSection(profileData);
     saveSettings();
     disconnectBtn();
 }
@@ -135,20 +135,19 @@ function saveSettings() {
 
     const saveButton = document.getElementById("saveSettings");
     saveButton.addEventListener("click", () => {
-	const newDisplayName = document.getElementById("newDisplayName").value.trim();
-	console.log("Nouveau nom d'utilisateur :", newDisplayName);
-	if (newDisplayName) {
-		updateDisplayNameRequest(newDisplayName, (response) => {
-			console.log("Nom d'utilisateur mis à jour avec succès :", response);
-			document.getElementById("usernameDisplay").textContent =
-			  newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
-			  pullProfile();
-		  }, (error) => {
-			console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
-		  });
-		} else {
-		  console.log("Aucun nouveau nom fourni.");
-		}
+    const newDisplayName = document.getElementById("newDisplayName").value.trim();
+    console.log("Nouveau nom d'utilisateur :", newDisplayName);
+    if (newDisplayName) {
+        updateDisplayNameRequest(newDisplayName, (response) => {
+            console.log("Nom d'utilisateur mis à jour avec succès :", response);
+            document.getElementById("usernameDisplay").textContent =
+              newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
+          }, (error) => {
+            console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
+          });
+        } else {
+          console.log("Aucun nouveau nom fourni.");
+        }
 		const modal = document.getElementById('settingsModal');
 		const modalInstance = bootstrap.Modal.getInstance(modal);
 		modalInstance.hide();
