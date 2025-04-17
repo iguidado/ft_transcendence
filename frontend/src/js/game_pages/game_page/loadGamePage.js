@@ -6,7 +6,7 @@ import { playersCount } from "../setting_page/util/playersCount.js";
 
 //TODO playerVSAI renvoie au login et ne lance plus de jeu vs AI
 
-export function loadGamePage({game, container, config, players=[]}) {
+export function loadGamePage({game, container, config, players=[], onEndMatch}) {
 	console.log("Players : ", players)
 	let leftPlayer = null
 	let rightPlayer = null
@@ -23,7 +23,7 @@ export function loadGamePage({game, container, config, players=[]}) {
 		app.appendChild(containerSetup);
 	}
 	if (game)
-		game.cleanup();
+		game.cleanup();loadGamePage
 	containerSetup.innerHTML = "";
 	containerSetup.id = "game-container";
 	const score = document.createElement("div");
@@ -40,12 +40,19 @@ export function loadGamePage({game, container, config, players=[]}) {
 	// 	console.log("scores", scores)
 	// }
 	game.scoreMonitor.onEndMatch = (winnerSide) => {
-		console.log(winnerSide);
 		if (players.length > 1)
 			pushHistory()
-		game.cleanup();
-		load_page("pong");
-		displayResults(resultMsg(winnerSide));
+		game.cleanup()
+		let winner = null
+		if (winnerSide === "left")
+			winner = leftPlayer
+		else if (winnerSide === "right")
+			winner = rightPlayer
+		displayResults(resultMsg(winner));
+		if (onEndMatch)
+			onEndMatch(winner)
+		else
+			load_page("pong");
 	}
 	game.start();
 
@@ -60,15 +67,8 @@ export function loadGamePage({game, container, config, players=[]}) {
 		pushHistoryRequest(body)
 	}
 
-	function resultMsg(winnerSide) {
-		let winnerName = "";
-		if (winnerSide === "left") {
-			winnerName = leftPlayer.displayName;
-		}
-		else if (winnerSide === "right") {
-			winnerName = rightPlayer.displayName;
-		}
-		return `Winner is ${winnerName}!`;
+	function resultMsg(winner) {
+		return `Winner is ${winner.displayName}!`;
 	}
 }
 

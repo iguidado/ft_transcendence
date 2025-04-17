@@ -6,15 +6,15 @@ export function loadLoginPage(onloginSuccess) {
 	const registerBtn = document.getElementById("registerButton");
 	if (registerBtn) {
 		registerBtn.addEventListener("click", () => {
-			showRegister();
+			showRegister(onloginSuccess);
 		});
 	}
 }
 
-export function showRegister() {
+export function showRegister(onloginSuccess) {
 	document.getElementById("loginSection").style.display = "none";
 	document.getElementById("registerSection").style.display = "block";
-	handleRegistration();
+	handleRegistration(onloginSuccess);
 }
 
 export function showLogin() {

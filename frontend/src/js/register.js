@@ -3,7 +3,7 @@ import { load_page } from "./router.js"
 import { displayError } from "./utils/displayError.js"
 import { saveAccessToken } from "./utils/saveAccessToken.js"
 
-export function handleRegistration() {
+export function handleRegistration(onloginSuccess) {
 	const registerForm = document.getElementById("registerForm")
 	if (!registerForm)
 		return
@@ -34,15 +34,15 @@ export function handleRegistration() {
 	const backToLoginButton = document.getElementById("backToLoginButton");
 	if (backToLoginButton) {
 		backToLoginButton.addEventListener("click", () => {
-			load_page("login");
+			load_page("login", onloginSuccess);
 		});
+	}
+	function registerRequestCallBack(res) {
+		console.log("Register API Response", res)
+		load_page("login", onloginSuccess)
 	}
 }
 
-function registerRequestCallBack(res) {
-	console.log("Register API Response", res)
-	load_page("login")
-}
 
 function registerRequestErrorCallBack(err) {
 	// DONE Register error actions

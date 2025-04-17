@@ -32,7 +32,7 @@ class MatchSerializer(serializers.ModelSerializer):
 class FriendSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ['username', 'is_active', 'avatar']
+		fields = ['username', 'is_online', 'avatar']
 
 class UserProfileSerializer(serializers.ModelSerializer):
 	match_history = serializers.SerializerMethodField()

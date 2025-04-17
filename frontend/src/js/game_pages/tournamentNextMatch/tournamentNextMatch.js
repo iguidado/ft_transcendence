@@ -1,4 +1,4 @@
-import { fetchHTMLContent } from "../../router";
+import { fetchHTMLContent, load_page } from "../../router";
 import { loadGamePage } from "../game_page/loadGamePage";
 
 export async function loadTournamentNextMatchPage(ctx, planning) {
@@ -14,9 +14,24 @@ export async function loadTournamentNextMatchPage(ctx, planning) {
 	startBtn.onclick = e => {
 		e.preventDefault()
 		setPlayerInputs(ctx.config)
-		loadGamePage({...ctx, players: [player1, player2]})
+		loadGamePage({...ctx, players: [player1, player2], onEndMatch})
+	}
+	function onEndMatch(winner) {
+		const newPlanning = planning.slice(1);
+		if (!newPlanning.length) {
+			console.log(winner.displayName + " Won !")
+			load_page("pong")
+			return
+		}
+		if (newPlanning[newPlanning.length-1].length == 1)
+			newPlanning[newPlanning.length-1].push(winner)
+		else
+			newPlanning.push([winner])
+		console.log("newPlanning", newPlanning)
+		loadTournamentNextMatchPage(ctx, newPlanning)
 	}
 }
+
 
 function setPlayerInputs(config) {
 	config.paddles.controls.leftBot = false
