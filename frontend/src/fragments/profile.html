@@ -14,69 +14,67 @@
       </button>
     </div>
 
-    <!-- Titre du profil -->
     <h1 class="card-title">
       <span id="usernameDisplay"></span>'s Profile
     </h1>
+    <h2 class="card-subtitle mb-2 text-muted">
+      <span id="realUsername"></span>
+    </h2>
 
-    <!-- Statistiques -->
-    <div class="text-start card-text ms-4 my-3">
+
+    <div class="text-center card-text my-3">
+      <h3 class="card-title">Statistics</h3>
       <p>Games played: <span id="gamesPlayed">0</span></p>
       <p>Games won: <span id="gamesWon">0</span></p>
+      <div id="matchHistory" class="match-history" style="margin : 0 auto; width: 80%;">
+        <h3>Match History</h3>
+        <ul id="matchHistoryList" class="list-group">
+        </ul>
+      </div>
     </div>
 
-    <!-- Liste d'amis -->
-    <div class="text-start card-text ms-4 my-3 position-relative">
+    <div class="text-start card-text my-3 position-relative">
       <h3>Friends List</h3>
       <button class="btn position-absolute" id="addFriendBtn" data-bs-toggle="modal" data-bs-target="#addFriendModal"
-      style="top: 0; right: 0; background-color: transparent; border: none; font-size: 1.5rem; color: #fd9b5d;">
-      EDIT
+        style="top: 0; right: 0; background-color: transparent; border: none; font-size: 1.5rem; color: #fd9b5d;">
+        EDIT
       </button>
       <ul id="friendsList" class="list-group">
-      <!-- Les amis seront ajoutés dynamiquement ici -->
       </ul>
     </div>
 
-    <!-- Modal pour ajouter des amis -->
     <div class="modal fade" id="addFriendModal" tabindex="-1" aria-labelledby="addFriendModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- En-tête de la modal -->
-        <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addFriendModalLabel">Add a Friend</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <!-- Corps de la modal -->
-        <div class="modal-body">
-          <div class="mb-3"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addFriendModalLabel">Add a Friend</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3"></div>
             <label for="friendUsername" class="form-label">All usernames:</label>
             <select id="friendUsername" class="form-select" style="background-color: rgba(255, 186, 106, 0.5)">
             </select>
           </div>
-        <!-- Pied de la modal -->
-        <div class="modal-footer">
-        <button id="addFriendConfirmBtn" class="btn btn-primary">Add Friend</button>
-        <button id="deleteFriendBtn" class="btn btn-danger">Delete Friend</button>
-      </div>
-      </div>
+          <div class="modal-footer">
+            <button id="addFriendConfirmBtn" class="btn btn-primary">Add Friend</button>
+            <button id="deleteFriendBtn" class="btn btn-danger">Delete Friend</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Bouton de déconnexion -->
     <button id="disconnect" class="btn btn-danger">Disconnect</button>
   </div>
 </div>
 
-<!-- Fenêtre modale pour les réglages du profil -->
 <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <!-- En-tête de la modal -->
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="settingsModalLabel">Profile Settings</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <!-- Corps de la modal : champs de réglages -->
       <div class="modal-body">
         <div class="mb-3">
           <label for="newDisplayName" class="form-label">Change username:</label>
@@ -107,7 +105,6 @@
             Send code
           </button>
         </div>
-        <!-- Zone de saisie du code 2FA, masquée par défaut -->
         <div id="verify2FAModal" style="display: none;">
           <input type="text" id="code2FAInput" class="form-control mb-2" placeholder="Enter code"
             style="background-color: rgba(255, 186, 106, 0.5)" />
@@ -116,7 +113,6 @@
           </button>
         </div>
       </div>
-      <!-- Pied de la modal : bouton de sauvegarde -->
       <div class="modal-footer">
         <button id="saveSettings" class="btn btn-primary">
           Save changes

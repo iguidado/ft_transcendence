@@ -4,8 +4,6 @@ import { Game } from "../../pong-game/src/core/Game.js";
 import { load_page } from "../../router.js";
 import { playersCount } from "../setting_page/util/playersCount.js";
 
-//TODO playerVSAI renvoie au login et ne lance plus de jeu vs AI
-
 export function loadGamePage({game, container, config, players=[], onEndMatch}) {
 	console.log("Players : ", players)
 	let leftPlayer = null
@@ -71,7 +69,7 @@ export function loadGamePage({game, container, config, players=[], onEndMatch}) 
 		let name = "Marvin"
 		if (winner)
 			name = winner.displayName
-		return `Winner is ${name}!`;
+		return `${name} wins !`;
 	}
 }
 
