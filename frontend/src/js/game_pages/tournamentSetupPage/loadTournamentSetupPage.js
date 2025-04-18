@@ -49,15 +49,18 @@ function addPlayerToList(playerName, id) {
 
 	const buttonContainer = document.createElement("div");
 	buttonContainer.className = "d-flex gap-2";
-
-	const removeButton = document.createElement("button");
-	removeButton.className = "btn btn-danger btn-sm";
-	removeButton.textContent = "Remove";
-	removeButton.onclick = () => {
-		rmGuest(id);
-		players = players.filter(p => p.id !== id);
-		container.removeChild(li);
-	};
+	let localProfile = getProfileData()
+	if (!localProfile) {
+		const removeButton = document.createElement("button");
+		removeButton.className = "btn btn-danger btn-sm";
+		removeButton.textContent = "Remove";
+		removeButton.onclick = () => {
+			rmGuest(id);
+			players = players.filter(p => p.id !== id);
+			container.removeChild(li);
+		};
+		buttonContainer.appendChild(removeButton);
+	}
 
 	const paramButton = document.createElement("button");
 	paramButton.className = "btn gear-btn";
@@ -75,7 +78,6 @@ function addPlayerToList(playerName, id) {
 		openTDNSettingsModal(modal, playerName, id);
 	};
 
-	buttonContainer.appendChild(removeButton);
 	buttonContainer.appendChild(paramButton);
 
 	li.appendChild(span);

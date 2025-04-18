@@ -17,12 +17,12 @@ export async function loadProfilePage(username = null) {
 	await pullProfile()
 	let isLocalProfile = true
 	let profileData = getProfileData()
+	if (!profileData)
+		return noProfileData()
 	if (username && username != profileData.username) {
 		profileData = await getProfileByUsername(username)
 		isLocalProfile = false
 	}
-	if (!profileData)
-		return noProfileData()
 	if (isLocalProfile) {
 		settingsModal(profileData)
 		addFriendModal()

@@ -5,6 +5,7 @@ import { loadLoginPage } from "./login.js";
 import { loadProfilePage } from "./profile.js";
 import { loadDashboardPage } from "./dashboard.js";
 import { gameRegistry } from "./pong-game/src/core/GameRegistry.js";
+import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestStore.js";
 // import { loadSocketTestPage } from "./socket-test";
 
 
@@ -46,6 +47,7 @@ const routeConfigs = {
 };
 
 export async function load_page(url, props=undefined, pushHistory=true) {
+	clearGuestStore()
 	let currentGame = gameRegistry.getCurrentContext()
 	if (currentGame)
 		currentGame.cleanup()
