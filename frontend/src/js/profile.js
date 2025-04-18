@@ -15,14 +15,13 @@ import { getProfileByUsername } from "./utils/getProfileByUsername.js"
 
 
 export async function loadProfilePage(username = null) {
-	let isLocalProfile = true
 	await pullProfile()
+	let isLocalProfile = true
 	let profileData = getProfileData()
 	if (username && username != profileData.username) {
 		profileData = await getProfileByUsername(username)
 		isLocalProfile = false
 	}
-	console.log("YOOOOO", username, username != profileData.username, )
 	if (!profileData)
 		return noProfileData()
 	if (isLocalProfile) {
