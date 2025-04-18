@@ -351,6 +351,9 @@ class AddFriendView(APIView):
 		except User.DoesNotExist:
 			return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 		
+		if friend in user.friends.all():
+			return Response({"detail": "User is already in your friend list."}, status=status.HTTP_400_BAD_REQUEST)
+
 		user.friends.add(friend)
 		return Response({"detail": "Friend added successfully."}, status=status.HTTP_200_OK)
 	  
