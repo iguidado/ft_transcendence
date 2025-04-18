@@ -13,23 +13,31 @@ import { deleteFriendRequest } from "./api/routes/deleteFriendRoute.js";
 import { initializeWebSocketConnection } from "./utils/webSocketManager.js";
 import { getProfileByUsername } from "./utils/getProfileByUsername.js"
 
-var isLocalProfile = true
 
 export async function loadProfilePage(username = null) {
+	let isLocalProfile = true
 	await pullProfile()
 	let profileData = getProfileData()
 	if (username && username != profileData.username) {
 		profileData = await getProfileByUsername(username)
 		isLocalProfile = false
 	}
+	console.log("YOOOOO", username, username != profileData.username, )
 	if (!profileData)
 		return noProfileData()
-	setupUserStatus(profileData)
-	displayInformations(profileData)
-	if (!username) {
+	if (isLocalProfile) {
 		settingsModal(profileData)
 		addFriendModal()
 	}
+	addFriendBtnSetup(isLocalProfile)
+	setupUserStatus(profileData)
+	displayInformations(profileData)
+}
+
+function addFriendBtnSetup(isLocalProfile) {
+	const addFriendBtn = document.getElementById("addFriendBtn");
+	if (!isLocalProfile)
+		addFriendBtn.style.display = "none";
 }
 
 function setupUserStatus() {
