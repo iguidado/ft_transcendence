@@ -30,6 +30,7 @@ export async function loadProfilePage(username = null) {
 	addFriendBtnSetup(isLocalProfile)
 	setupUserStatus(profileData)
 	displayInformations(profileData)
+	displayMatchHistory(profileData.match_history)
 }
 
 function addFriendBtnSetup(isLocalProfile) {
@@ -67,6 +68,8 @@ function updateFriendStatusInUI(username, isOnline) {
 async function displayInformations(profileData) {
 	document.getElementById("usernameDisplay")
 		.textContent = profileData.displayName.charAt(0).toUpperCase() + profileData.displayName.slice(1)
+	document.getElementById("realUsername")
+		.textContent = profileData.username.charAt(0).toUpperCase() + profileData.username.slice(1)
 	document.getElementById("userAvatar")
 		.src = profileData.avatar
 	document.getElementById("gamesPlayed")
@@ -224,5 +227,32 @@ function displayFriendsList(profileData) {
 			load_page("profile/"+friend.username)
 		}
 	});
+}
+
+function displayMatchHistory(matchHistory) {
+    const matchHistoryContainer = document.getElementById("matchHistory");
+    matchHistoryContainer.innerHTML = ''; // Réinitialiser le conteneur
+
+    if (!matchHistory || matchHistory.length === 0) {
+        matchHistoryContainer.innerHTML = '<p>No match historic yet</p>';
+        return;
+    }
+
+    matchHistory.forEach(match => {
+        const matchItem = document.createElement("div");
+        matchItem.className = "match-item";
+
+        const date = new Date(match.date).toLocaleString();
+        const result = match.winner === match.player_one ? "Victory" : "Defeat";
+
+        matchItem.innerHTML = `
+            <p>Date : ${date}</p>
+            <p>Player 1 : ${match.player_one} - Score : ${match.score_p1}</p>
+            <p>Player 2 : ${match.player_two} - Score : ${match.score_p2}</p>
+            <p>Result : ${result}</p>
+        `;
+
+        matchHistoryContainer.appendChild(matchItem);
+    });
 }
 

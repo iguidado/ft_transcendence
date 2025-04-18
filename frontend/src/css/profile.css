@@ -143,3 +143,19 @@ img {
   border: #422445 2px solid !important;
 }
 
+.match-history {
+    margin-top: 20px;
+}
+
+.match-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 233, 107, 0.5) !important;
+    border-radius: 0 !important;
+    border: #422445 2px solid !important;
+}
+
+.match-item p {
+    margin: 5px 0;
+}
+

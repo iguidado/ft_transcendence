@@ -60,10 +60,6 @@ function setupSwitchMenuButton(ctx) {
 	});
 }
 
-// Initialize the button functionality when DOM is loaded
-// document.addEventListener('DOMContentLoaded', () => {
-//     setupSwitchMenuButton();
-// });
 
 // Export function if using modules
 export { setupSwitchMenuButton };
