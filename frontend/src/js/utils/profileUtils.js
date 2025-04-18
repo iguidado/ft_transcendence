@@ -8,7 +8,10 @@ export const pullProfile = () => {
 				localStorage.setItem("userProfile", JSON.stringify(data))
 				resolve(data)
 			},
-			(err) => resolve(null)
+			(err) => {
+				localStorage.setItem("userProfile", JSON.stringify(null))
+				resolve(null)
+			}
 		)
 	})
 }

@@ -11,8 +11,6 @@ import { getProfileByUsername } from "./utils/getProfileByUsername.js"
 import { settingsModal } from "./utils/settingsModal.js"
 import { disconnect } from "./utils/disconnect.js"
 
-
-
 export async function loadProfilePage(username = null) {
 	await pullProfile()
 	let isLocalProfile = true
