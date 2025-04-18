@@ -2,7 +2,7 @@ import { updateDisplayNameRequest } from "../api/routes/updateDisplayNameRequest
 import { disconnect } from "./disconnect.js"
 import { toggle2faRequest } from "../api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "../api/routes/user/verifyEmailOTP.js"
-
+import { updateAvatarRequest } from "../api/routes/updateAvatar.js"
 
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
@@ -10,9 +10,55 @@ export function settingsModal(profileData) {
     //   loadAvailableAvatars();
     });
     
+    setupAvatarUpload(); // Ajout de la fonction pour l'upload d'avatar
     twoFactorAuthSection(profileData);
     saveSettings();
     disconnectBtn();
+}
+
+// Fonction simplifiée qui ne s'occupe que du comportement
+function setupAvatarUpload() {
+    const avatarInput = document.getElementById("avatarUpload");
+    const avatarPreview = document.getElementById("avatarPreview");
+    
+    avatarInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            // Vérifier si c'est une image
+            if (!file.type.startsWith("image/")) {
+                console.error("Le fichier sélectionné n'est pas une image");
+                return;
+            }
+            
+            // Créer un lecteur de fichier
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Charger l'image
+                const img = new Image();
+                img.onload = function() {
+                    // Créer un canvas pour redimensionner l'image
+                    const canvas = document.createElement("canvas");
+                    canvas.width = 50;
+                    canvas.height = 50;
+                    const ctx = canvas.getContext("2d");
+                    
+                    // Dessiner l'image redimensionnée
+                    ctx.drawImage(img, 0, 0, 50, 50);
+                    
+                    // Mettre à jour l'aperçu
+                    avatarPreview.src = canvas.toDataURL("image/jpeg");
+                    avatarPreview.style.display = "block";
+                    
+                    // Stocker l'image redimensionnée pour l'envoi ultérieur
+                    canvas.toBlob((blob) => {
+                        avatarInput.resizedBlob = blob;
+                    }, "image/jpeg", 0.9);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 }
 
 function twoFactorAuthSection(profileData) {
@@ -64,28 +110,61 @@ function toggle2faError(err, res) {
 	console.warn("API Response:", res)
 }
 
-
 function saveSettings() {
-
-	const saveButton = document.getElementById("saveSettings");
-	saveButton.addEventListener("click", () => {
-	const newDisplayName = document.getElementById("newDisplayName").value.trim();
-	console.log("Nouveau nom d'utilisateur :", newDisplayName);
-	if (newDisplayName) {
-		updateDisplayNameRequest(newDisplayName, (response) => {
-			console.log("Nom d'utilisateur mis à jour avec succès :", response);
-			document.getElementById("usernameDisplay").textContent =
-			  newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
-		  }, (error) => {
-			console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
-		  });
-		} else {
-		  console.log("Aucun nouveau nom fourni.");
-		}
-		const modal = document.getElementById('settingsModal');
-		const modalInstance = bootstrap.Modal.getInstance(modal);
-		modalInstance.hide();
-	});
+    const saveButton = document.getElementById("saveSettings");
+    saveButton.addEventListener("click", () => {
+        // Gestion du nom d'utilisateur
+        const newDisplayName = document.getElementById("newDisplayName").value.trim();
+        console.log("Nouveau nom d'utilisateur :", newDisplayName);
+        if (newDisplayName) {
+            updateDisplayNameRequest(newDisplayName, (response) => {
+                console.log("Nom d'utilisateur mis à jour avec succès :", response);
+                document.getElementById("usernameDisplay").textContent =
+                newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
+            }, (error) => {
+                console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
+            });
+        } else {
+            console.log("Aucun nouveau nom fourni.");
+        }
+        
+        // Gestion de l'avatar
+        const avatarInput = document.getElementById("avatarUpload");
+        if (avatarInput && avatarInput.files.length > 0 && avatarInput.resizedBlob) {
+            const formData = new FormData();
+            formData.append("avatar", avatarInput.resizedBlob, "avatar.jpg");
+            
+            updateAvatarRequest(formData, 
+                (response) => {
+                    console.log("Avatar mis à jour avec succès:", response);
+                    
+                    // Mettre à jour tous les éléments d'avatar dans l'interface
+                    const avatarElements = document.querySelectorAll('[data-user-avatar], .profile-avatar, .user-avatar, #userAvatar');
+                    const newAvatarUrl = response.avatar || response.message && `/media/avatars/${response.avatarUrl}`;
+                    
+                    if (newAvatarUrl) {
+                        avatarElements.forEach(el => {
+                            if (el) el.src = newAvatarUrl;
+                        });
+                        
+                        // Mettre à jour aussi dans le localStorage si vous stockez les données utilisateur
+                        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                        if (userData) {
+                            userData.avatar = newAvatarUrl;
+                            localStorage.setItem('userData', JSON.stringify(userData));
+                        }
+                    }
+                },
+                (error) => {
+                    console.error("Erreur lors de la mise à jour de l'avatar:", error);
+                }
+            );
+        }
+        
+        const modal = document.getElementById('settingsModal');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        modalInstance.hide();
+    });
 }
 
 function disconnectBtn() {

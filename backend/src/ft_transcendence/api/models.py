@@ -89,9 +89,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'Users'
 
 class Match(models.Model):
-    player_one = models.ForeignKey('User', on_delete=models.CASCADE, related_name='p1_match_history')
-    player_two = models.ForeignKey('User', on_delete=models.CASCADE, related_name='p2_match_history')
-    winner = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True, related_name='winner')
+    player_one = models.ForeignKey('User', to_field='username',on_delete=models.CASCADE, related_name='p1_match_history')
+    player_two = models.ForeignKey('User', to_field='username',on_delete=models.CASCADE, related_name='p2_match_history')
+    winner = models.ForeignKey('User', to_field='username', on_delete=models.SET_NULL, null=True, blank=True, related_name='winner')
     date = models.DateTimeField(default=timezone.now)
     
     score_p1 = models.IntegerField(default=0)
