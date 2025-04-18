@@ -13,15 +13,17 @@ import { deleteFriendRequest } from "./api/routes/deleteFriendRoute.js";
 import { initializeWebSocketConnection } from "./utils/webSocketManager.js";
 import { getProfileByUsername } from "./utils/getProfileByUsername.js"
 
+var isLocalProfile = true
+
 export async function loadProfilePage(username = null) {
-	const localProfile = await pullProfile()
-	if (!localProfile)
-		return noProfileData()
-	let profileData = null
-	if (!username)
-		profileData = getProfileData()
-	else
+	await pullProfile()
+	let profileData = getProfileData()
+	if (username && username != profileData.username) {
 		profileData = await getProfileByUsername(username)
+		isLocalProfile = false
+	}
+	if (!profileData)
+		return noProfileData()
 	setupUserStatus(profileData)
 	displayInformations(profileData)
 	if (!username) {
@@ -206,7 +208,7 @@ function addFriendModal() {
 	addFriendModal.addEventListener('shown.bs.modal', () => {
 		loadUsersList();
 	});
-
+	
 	// Gestion du bouton de confirmation d'ajout d'ami
 	const addFriendBtn = document.getElementById("addFriendConfirmBtn");
 	addFriendBtn.addEventListener("click", () => {
