@@ -99,5 +99,3 @@ export function getCurrentPageFromURL() {
 	return path;
 }
 
-
-// TODO FORWARD

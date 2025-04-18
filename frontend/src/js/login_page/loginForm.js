@@ -7,7 +7,6 @@ import { saveAccessToken } from "../utils/saveAccessToken.js"
 import { updateLocalProfile } from "../utils/updateLocalProfile.js"
 import { initializeWebSocketConnection } from "../utils/webSocketManager.js" // nouveau import
 
-//TODO verif 2fa access token probleme
 
 function fetchHandler(res, onloginSuccess = updateLocalProfile) {
     console.log("API Login response : ", res)
