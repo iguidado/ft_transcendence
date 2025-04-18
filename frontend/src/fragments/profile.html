@@ -81,9 +81,13 @@
           <input type="text" id="newDisplayName" class="form-control" placeholder="Enter new username"
             style="background-color: rgba(255, 186, 106, 0.5)" />
         </div>
-        <div class="mb-3" id="avatarGalleryContainer">
-          <label class="form-label">Select an avatar:</label>
-          <div id="avatarGallery" class="d-flex flex-wrap gap-2">
+
+        <div class="mb-3 avatar-upload-section">
+          <label for="avatarUpload" class="form-label">Upload your avatar:</label>
+          <input type="file" class="form-control" id="avatarUpload" accept="image/*" 
+            style="background-color: rgba(255, 186, 106, 0.5)">
+          <div class="mt-2 d-flex justify-content-center">
+            <img id="avatarPreview" style="width: 50px; height: 50px; display: none; border-radius: 50%;" alt="Avatar preview">
           </div>
         </div>
 
