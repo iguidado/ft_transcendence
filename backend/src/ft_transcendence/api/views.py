@@ -182,16 +182,13 @@ class RegisterView(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            # Vérifier si l'erreur est due à un username déjà pris
             elif 'username' in serializer.errors and any('already exists' in error for error in serializer.errors['username']):
                 return Response(
                     {"error": "username already exists"},
                     status=status.HTTP_409_CONFLICT
                 )
-            # Pour toutes les autres erreurs
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            # Gérer les autres exceptions possibles
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserDisplayNameUpdateView(APIView):
@@ -272,7 +269,7 @@ class VerifyEmailOtpView(APIView):
 class UserAvatarUpdateView(APIView):
 	permission_classes = [IsAuthenticated]
 	serializer_class = UpdateAvatarSerializer
-	parser_classes = (MultiPartParser, FormParser)  # Pour gérer les fichiers uploadés
+	parser_classes = (MultiPartParser, FormParser)
 
 	@swagger_auto_schema(
 		operation_description="Update user avatar",
