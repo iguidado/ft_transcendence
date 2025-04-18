@@ -373,7 +373,7 @@ class RemoveFriendView(APIView):
 			return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 		
 		if friend not in user.friends.all():
-			return Response({"detail": "User is not in your friend list."}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({"detail": "User is not in your friend list."}, status=status.HTTP_404_NOT_FOUND)
 		
 		user.friends.remove(friend)
 		return Response({"detail": "Friend added successfully."}, status=status.HTTP_200_OK)

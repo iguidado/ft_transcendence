@@ -16,7 +16,8 @@ export const setupStartBtn = (ctx) => {
 			ctx.game.cleanup();
 		let playerCount = playersCount(ctx.config)
 		const localProfile = getProfileData()
-		if (!playerCount || (playerCount && localProfile)) {
+		console.log(playerCount)
+		if (!playerCount || (playerCount == 1 && localProfile)) {
 			loadGamePage({...ctx, players: [localProfile]})
 			return
 		}
