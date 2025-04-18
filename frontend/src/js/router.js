@@ -4,6 +4,7 @@ import { loadGame } from "./loadGame.js";
 import { loadLoginPage } from "./login.js";
 import { loadProfilePage } from "./profile.js";
 import { loadDashboardPage } from "./dashboard.js";
+import { gameRegistry } from "./pong-game/src/core/GameRegistry.js";
 // import { loadSocketTestPage } from "./socket-test";
 
 
@@ -45,6 +46,9 @@ const routeConfigs = {
 };
 
 export async function load_page(url, props=undefined, pushHistory=true) {
+	let currentGame = gameRegistry.getCurrentContext()
+	if (currentGame)
+		currentGame.cleanup()
 	const tmp = url.split("/")
 	if (tmp.length == 2) {
 		url = tmp[0]
@@ -99,5 +103,3 @@ export function getCurrentPageFromURL() {
 	return path;
 }
 
-
-// TODO FORWARD
