@@ -44,7 +44,6 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
         self.user.save(update_fields=["is_online"])
     
     async def status_update(self, event):
-        # Envoyer le message au client WebSocket
         await self.send(text_data=json.dumps({
             "type": "status_update",
             "username": event["username"],

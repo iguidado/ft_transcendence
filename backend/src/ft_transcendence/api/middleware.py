@@ -13,11 +13,8 @@ logger = logging.getLogger('api.middleware')
 @database_sync_to_async
 def get_user(token_key):
     try:
-        # Vérifiez si le token est valide:
         access_token = AccessToken(token_key)
         user_id = access_token['user_id']
-        
-        # Récupérez l'utilisateur:
         user = User.objects.get(id=user_id)
         return user
     except (InvalidToken, TokenError, User.DoesNotExist):
@@ -30,10 +27,8 @@ class JWTAuthMiddleware:
         self.inner = inner
 
     async def __call__(self, scope, receive, send):
-        # Fermez les anciennes connexions pour éviter tout problème
         close_old_connections()
         
-        # Extraction du token
         query_string = scope.get("query_string", b"").decode()
         query_params = dict(qp.split("=") for qp in query_string.split("&") if "=" in qp)
         
@@ -50,12 +45,9 @@ class JWTAuthMiddleware:
             return
 
         if token:
-            # Utilisez le token pour authentifier l'utilisateur
             scope['user'] = await get_user(token)
         else:
             scope['user'] = AnonymousUser()
-            
-        # Continuez avec la chaîne de middleware
         return await self.inner(scope, receive, send)
 
 def JWTAuthMiddlewareStack(inner):
