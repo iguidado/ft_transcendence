@@ -28,6 +28,8 @@ DEV_DIR=frontend/dev/
 PKG_FILE=package-lock.json
 VITE_CFG=vite.config.js
 
+ARCH_DIR=./ELK/Elasticsearch/snapshot/
+
 # Main Commands:
 # -------------
 # make          : Starts development environment with dev profile after setup
@@ -78,9 +80,8 @@ monitoring:
 # Prod environment Setup:
 # ------------------------------------
 
-prod: $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) .env
+prod: $(CERT_DIR)$(CERT_FILE) $(CERT_DIR)$(KEY_FILE) $(ARCH_DIR) .env
 	$(DC) -f docker-compose.prod.yml up --build -d
-
 
 $(CERT_DIR):
 	mkdir -p $(CERT_DIR)
@@ -92,6 +93,11 @@ $(CERT_DIR)$(CERT_FILE)  $(CERT_DIR)$(KEY_FILE): $(CERT_DIR)
 		-days 825 \
 		-subj "/C=XX/ST=State/L=City/O=Organization/CN=localhost" \
 		-addext "subjectAltName=DNS:localhost,DNS:*.localhost,IP:127.0.0.1"
+
+$(ARCH_DIR):
+	mkdir -p $(ARCH_DIR)
+	chmod 777 $(ARCH_DIR)
+
 
 # Down command  : To stop the project
 # -------------------------

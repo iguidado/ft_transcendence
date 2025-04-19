@@ -37,8 +37,8 @@ echo -e "\n🔧 Applying index template...\n"
 /usr/share/elasticsearch/config/policy_scripts/index_template/apply_index_template.sh
 
 
-echo -e "\n🔧 Applying ILM policy...\n"
-/usr/share/elasticsearch/config/policy_scripts/ilm_policy/apply_ilm_policy.sh
+#echo -e "\n🔧 Applying ILM policy...\n"
+#/usr/share/elasticsearch/config/policy_scripts/ilm_policy/apply_ilm_policy.sh
 
 echo -e "\n🔧 Applying SLM policy...\n"
 /usr/share/elasticsearch/config/policy_scripts/slm_policy/apply_slm_policy.sh
