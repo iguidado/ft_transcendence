@@ -84,7 +84,7 @@ function updateFriendStatusInUI(username, isOnline) {
 		if (item.getAttribute('data-username') === username) {
 			const statusIndicator = item.querySelector('.status-indicator');
 			if (statusIndicator) {
-				statusIndicator.style.backgroundColor = isOnline ? "green" : "grey";
+				statusIndicator.style.backgroundColor = isOnline ? "green" : "red";
 				console.log(`Mise à jour du statut pour ${username}: ${isOnline ? 'en ligne' : 'hors ligne'}`);
 			}
 		}
