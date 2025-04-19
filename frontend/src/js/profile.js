@@ -37,10 +37,13 @@ export async function loadProfilePage(username = null) {
 }
 
 function addBackBtnSetup(isLocalProfile) {
+	console.log("isLocalProfile", isLocalProfile)
 	const backBtn = document.getElementById("backButton");
 	if (isLocalProfile) {
 		backBtn.style.display = "none";
 	} else {
+		backBtn.style.display = "block";
+		console.log(backBtn)
 		backBtn.addEventListener("click", () => {
 			load_page("profile");
 		});
@@ -257,7 +260,8 @@ function displayFriendsList(profileData) {
 
 function displayMatchHistory(matchHistory) {
     const profileData = getProfileData();
-    const currentProfileUsername = window.location.pathname.split('/').pop() || profileData.username;
+    let currentProfileUsername = window.location.pathname.split('/').pop() || profileData.username;
+	currentProfileUsername = currentProfileUsername == "" ? profileData.username : currentProfileUsername;
     const matchHistoryContainer = document.getElementById("matchHistory");
     matchHistoryContainer.innerHTML = ''; // Réinitialiser le conteneur
 
@@ -280,8 +284,12 @@ function displayMatchHistory(matchHistory) {
         player1Link.style.cursor = "pointer";
         player1Link.onclick = (e) => {
             e.preventDefault();
-			if (match.player_one != profileData.username)
-            	load_page("profile/" + match.player_one);
+			if (match.player_one != currentProfileUsername){
+				if (match.player_one == profileData.username)
+					load_page("profile");
+				else
+					load_page("profile/" + match.player_one);
+			}
         };
         player1Container.append("Player 1 : ", player1Link, ` - Score : ${match.score_p1}`);
 
@@ -292,8 +300,12 @@ function displayMatchHistory(matchHistory) {
         player2Link.style.cursor = "pointer";
         player2Link.onclick = (e) => {
             e.preventDefault();
-			if (match.player_two != profileData.username)
-				load_page("profile/" + match.player_two);
+			if (match.player_two != currentProfileUsername){
+				if (match.player_two == profileData.username)
+					load_page("profile");
+				else
+					load_page("profile/" + match.player_two);
+			}
         };
         player2Container.append("Player 2 : ", player2Link, ` - Score : ${match.score_p2}`);
 
