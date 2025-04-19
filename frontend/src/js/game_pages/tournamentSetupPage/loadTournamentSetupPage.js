@@ -104,13 +104,11 @@ function setupAddPlayerBtn(ctx) {
 			app.innerHTML = htmlContent
 			const backBtn = document.getElementById("backBtn");
 			if (backBtn) {
-
+				backBtn.style.display = "block";
 				backBtn.addEventListener("click", () => {
 					app.innerHTML = "";
 					loadTournamentSetupPage(ctx);
 				});
-			} else {
-				backBtn.style.display = "none";
 			}
 			loadLoginPage(res => {
 				if (!getProfileData()) {
