@@ -56,8 +56,8 @@ export function loadGamePage({game, container, config, players=[], onEndMatch}) 
 
 	function pushHistory() {
 		const body = {
-			player_one: leftPlayer.id,
-			player_two: rightPlayer.id,
+			player_one: leftPlayer.username,
+			player_two: rightPlayer.username,
 			score_p1: game.scoreMonitor.scores.left,
 			score_p2: game.scoreMonitor.scores.right
 		}

@@ -158,3 +158,13 @@ img {
 .match-item p {
     margin: 5px 0;
 }
+
+
+.player-link {
+  color: #422445;
+  text-decoration: underline;
+}
+
+.player-link:hover {
+  color: #fd9b5d;
+}

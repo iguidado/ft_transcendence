@@ -256,6 +256,7 @@ function displayFriendsList(profileData) {
 }
 
 function displayMatchHistory(matchHistory) {
+	const profileData = getProfileData();
     const matchHistoryContainer = document.getElementById("matchHistory");
     matchHistoryContainer.innerHTML = ''; // Réinitialiser le conteneur
 
@@ -268,15 +269,40 @@ function displayMatchHistory(matchHistory) {
         const matchItem = document.createElement("div");
         matchItem.className = "match-item";
 
-        const date = new Date(match.date).toLocaleString();
-        const result = match.winner === match.player_one ? "Victory" : "Defeat";
+        const date = document.createElement("p");
+        date.textContent = `Date : ${new Date(match.date).toLocaleString()}`;
 
-        matchItem.innerHTML = `
-            <p>Date : ${date}</p>
-            <p>Player 1 : ${match.player_one} - Score : ${match.score_p1}</p>
-            <p>Player 2 : ${match.player_two} - Score : ${match.score_p2}</p>
-            <p>Result : ${result}</p>
-        `;
+        const player1Container = document.createElement("p");
+        const player1Link = document.createElement("span");
+        player1Link.textContent = match.player_one;
+        player1Link.className = "player-link";
+        player1Link.style.cursor = "pointer";
+        player1Link.onclick = (e) => {
+            e.preventDefault();
+			if (match.player_one != profileData.username)
+            	load_page("profile/" + match.player_one);
+        };
+        player1Container.append("Player 1 : ", player1Link, ` - Score : ${match.score_p1}`);
+
+        const player2Container = document.createElement("p");
+        const player2Link = document.createElement("span");
+        player2Link.textContent = match.player_two;
+        player2Link.className = "player-link";
+        player2Link.style.cursor = "pointer";
+        player2Link.onclick = (e) => {
+            e.preventDefault();
+			if (match.player_two != profileData.username)
+				load_page("profile/" + match.player_two);
+        };
+        player2Container.append("Player 2 : ", player2Link, ` - Score : ${match.score_p2}`);
+
+        const result = document.createElement("p");
+        result.textContent = `Result : ${match.winner === match.player_one ? "Victory" : "Defeat"}`;
+
+        matchItem.appendChild(date);
+        matchItem.appendChild(player1Container);
+        matchItem.appendChild(player2Container);
+        matchItem.appendChild(result);
 
         matchHistoryContainer.appendChild(matchItem);
     });
