@@ -20,24 +20,53 @@ export async function loadProfilePage(username = null) {
 	if (!profileData)
 		return noProfileData()
 	if (username && username != profileData.username) {
-		profileData = await getProfileByUsername(username)
-		isLocalProfile = false
+		profileData = await getProfileByUsername(username);
+		isLocalProfile = false;
 	}
 	if (isLocalProfile) {
 		settingsModal(profileData)
-		addFriendModal()
+		addFriendModal();
 	}
-	addFriendBtnSetup(isLocalProfile)
-	setupUserStatus(profileData)
-	displayInformations(profileData)
-	displayMatchHistory(profileData.match_history)
+	addBackBtnSetup(isLocalProfile);
+	addFriendBtnSetup(isLocalProfile);
+	addSettingsBtnSetup(isLocalProfile);
+	addDisconnectBtnSetup(isLocalProfile);
+	setupUserStatus(profileData);
+	displayInformations(profileData);
+	displayMatchHistory(profileData.match_history);
 }
 
+function addBackBtnSetup(isLocalProfile) {
+	console.log("isLocalProfile", isLocalProfile)
+	const backBtn = document.getElementById("backButton");
+	if (isLocalProfile) {
+		backBtn.style.display = "none";
+	} else {
+		backBtn.style.display = "block";
+		console.log(backBtn)
+		backBtn.addEventListener("click", () => {
+			load_page("profile");
+		});
+	}
+}
+
+function addSettingsBtnSetup(isLocalProfile) {
+	const settingsBtn = document.getElementById("openSettings");
+	if (!isLocalProfile)
+		settingsBtn.style.display = "none";
+}
+
+function addDisconnectBtnSetup(isLocalProfile) {
+	const disconnectBtn = document.getElementById("disconnect");
+	if (!isLocalProfile)
+		disconnectBtn.style.display = "none";
+}
 function addFriendBtnSetup(isLocalProfile) {
 	const addFriendBtn = document.getElementById("addFriendBtn");
 	if (!isLocalProfile)
 		addFriendBtn.style.display = "none";
 }
+
 
 function setupUserStatus() {
 	window.removeEventListener('userStatusUpdate', handleUserStatusUpdate);
@@ -58,7 +87,7 @@ function updateFriendStatusInUI(username, isOnline) {
 		if (item.getAttribute('data-username') === username) {
 			const statusIndicator = item.querySelector('.status-indicator');
 			if (statusIndicator) {
-				statusIndicator.style.backgroundColor = isOnline ? "green" : "grey";
+				statusIndicator.style.backgroundColor = isOnline ? "green" : "red";
 				console.log(`Mise à jour du statut pour ${username}: ${isOnline ? 'en ligne' : 'hors ligne'}`);
 			}
 		}
@@ -230,6 +259,9 @@ function displayFriendsList(profileData) {
 }
 
 function displayMatchHistory(matchHistory) {
+    const profileData = getProfileData();
+    let currentProfileUsername = window.location.pathname.split('/').pop() || profileData.username;
+	currentProfileUsername = currentProfileUsername == "" ? profileData.username : currentProfileUsername;
     const matchHistoryContainer = document.getElementById("matchHistory");
     matchHistoryContainer.innerHTML = ''; // Réinitialiser le conteneur
 
@@ -242,15 +274,51 @@ function displayMatchHistory(matchHistory) {
         const matchItem = document.createElement("div");
         matchItem.className = "match-item";
 
-        const date = new Date(match.date).toLocaleString();
-        const result = match.winner === match.player_one ? "Victory" : "Defeat";
+        const date = document.createElement("p");
+        date.textContent = `Date : ${new Date(match.date).toLocaleString()}`;
 
-        matchItem.innerHTML = `
-            <p>Date : ${date}</p>
-            <p>Player 1 : ${match.player_one} - Score : ${match.score_p1}</p>
-            <p>Player 2 : ${match.player_two} - Score : ${match.score_p2}</p>
-            <p>Result : ${result}</p>
-        `;
+        const player1Container = document.createElement("p");
+        const player1Link = document.createElement("span");
+        player1Link.textContent = match.player_one;
+        player1Link.className = "player-link";
+        player1Link.style.cursor = "pointer";
+        player1Link.onclick = (e) => {
+            e.preventDefault();
+			if (match.player_one != currentProfileUsername){
+				if (match.player_one == profileData.username)
+					load_page("profile");
+				else
+					load_page("profile/" + match.player_one);
+			}
+        };
+        player1Container.append("Player 1 : ", player1Link, ` - Score : ${match.score_p1}`);
+
+        const player2Container = document.createElement("p");
+        const player2Link = document.createElement("span");
+        player2Link.textContent = match.player_two;
+        player2Link.className = "player-link";
+        player2Link.style.cursor = "pointer";
+        player2Link.onclick = (e) => {
+            e.preventDefault();
+			if (match.player_two != currentProfileUsername){
+				if (match.player_two == profileData.username)
+					load_page("profile");
+				else
+					load_page("profile/" + match.player_two);
+			}
+        };
+        player2Container.append("Player 2 : ", player2Link, ` - Score : ${match.score_p2}`);
+
+        const result = document.createElement("p");
+        // Determine if the current profile user is player one or two
+        const isPlayerOne = match.player_one === currentProfileUsername;
+        const hasWon = isPlayerOne ? match.winner === match.player_one : match.winner === match.player_two;
+        result.textContent = `Result : ${hasWon ? "Victory" : "Defeat"}`;
+
+        matchItem.appendChild(date);
+        matchItem.appendChild(player1Container);
+        matchItem.appendChild(player2Container);
+        matchItem.appendChild(result);
 
         matchHistoryContainer.appendChild(matchItem);
     });
