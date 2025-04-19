@@ -3,6 +3,7 @@ import { disconnect } from "./disconnect.js"
 import { toggle2faRequest } from "../api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "../api/routes/user/verifyEmailOTP.js"
 import { updateAvatarRequest } from "../api/routes/updateAvatar.js"
+import { load_page } from "../router.js"
 
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
@@ -154,6 +155,7 @@ function saveSettings() {
                             localStorage.setItem('userData', JSON.stringify(userData));
                         }
                     }
+                    load_page("profile");
                 },
                 (error) => {
                     console.error("Erreur lors de la mise à jour de l'avatar:", error);
