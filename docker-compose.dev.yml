@@ -17,6 +17,7 @@ services:
     environment:
       - NODE_ENV=development
       - VITE_API_URL=http://backend:${BACK_PORT}
+      - API_PORT=${BACK_PORT}
     working_dir: /app
     entrypoint: ["/root/setup.sh"]
     depends_on:
