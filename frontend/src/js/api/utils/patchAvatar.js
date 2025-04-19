@@ -33,7 +33,7 @@ export async function patchAvatar({
             body: formData,
         }
         
-        const response = await fetch(config.url+UrlPath, requestOptions)
+        const response = await fetch(config.url+UrlPath, requestOptions).catch(err => {})
         
         if (!response.ok) {
             const errorText = await response.text();

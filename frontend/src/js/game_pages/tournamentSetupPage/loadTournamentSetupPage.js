@@ -11,8 +11,12 @@ import { rmGuest } from "../loginGuestPage/utils/rmGuest.js";
 import { loadTournamentNextMatchPage } from "../tournamentNextMatch/tournamentNextMatch.js";
 
 var players = []
-
+var ctx_save = null
 export async function loadTournamentSetupPage(ctx) {
+	if (!ctx)
+		ctx_save = ctx
+	else
+		ctx = ctx_save
 	const app = document.getElementById("main_container");
 	const torunamentHtml = await fetchHTMLContent("tournament")
 	app.innerHTML = torunamentHtml
