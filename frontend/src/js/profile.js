@@ -20,24 +20,50 @@ export async function loadProfilePage(username = null) {
 	if (!profileData)
 		return noProfileData()
 	if (username && username != profileData.username) {
-		profileData = await getProfileByUsername(username)
-		isLocalProfile = false
+		profileData = await getProfileByUsername(username);
+		isLocalProfile = false;
 	}
 	if (isLocalProfile) {
 		settingsModal(profileData)
-		addFriendModal()
+		addFriendModal();
 	}
-	addFriendBtnSetup(isLocalProfile)
-	setupUserStatus(profileData)
-	displayInformations(profileData)
-	displayMatchHistory(profileData.match_history)
+	addBackBtnSetup(isLocalProfile);
+	addFriendBtnSetup(isLocalProfile);
+	addSettingsBtnSetup(isLocalProfile);
+	addDisconnectBtnSetup(isLocalProfile);
+	setupUserStatus(profileData);
+	displayInformations(profileData);
+	displayMatchHistory(profileData.match_history);
 }
 
+function addBackBtnSetup(isLocalProfile) {
+	const backBtn = document.getElementById("backButton");
+	if (isLocalProfile) {
+		backBtn.style.display = "none";
+	} else if (!isLocalProfile) {
+		backBtn.addEventListener("click", () => {
+			load_page("profile");
+		});
+	}
+}
+
+function addSettingsBtnSetup(isLocalProfile) {
+	const settingsBtn = document.getElementById("openSettings");
+	if (!isLocalProfile)
+		settingsBtn.style.display = "none";
+}
+
+function addDisconnectBtnSetup(isLocalProfile) {
+	const disconnectBtn = document.getElementById("disconnect");
+	if (!isLocalProfile)
+		disconnectBtn.style.display = "none";
+}
 function addFriendBtnSetup(isLocalProfile) {
 	const addFriendBtn = document.getElementById("addFriendBtn");
 	if (!isLocalProfile)
 		addFriendBtn.style.display = "none";
 }
+
 
 function setupUserStatus() {
 	window.removeEventListener('userStatusUpdate', handleUserStatusUpdate);
