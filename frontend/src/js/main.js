@@ -6,7 +6,8 @@ document.body.classList.add("themePink")
 
 window.addEventListener("DOMContentLoaded", () => {
 	clearGuestStore()
-	pullProfile()
-	const currentPage = getCurrentPageFromURL()
-	load_page(currentPage, undefined, false)
+	pullProfile().then(() => {
+		const currentPage = getCurrentPageFromURL()
+		load_page(currentPage, undefined, false)
+	})
 })
