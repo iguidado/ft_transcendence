@@ -40,7 +40,7 @@ function addBackBtnSetup(isLocalProfile) {
 	const backBtn = document.getElementById("backButton");
 	if (isLocalProfile) {
 		backBtn.style.display = "none";
-	} else if (!isLocalProfile) {
+	} else {
 		backBtn.addEventListener("click", () => {
 			load_page("profile");
 		});
@@ -256,7 +256,8 @@ function displayFriendsList(profileData) {
 }
 
 function displayMatchHistory(matchHistory) {
-	const profileData = getProfileData();
+    const profileData = getProfileData();
+    const currentProfileUsername = window.location.pathname.split('/').pop() || profileData.username;
     const matchHistoryContainer = document.getElementById("matchHistory");
     matchHistoryContainer.innerHTML = ''; // Réinitialiser le conteneur
 
@@ -297,7 +298,10 @@ function displayMatchHistory(matchHistory) {
         player2Container.append("Player 2 : ", player2Link, ` - Score : ${match.score_p2}`);
 
         const result = document.createElement("p");
-        result.textContent = `Result : ${match.winner === match.player_one ? "Victory" : "Defeat"}`;
+        // Determine if the current profile user is player one or two
+        const isPlayerOne = match.player_one === currentProfileUsername;
+        const hasWon = isPlayerOne ? match.winner === match.player_one : match.winner === match.player_two;
+        result.textContent = `Result : ${hasWon ? "Victory" : "Defeat"}`;
 
         matchItem.appendChild(date);
         matchItem.appendChild(player1Container);

@@ -32,6 +32,15 @@
       <span id="realUsername"></span>
     </h2>
 
+    <div class="text-start card-text my-3 position-relative">
+      <h3>Friends List</h3>
+      <button class="btn position-absolute" id="addFriendBtn" data-bs-toggle="modal" data-bs-target="#addFriendModal"
+        style="top: 0; right: 0; background-color: transparent; border: none; font-size: 1.5rem; color: #fd9b5d;">
+        EDIT
+      </button>
+      <ul id="friendsList" class="list-group">
+      </ul>
+    </div>
 
     <div class="text-center card-text my-3">
       <h3 class="card-title">Statistics</h3>
@@ -44,15 +53,6 @@
       </div>
     </div>
 
-    <div class="text-start card-text my-3 position-relative">
-      <h3>Friends List</h3>
-      <button class="btn position-absolute" id="addFriendBtn" data-bs-toggle="modal" data-bs-target="#addFriendModal"
-        style="top: 0; right: 0; background-color: transparent; border: none; font-size: 1.5rem; color: #fd9b5d;">
-        EDIT
-      </button>
-      <ul id="friendsList" class="list-group">
-      </ul>
-    </div>
 
     <div class="modal fade" id="addFriendModal" tabindex="-1" aria-labelledby="addFriendModalLabel" aria-hidden="true">
       <div class="modal-dialog">
