@@ -37,11 +37,10 @@ class FriendSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
 	match_history = serializers.SerializerMethodField()
 	friends = serializers.SerializerMethodField()
-	avatar_url = serializers.SerializerMethodField()
 
 	class Meta:
 		model = get_user_model()
-		fields = ['id', 'username', 'email','displayName', 'avatar', 'avatar_url', 'date_joined', 'wins', 'game_played', 'match_history', 'otp_2fa', 'otp_2fa_expiry_time', 'otp_email', 'otp_email_expiry_time' ,'is_2fa_enabled', 'jwt_token', 'friends', 'win_ratio', 'temp_auth_token']
+		fields = ['id', 'username', 'displayName', 'avatar', 'wins', 'game_played', 'match_history', 'is_2fa_enabled', 'friends', 'win_ratio']
 
 	def get_match_history(seld, obj):
 		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
@@ -51,12 +50,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
 		friends = obj.friends.all()
 		return FriendSerializer(friends, many=True).data
 
-	def get_avatar_url(self, obj):
-		if obj.avatar:
-			request = self.context.get('request')
-			if request:
-				return request.build_absolute_uri(obj.avatar.url)
-		return None
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
 	confirm_password = serializers.CharField(write_only=True)
@@ -88,6 +81,8 @@ class UpdateDisplayNameSerializer(serializers.ModelSerializer):
 	def validate_diplayName(self, value):
 		if len(value) < 3:
 			raise serializers.ValidationError("Displayname must at least have 3 characters")
+		if len(value) > 15:
+			raise serializers.ValidationError("Displayname must at most have 15 characters")
 		return value
 	
 class TwoFAUpdateSerializer(serializers.ModelSerializer):
