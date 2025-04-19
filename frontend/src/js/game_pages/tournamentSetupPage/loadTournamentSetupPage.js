@@ -35,7 +35,6 @@ function setupProfiles() {
 function addPlayerToList(playerName, id) {
 	const container = document.getElementById("tournament__playerlist");
 	if (!container) {
-		console.error(`Container with id "tournament__playerlist" not found.`);
 		return;
 	}
 
@@ -105,7 +104,7 @@ function setupAddPlayerBtn(ctx) {
 				} else {
 					getProfileFromToken(res.access_token).then(profile => {
 						profile.access_token = res.access_token
-						addGuestProfileToStore(profile, console.error)
+						addGuestProfileToStore(profile, (error) => {})
 						loadTournamentSetupPage(ctx)
 					})
 				}
@@ -176,13 +175,8 @@ function saveTDNbtn(modal, id, newTDNInput) {
 					const nameSpan = playerListItem.querySelector(".tournament__playerlist__item__name");
 					nameSpan.textContent = newDisplayName;
 				}
-			} else {
-				console.error(`Player with ID ${id} not found.`);
 			}
-		} else {
-			console.error("Display name cannot be empty.");
 		}
-
 		// Fermer la modale
 		const modalInstance = bootstrap.Modal.getInstance(modal);
 		modalInstance.hide();

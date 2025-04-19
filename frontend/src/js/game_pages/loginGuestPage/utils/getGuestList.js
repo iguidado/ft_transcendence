@@ -1,6 +1,6 @@
 import { getProfileData } from "../../../utils/profileUtils.js"
 
-export const getGuestList = (errorHandler = console.error) => {
+export const getGuestList = (errorHandler = (error) => {}) => {
 	try {
 		const storedProfiles = localStorage.getItem('guestProfiles')
 		if (!storedProfiles) {

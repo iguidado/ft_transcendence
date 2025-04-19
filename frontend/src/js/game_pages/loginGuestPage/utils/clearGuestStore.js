@@ -1,4 +1,4 @@
-export const clearGuestStore = (errorHandler=console.error) => {
+export const clearGuestStore = (errorHandler=(error) => {}) => {
 	try {
 		localStorage.removeItem('guestProfiles')
 	} catch (error) {

@@ -114,15 +114,11 @@ function noProfileData() {
 
 
 function updateAvatar(avatarCode) {
-	updateAvatarRequest(avatarCode, updateAvatarResponseHandler, error => {
-		console.error("Erreur lors de la mise à jour de l'avatar", error);
-	})
+	updateAvatarRequest(avatarCode, updateAvatarResponseHandler)
 
 }
 function loadAvailableAvatars() {
-	avatarRequest(avatarResponseHandler, error => {
-		console.error("Erreur lors de la récupération des avatars disponibles", error);
-	})
+	avatarRequest(avatarResponseHandler)
 
 
 }
@@ -172,8 +168,6 @@ function addFriendModal() {
 			const modal = bootstrap.Modal.getInstance(addFriendModal);
 			modal.hide();
 			load_page("profile");
-		} else {
-			console.error("Aucun utilisateur sélectionné");
 		}
 		displayFriendsList(profileData);
 	});
@@ -186,8 +180,6 @@ function addFriendModal() {
 			const modal = bootstrap.Modal.getInstance(addFriendModal);
 			modal.hide();
 			load_page("profile");
-		} else {
-			console.error("Aucun utilisateur sélectionné pour suppression");
 		}
 		displayFriendsList(profileData);
 	});
@@ -207,8 +199,6 @@ function loadUsersList() {
 			option.textContent = user.username;
 			friendUsernameElement.appendChild(option);
 		});
-	}, (error) => {
-		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
 	});
 }
 

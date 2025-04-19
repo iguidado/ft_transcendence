@@ -5,7 +5,6 @@ function responseHandlerDefault(res) {
 }
 
 function errorHandlerDefault(err) {
-	console.error(err);
 }
 
 // Error renvoie l'information fournie par le serveur ( mais dans un format moche si tu arrives a changer c'est bien en parsant le json)

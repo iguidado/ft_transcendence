@@ -38,7 +38,6 @@ export class Wall {
             
             // Fonction à exécuter en cas d'erreur de chargement
             const onError = (err) => {
-                console.error(`Erreur lors du chargement de la texture: ${texturePath}`, err);
                 // Utiliser le matériau par défaut en cas d'erreur
                 this.material = new THREE.MeshBasicMaterial({ color: this.color });
                 this.mesh.material = this.material;
@@ -48,7 +47,6 @@ export class Wall {
             try {
                 textureLoader.load(texturePath, onLoad, undefined, onError);
             } catch (error) {
-                console.error(`Exception lors du chargement de la texture: ${texturePath}`, error);
                 this.material = new THREE.MeshBasicMaterial({ color: this.color });
             }
         } else {

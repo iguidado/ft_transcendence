@@ -8,8 +8,6 @@ export function updateAvatarResponseHandler(response) {
 }
 
 function updateAvatarErrorHandler(error) {
-    console.error("Erreur lors de la mise à jour de l'avatar:", error);
-    return Promise.reject(error);
 }
 
 export function updateAvatarRequest(formData, responseHandler=updateAvatarResponseHandler, errorHandler=updateAvatarErrorHandler) {

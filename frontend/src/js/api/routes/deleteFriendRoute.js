@@ -5,7 +5,6 @@ function deleteFriendResponseHandler(response) {
 }
 
 function deleteFriendErrorHandler(error) {
-    console.error("Error while deleting friend:", error);
 }
 
 export function deleteFriendRequest({username}, responseHandler=deleteFriendResponseHandler, errorHandler=deleteFriendErrorHandler) {

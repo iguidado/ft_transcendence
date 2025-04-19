@@ -5,7 +5,6 @@ function responseHandlerDefault(res) {
 }
 
 function errorHandlerDefault(err) {
-    console.error(err)
 }
 
 export async function patchAvatar({
