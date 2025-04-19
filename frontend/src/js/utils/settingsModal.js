@@ -4,6 +4,7 @@ import { toggle2faRequest } from "../api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "../api/routes/user/verifyEmailOTP.js"
 import { updateAvatarRequest } from "../api/routes/updateAvatar.js"
 import { load_page } from "../router.js"
+import { displayError } from "./displayError.js"
 
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
@@ -115,20 +116,24 @@ function saveSettings() {
     const saveButton = document.getElementById("saveSettings");
     saveButton.addEventListener("click", () => {
         // Gestion du nom d'utilisateur
-        const newDisplayName = document.getElementById("newDisplayName").value.trim();
-        console.log("Nouveau nom d'utilisateur :", newDisplayName);
+        const newDisplayName = document.getElementById("newDisplayName").value.trim();        
         if (newDisplayName) {
+            if (newDisplayName.length > 15) {
+                displayError("Display name must be 15 characters or less (˶ᵔ ᵕ ᵔ˶)");
+                return;
+            }
+            
             updateDisplayNameRequest(newDisplayName, (response) => {
-                console.log("Nom d'utilisateur mis à jour avec succès :", response);
                 document.getElementById("usernameDisplay").textContent =
                 newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
             }, (error) => {
                 console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
             });
         } else {
-            console.log("Aucun nouveau nom fourni.");
+            displayError("You haven't changed your username, please make your mind !");
+            return;
         }
-        
+
         // Gestion de l'avatar
         const avatarInput = document.getElementById("avatarUpload");
         if (avatarInput && avatarInput.files.length > 0 && avatarInput.resizedBlob) {

@@ -99,6 +99,16 @@ function setupAddPlayerBtn(ctx) {
 		fetchHTMLContent("login").then(htmlContent => {
 			const app = document.getElementById('main_container')
 			app.innerHTML = htmlContent
+			const backBtn = document.getElementById("backBtn");
+			if (backBtn) {
+
+				backBtn.addEventListener("click", () => {
+					app.innerHTML = "";
+					loadTournamentSetupPage(ctx);
+				});
+			} else {
+				backBtn.style.display = "none";
+			}
 			loadLoginPage(res => {
 				if (!getProfileData()) {
 					updateLocalProfile(res)
@@ -167,8 +177,11 @@ function saveTDNbtn(modal, id, newTDNInput) {
 			// Mettre à jour le display name du joueur
 			const player = players.find(p => p.id === id);
 			if (player) {
+				if (newDisplayName.length > 15) {
+					displayError("Display name must be 15 characters or less (˶ᵔ ᵕ ᵔ˶)");
+					return;
+				}
 				player.displayName = newDisplayName;
-				console.log(`Display name updated for player ${id}: ${newDisplayName}`);
 
 				// Mettre à jour l'affichage dans la liste
 				const playerListItem = document.querySelector(`#tournament__playerlist li[data-id="${id}"]`);

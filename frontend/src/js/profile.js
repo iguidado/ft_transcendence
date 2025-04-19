@@ -10,6 +10,7 @@ import { initializeWebSocketConnection } from "./utils/webSocketManager.js";
 import { getProfileByUsername } from "./utils/getProfileByUsername.js"
 import { settingsModal } from "./utils/settingsModal.js"
 import { disconnect } from "./utils/disconnect.js"
+import { displayError } from "./utils/displayError.js"
 
 
 
@@ -113,81 +114,56 @@ function noProfileData() {
 }
 
 
-function updateAvatar(avatarCode) {
-	updateAvatarRequest(avatarCode, updateAvatarResponseHandler, error => {
-		console.error("Erreur lors de la mise à jour de l'avatar", error);
-	})
-
-}
-function loadAvailableAvatars() {
-	avatarRequest(avatarResponseHandler, error => {
-		console.error("Erreur lors de la récupération des avatars disponibles", error);
-	})
-
-
-}
-function avatarResponseHandler(data) {
-	const avatarGallery = document.getElementById("avatarGallery");
-	avatarGallery.innerHTML = ''; // Vide le conteneur
-	data.forEach(avatar => {
-		const img = document.createElement("img");
-		img.src = getApiConfigDefault().url + avatar.url;
-		img.alt = avatar.name;
-		img.style.cursor = "pointer";
-		img.style.width = "50px";
-		img.style.height = "50px";
-		img.addEventListener("click", () => {
-			updateAvatar(avatar.code)
-			document.getElementById("userAvatar")
-				.src = img.src
-		});
-		avatarGallery.appendChild(img);
-	})
-}
-
-
-
 
 
 //DONE gestion modale addfriends
 
 function addFriendModal() {
-	const addFriendModal = document.getElementById("addFriendModal");
-	// Chargez la liste des utilisateurs quand la modale s'ouvre
-	addFriendModal.addEventListener('shown.bs.modal', () => {
-		loadUsersList();
-	});
-	
-	// Gestion du bouton de confirmation d'ajout d'ami
-	const addFriendBtn = document.getElementById("addFriendConfirmBtn");
-	addFriendBtn.addEventListener("click", () => {
-		// Récupérer l'utilisateur sélectionné
-		const friendUsernameSelect = document.getElementById("friendUsername");
-		const selectedUsername = friendUsernameSelect.value;
+    const addFriendModal = document.getElementById("addFriendModal");
+	const profileData = getProfileData();
+    addFriendModal.addEventListener('shown.bs.modal', () => {
+        loadUsersList();
+    });
 
-		if (selectedUsername) {
-			addFriend(selectedUsername);
+    const addFriendBtn = document.getElementById("addFriendConfirmBtn");
+    addFriendBtn.addEventListener("click", () => {
+        const friendUsernameSelect = document.getElementById("friendUsername");
+        const selectedUsername = friendUsernameSelect.value;
 
-			// Fermer la modale après l'ajout
-			const modal = bootstrap.Modal.getInstance(addFriendModal);
-			modal.hide();
-			load_page("profile");
-		} else {
-			console.error("Aucun utilisateur sélectionné");
-		}
-		displayFriendsList(profileData);
-	});
-	const deleteFriendBtn = document.getElementById("deleteFriendBtn");
+        if (selectedUsername) {
+            const isAlreadyFriend = profileData.friends.some(friend => friend.username === selectedUsername);
+            if (isAlreadyFriend) {
+               displayError("You are already friends with this user (˶ᵔ ᵕ ᵔ˶)");
+                return;
+            }
+            addFriend(selectedUsername);
+            const modal = bootstrap.Modal.getInstance(addFriendModal);
+            modal.hide();
+            load_page("profile");
+        } else {
+            displayError("Please select a username to add as a friend (˶ᵔ ᵕ ᵔ˶)");
+			return;
+        }
+        displayFriendsList(profileData);
+    });
+
+    const deleteFriendBtn = document.getElementById("deleteFriendBtn");
 	deleteFriendBtn.addEventListener("click", () => {
 		const friendUsernameSelect = document.getElementById("friendUsername");
 		const selectedUsername = friendUsernameSelect.value;
 		if (selectedUsername) {
+			const isNotFriend = !profileData.friends.some(friend => friend.username === selectedUsername);
+			if (isNotFriend) {
+				displayError("You are not friends with this user ! (˶ᵔ ᵕ ᵔ˶)");
+				return;
+			}
 			deleteFriend(selectedUsername);
 			const modal = bootstrap.Modal.getInstance(addFriendModal);
 			modal.hide();
 			load_page("profile");
 		} else {
-			console.error("Aucun utilisateur sélectionné pour suppression");
+			displayError("Please select a username to delete from your friends list (˶ᵔ ᵕ ᵔ˶)");
+			return;
 		}
 		displayFriendsList(profileData);
 	});
