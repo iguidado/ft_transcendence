@@ -83,7 +83,6 @@ export class Paddle {
 				const predictionError =
 					(Math.random() - 0.5) * 2 * botConfig.predictionError;
 
-				// Randomiser la position sur le paddle
 				const paddleRandomOffset =
 					(Math.random() - 0.5) * this.config.paddles.length * 0.5;
 
