@@ -183,8 +183,6 @@ function loadUsersList() {
 			option.textContent = user.username;
 			friendUsernameElement.appendChild(option);
 		});
-	}, (error) => {
-		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
 	});
 }
 

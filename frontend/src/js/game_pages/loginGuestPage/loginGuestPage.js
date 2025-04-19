@@ -5,7 +5,7 @@ import { updateLocalProfile } from "../../utils/updateLocalProfile.js"
 import { addGuestProfileToStore } from "./utils/addGuestProfileToStore.js"
 import { getProfileFromToken } from "./utils/getProfileFromToken.js"
 
-export const loginGuestPage = async () => {
+export const loginGuestPage = async (successHandler = console.log, errorHandler = (error) => {}) => {
 	return new Promise((resolve) => {
 		const onLoginSuccess = res => {
 			if (!getProfileData()) {
@@ -13,7 +13,7 @@ export const loginGuestPage = async () => {
 			} else {
 				getProfileFromToken(res.access_token).then(profile => {
 					profile.access_token = res.access_token
-					addGuestProfileToStore(profile, console.error)
+					addGuestProfileToStore(profile, errorHandler)
 					resolve(true)
 				})
 			}

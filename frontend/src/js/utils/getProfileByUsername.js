@@ -9,7 +9,6 @@ export const getProfileByUsername = async (username) => {
 			res = formatProfileData(data)
 		},
 		(err) => {
-			console.error(err)
 			res = null
 		}
 	)

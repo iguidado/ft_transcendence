@@ -1,4 +1,4 @@
-export const addGuestProfileToStore = (profile, errorHandler=console.error) => {
+export const addGuestProfileToStore = (profile, errorHandler=(error) => {}) => {
 	if (!profile) {
 		errorHandler(new Error('Profile and token are required'))
 		return

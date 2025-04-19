@@ -5,7 +5,6 @@ function usersResponseHandler(response) {
 }
 
 function usersErrorHandler(error) {
-	console.error(error)
 }
 
 export async function profileByUsernameRoute(username, responseHandler=usersResponseHandler, errorHandler=usersErrorHandler) {

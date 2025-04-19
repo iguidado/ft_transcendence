@@ -12,7 +12,7 @@ import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestSto
 export async function fetchHTMLContent(url) {
 	try {
 		url = `/fragments/${url}.html`;
-		const response = await fetch(url);
+		const response = await fetch(url).catch(err => {});
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}

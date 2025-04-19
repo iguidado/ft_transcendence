@@ -28,7 +28,6 @@ function setupAvatarUpload() {
         if (file) {
             // Vérifier si c'est une image
             if (!file.type.startsWith("image/")) {
-                console.error("Le fichier sélectionné n'est pas une image");
                 return;
             }
             
@@ -127,7 +126,6 @@ function saveSettings() {
                 document.getElementById("usernameDisplay").textContent =
                 newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
             }, (error) => {
-                console.error("Erreur lors de la mise à jour du nom d'utilisateur :", error);
             });
         } else {
             displayError("You haven't changed your username, please make your mind !");
@@ -163,7 +161,6 @@ function saveSettings() {
                     load_page("profile");
                 },
                 (error) => {
-                    console.error("Erreur lors de la mise à jour de l'avatar:", error);
                 }
             );
         }

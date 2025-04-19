@@ -1,4 +1,4 @@
-export const getGuestProfileFromStore = (profileId, errorHandler = console.error) => {
+export const getGuestProfileFromStore = (profileId, errorHandler = (error) => {}) => {
 	if (!profileId) {
 		errorHandler('Profile ID is required')
 		return null
