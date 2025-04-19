@@ -1,5 +1,5 @@
-import { fetchHTMLContent, load_page } from "../../router";
-import { loadGamePage } from "../game_page/loadGamePage";
+import { fetchHTMLContent, load_page } from "../../router.js";
+import { loadGamePage } from "../game_page/loadGamePage.js";
 
 export async function loadTournamentNextMatchPage(ctx, planning) {
 	console.log(planning)

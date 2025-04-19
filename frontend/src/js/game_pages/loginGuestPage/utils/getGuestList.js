@@ -1,4 +1,4 @@
-import { getProfileData } from "../../../utils/profileUtils"
+import { getProfileData } from "../../../utils/profileUtils.js"
 
 export const getGuestList = (errorHandler = console.error) => {
 	try {

@@ -1,4 +1,4 @@
-import { getGuestList } from "./getGuestList";
+import { getGuestList } from "./getGuestList.js";
 
 export function rmGuest(id) {
 	let list = getGuestList()

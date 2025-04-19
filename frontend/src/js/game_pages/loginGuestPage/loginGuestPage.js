@@ -1,9 +1,9 @@
-import { loadLoginPage } from "../../login"
-import { fetchHTMLContent } from "../../router"
-import { getProfileData } from "../../utils/profileUtils"
-import { updateLocalProfile } from "../../utils/updateLocalProfile"
-import { addGuestProfileToStore } from "./utils/addGuestProfileToStore"
-import { getProfileFromToken } from "./utils/getProfileFromToken"
+import { loadLoginPage } from "../../login.js"
+import { fetchHTMLContent } from "../../router.js"
+import { getProfileData } from "../../utils/profileUtils.js"
+import { updateLocalProfile } from "../../utils/updateLocalProfile.js"
+import { addGuestProfileToStore } from "./utils/addGuestProfileToStore.js"
+import { getProfileFromToken } from "./utils/getProfileFromToken.js"
 
 export const loginGuestPage = async (successHandler = console.log, errorHandler = console.error) => {
 	return new Promise((resolve) => {

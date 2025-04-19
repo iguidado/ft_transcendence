@@ -1,5 +1,5 @@
-import { leaderboardRequest } from "./api/routes/leaderboard";
-// import { displayError } from "./utils/displayError";
+import { leaderboardRequest } from "./api/routes/leaderboard.js";
+// import { displayError } from "./utils/displayError.js";
 
 
 export function loadDashboardPage() {

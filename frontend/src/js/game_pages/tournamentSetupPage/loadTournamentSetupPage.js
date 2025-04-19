@@ -1,14 +1,14 @@
-import { loadLoginPage, showLogin } from "../../login";
-import { fetchHTMLContent } from "../../router";
-import { displayError } from "../../utils/displayError";
-import { getAccessToken } from "../../utils/getAccessToken";
-import { getProfileData } from "../../utils/profileUtils";
-import { updateLocalProfile } from "../../utils/updateLocalProfile";
-import { addGuestProfileToStore } from "../loginGuestPage/utils/addGuestProfileToStore";
-import { getGuestList } from "../loginGuestPage/utils/getGuestList";
-import { getProfileFromToken } from "../loginGuestPage/utils/getProfileFromToken";
-import { rmGuest } from "../loginGuestPage/utils/rmGuest";
-import { loadTournamentNextMatchPage } from "../tournamentNextMatch/tournamentNextMatch";
+import { loadLoginPage, showLogin } from "../../login.js";
+import { fetchHTMLContent } from "../../router.js";
+import { displayError } from "../../utils/displayError.js";
+import { getAccessToken } from "../../utils/getAccessToken.js";
+import { getProfileData } from "../../utils/profileUtils.js";
+import { updateLocalProfile } from "../../utils/updateLocalProfile.js";
+import { addGuestProfileToStore } from "../loginGuestPage/utils/addGuestProfileToStore.js";
+import { getGuestList } from "../loginGuestPage/utils/getGuestList.js";
+import { getProfileFromToken } from "../loginGuestPage/utils/getProfileFromToken.js";
+import { rmGuest } from "../loginGuestPage/utils/rmGuest.js";
+import { loadTournamentNextMatchPage } from "../tournamentNextMatch/tournamentNextMatch.js";
 
 var players = []
 

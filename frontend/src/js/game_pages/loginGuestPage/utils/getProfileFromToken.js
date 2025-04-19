@@ -1,5 +1,5 @@
-import { profileRequest } from "../../../api/routes/profileRoute"
-import { formatProfileData } from "../../../utils/profileUtils"
+import { profileRequest } from "../../../api/routes/profileRoute.js"
+import { formatProfileData } from "../../../utils/profileUtils.js"
 
 export function getProfileFromToken(token) {
 	return new Promise(resolve => {
