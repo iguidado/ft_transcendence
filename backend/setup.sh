@@ -53,8 +53,8 @@ django.setup()
 
 from api.models import User
 
-USERNAME = os.getenv('DB_USER')
-PASSWORD = os.getenv('DB_PASSWORD')
+USERNAME = os.getenv('ADMIN_USER')
+PASSWORD = os.getenv('ADMIN_PASSWORD')
 
 if not User.objects.filter(username=USERNAME).exists():
 	User.objects.create_superuser(username=USERNAME, password=PASSWORD)
