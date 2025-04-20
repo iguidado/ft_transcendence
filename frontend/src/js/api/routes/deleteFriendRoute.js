@@ -7,8 +7,8 @@ function deleteFriendResponseHandler(response) {
 function deleteFriendErrorHandler(error) {
 }
 
-export function deleteFriendRequest({username}, responseHandler=deleteFriendResponseHandler, errorHandler=deleteFriendErrorHandler) {
-    postRequest({
+export async function deleteFriendRequest({username}, responseHandler=deleteFriendResponseHandler, errorHandler=deleteFriendErrorHandler) {
+    return postRequest({
         UrlPath: "/api/user/friends/remove/",
         body: {username},
         responseHandler,
