@@ -46,8 +46,8 @@ const routeConfigs = {
 	}
 };
 
+
 export async function load_page(url, props=undefined, pushHistory=true) {
-	clearGuestStore()
 	let currentGame = gameRegistry.getCurrentContext()
 	if (currentGame)
 		currentGame.cleanup()
@@ -72,23 +72,36 @@ export async function load_page(url, props=undefined, pushHistory=true) {
 		}
 		mainContainer.innerHTML = htmlContent;
 	}
-	appendBuildingSideMenu(url)
+	// On n'ajoute le menu que si ce n'est pas la page login ou si onLoginSuccess est dans les props
+	if (url !== 'login' || props?.onLoginSuccess) {
+		appendBuildingSideMenu(url, props)
+	}
 	if (config.script) config.script(props);
 	if (pushHistory)
 		history.pushState({ page: tmp.join("/") }, "", `/${tmp.join("/")}`)
 }
 
-
-
-async function appendBuildingSideMenu(url) {
+async function appendBuildingSideMenu(url, props) {
 	const app = document.getElementById('app');
 	const htmlLayout = await fetchHTMLContent('layout')
 	const layout = document.createElement('div');
 	layout.innerHTML = htmlLayout;
-	const groupElement = layout.querySelector(`#${url}Group`);
-	if (groupElement) {
-		groupElement.style.display = 'none';
+
+	if (url === 'login' && props?.onLoginSuccess) {
+		// Cacher tous les groupes d'URL
+		const allGroups = layout.querySelectorAll('[id$="Group"]');
+		allGroups.forEach(group => {
+			group.style.display = 'none';
+		});
+
+	} else {
+		// Comportement normal pour les autres pages
+		const groupElement = layout.querySelector(`#${url}Group`);
+		if (groupElement) {
+			groupElement.style.display = 'none';
+		}
 	}
+
 	app.appendChild(layout);
 	initBuildButtons();
 }

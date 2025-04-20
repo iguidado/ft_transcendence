@@ -8,15 +8,17 @@ import { addGuestProfileToStore } from "../loginGuestPage/utils/addGuestProfileT
 import { getGuestList } from "../loginGuestPage/utils/getGuestList.js";
 import { getProfileFromToken } from "../loginGuestPage/utils/getProfileFromToken.js";
 import { rmGuest } from "../loginGuestPage/utils/rmGuest.js";
+import { updateGuest } from "../loginGuestPage/utils/updateGuest.js";
 import { loadTournamentNextMatchPage } from "../tournamentNextMatch/tournamentNextMatch.js";
 
 var players = []
 var ctx_save = null
+var saveLocalProfileTDN = null
 export async function loadTournamentSetupPage(ctx) {
 	if (!ctx)
-		ctx_save = ctx
-	else
 		ctx = ctx_save
+	else
+		ctx_save = ctx
 	const app = document.getElementById("main_container");
 	const torunamentHtml = await fetchHTMLContent("tournament")
 	app.innerHTML = torunamentHtml
@@ -30,6 +32,8 @@ export async function loadTournamentSetupPage(ctx) {
 function setupProfiles() {
 	players = getGuestList() || []
 	const localProfile = getProfileData()
+	if (saveLocalProfileTDN)
+		localProfile.displayName = saveLocalProfileTDN
 	if (localProfile) {
 		localProfile.access_token = getAccessToken()
 		players = [localProfile, ...players]
@@ -49,11 +53,11 @@ function addPlayerToList(playerName, id) {
 	const span = document.createElement("span");
 	span.className = "tournament__playerlist__item__name";
 	span.textContent = playerName;
-
+	
 	const buttonContainer = document.createElement("div");
 	buttonContainer.className = "d-flex gap-2";
 	let localProfile = getProfileData()
-	if (!localProfile) {
+	if (!localProfile || localProfile.id !== id) {
 		const removeButton = document.createElement("button");
 		removeButton.className = "btn btn-danger btn-sm";
 		removeButton.textContent = "Remove";
@@ -102,6 +106,15 @@ function setupAddPlayerBtn(ctx) {
 		fetchHTMLContent("login").then(htmlContent => {
 			const app = document.getElementById('main_container')
 			app.innerHTML = htmlContent
+			const backBtn = document.getElementById("backBtn");
+			if (backBtn) {
+				backBtn.style.display = "block";
+				backBtn.addEventListener("click", (e) => {
+	e.preventDefault()
+					app.innerHTML = "";
+					loadTournamentSetupPage(ctx);
+				});
+			}
 			loadLoginPage(res => {
 				if (!getProfileData()) {
 					updateLocalProfile(res)
@@ -138,7 +151,10 @@ function setupStartBtn(ctx) {
 	btn.onclick = e => {
 		e.preventDefault()
 		if (players.length < 2) {
-			displayError("why are you solo ???")
+			displayError("why are you solo ?? (╥﹏╥)")
+			return
+		} else if (players.length == 2) {
+			displayError("You need at least 3 players to start a tournament (˶ᵔ ᵕ ᵔ˶)")
 			return
 		}
 		loadTournamentNextMatchPage(ctx, generatePlanning())
@@ -150,15 +166,12 @@ function openTDNSettingsModal(modal, playerName, id) {
 	const modalTitle = modal.querySelector(".modal-title");
 	const newTDNInput = modal.querySelector("#newTDN");
 
-	// Mettre à jour le titre de la modale et le placeholder
 	modalTitle.textContent = `Edit Display Name for ${playerName}`;
 	newTDNInput.value = playerName;
 
-	// Afficher la modale
 	const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
 	modalInstance.show();
 
-	// Ajouter un gestionnaire pour le bouton "Save"
 	saveTDNbtn(modal, id, newTDNInput);
 }
 
@@ -170,8 +183,15 @@ function saveTDNbtn(modal, id, newTDNInput) {
 			// Mettre à jour le display name du joueur
 			const player = players.find(p => p.id === id);
 			if (player) {
+				if (newDisplayName.length > 15) {
+					displayError("Display name must be 15 characters or less (˶ᵔ ᵕ ᵔ˶)");
+					return;
+				}
 				player.displayName = newDisplayName;
-				console.log(`Display name updated for player ${id}: ${newDisplayName}`);
+				updateGuest(id, newTDNInput.value)
+				if (getProfileData() && getProfileData().id === id) {
+					saveLocalProfileTDN = newDisplayName
+				}
 
 				// Mettre à jour l'affichage dans la liste
 				const playerListItem = document.querySelector(`#tournament__playerlist li[data-id="${id}"]`);
@@ -179,6 +199,7 @@ function saveTDNbtn(modal, id, newTDNInput) {
 					const nameSpan = playerListItem.querySelector(".tournament__playerlist__item__name");
 					nameSpan.textContent = newDisplayName;
 				}
+				
 			}
 		}
 		// Fermer la modale

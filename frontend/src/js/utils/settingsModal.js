@@ -4,6 +4,7 @@ import { toggle2faRequest } from "../api/routes/user/toggle2fa.js"
 import { verifyEmailOTP } from "../api/routes/user/verifyEmailOTP.js"
 import { updateAvatarRequest } from "../api/routes/updateAvatar.js"
 import { load_page } from "../router.js"
+import { displayError } from "./displayError.js"
 
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
@@ -74,7 +75,8 @@ function twoFactorAuthSection(profileData) {
 		email2FASection.style.display = "block"
 		verify2FAModal.style.display = "none"
 	})
-	send2FAEmailBtn.addEventListener("click", () => {
+	send2FAEmailBtn.addEventListener("click", (e) => {
+        e.preventDefault()
 		email2FASection.style.display = "none"
 		verify2FAModal.style.display = "block"
 		const emailInput = document.getElementById("email2FAInput").value
@@ -87,7 +89,8 @@ function twoFactorAuthSection(profileData) {
 			toggle2faError
 		)
 	})
-	confirm2FABtn.addEventListener("click", () => {
+	confirm2FABtn.addEventListener("click", (e) => {
+        e.preventDefault()
 		const otp = document.getElementById("code2FAInput").value;
 		verifyEmailOTP(otp, (res) => {
 			const modal = document.getElementById("settingsModal");
@@ -112,21 +115,23 @@ function toggle2faError(err, res) {
 
 function saveSettings() {
     const saveButton = document.getElementById("saveSettings");
-    saveButton.addEventListener("click", () => {
+    saveButton.addEventListener("click", (e) => {
+        e.preventDefault()
         // Gestion du nom d'utilisateur
-        const newDisplayName = document.getElementById("newDisplayName").value.trim();
-        console.log("Nouveau nom d'utilisateur :", newDisplayName);
+        const newDisplayName = document.getElementById("newDisplayName").value.trim();        
         if (newDisplayName) {
+            if (newDisplayName.length > 15 || newDisplayName.length < 2) {
+                displayError("Displayname must be between 2 and 15 characters (˶ᵔ ᵕ ᵔ˶)");
+                return;
+            }
+            
             updateDisplayNameRequest(newDisplayName, (response) => {
-                console.log("Nom d'utilisateur mis à jour avec succès :", response);
                 document.getElementById("usernameDisplay").textContent =
                 newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
             }, (error) => {
             });
-        } else {
-            console.log("Aucun nouveau nom fourni.");
         }
-        
+
         // Gestion de l'avatar
         const avatarInput = document.getElementById("avatarUpload");
         if (avatarInput && avatarInput.files.length > 0 && avatarInput.resizedBlob) {
@@ -168,7 +173,8 @@ function saveSettings() {
 
 function disconnectBtn() {
 	document.getElementById("disconnect")
-		.addEventListener("click", () => {
+		.addEventListener("click", (e) => {
+        e.preventDefault()
 			disconnect()
 		})
 }
