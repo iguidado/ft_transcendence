@@ -2,6 +2,8 @@ from .models import User, Match
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from PIL import Image
+from django.core.exceptions import ValidationError
 
 class LoginSerializer(serializers.Serializer):
 	username = serializers.CharField(max_length=150, required=True)
@@ -112,6 +114,15 @@ class UpdateAvatarSerializer(serializers.ModelSerializer):
     def validate_avatar(self, value):
         if value is None:
             raise serializers.ValidationError("Avatar is required")
+        
+        # Vérification du format de l'image
+        try:
+            img = Image.open(value)
+            if img.format not in ['JPEG', 'PNG']:
+                raise serializers.ValidationError("Only JPEG and PNG formats are supported.")
+        except Exception:
+            raise serializers.ValidationError("Invalid image file.")
+        
         return value
 
 class UpdateUserHistoricSerializer(serializers.ModelSerializer):
