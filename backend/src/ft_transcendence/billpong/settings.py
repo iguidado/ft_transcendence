@@ -111,6 +111,8 @@ PORT = os.getenv("FRONT_PORT")
 CORS_ALLOWED_ORIGINS = [
     f"http://localhost:{PORT}",
     f"http://127.0.0.1:{PORT}",
+    f"https://localhost:{PORT}",
+    f"https://127.0.0.1:{PORT}",
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
