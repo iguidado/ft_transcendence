@@ -10,23 +10,16 @@ services:
     image: frontend:dev
     ports:
       - "${FRONT_PORT}:3000"
-      - "7777:5173"
     volumes:
       - ./frontend/src:/app/src:rw,z  # Bind mount for development
-        #      - ./frontend/public:/app/public:rw,z  # Public assets
       - ./frontend/dev:/app:rw,z
       - ./frontend/cfg/vite.config.js:/app/vite.config.js:rw,z
-        #     - ./frontend/dev:/dev:rw,z
-        #     - ./frontend/dev/node_modules:/app/node_modules:rw,z  # Dev dependencies
-        #     - ./frontend/dev/package.json:/app/package.json:rw,z  # Package management
-        #     - ./frontend/dev/package-lock.json:/app/package-lock.json:rw,z  # Package management
     environment:
       - NODE_ENV=development
       - VITE_API_URL=http://backend:${BACK_PORT}
+      - API_PORT=${BACK_PORT}
     working_dir: /app
-      #command: ["npm", "run", "dev"]
-    command: ["/root/setup.sh"]
-      #command: ["tail", "-f", "/dev/null"]
+    entrypoint: ["/root/setup.sh"]
     depends_on:
       backend:
         condition: service_started
@@ -53,17 +46,16 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_USER_EMAIL=${DB_USER_EMAIL}
+      - ADMIN_USER=${ADMIN_USER}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - FRONT_PORT=${FRONT_PORT}
         #- JWT_SECRET_KEY=your-secret-key-here
     volumes:
       - ./backend/src:/app:rw,z  # Mount backend code
     networks:
       - web_networks
-        #   logging:
-        #     driver: gelf
-        #     options:
-        #       gelf-address: "udp://logstash:12201"
-        #       tag: "django"
 
 # Database service: Provide user management databases for authentication and user metrics
 # --------------------------------------------------------------------------------------------------------------------
@@ -78,11 +70,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - web_networks
-        #   logging:
-        #     driver: gelf
-        #     options:
-        #       gelf-address: "udp://logstash:12201"
-        #       tag: "postgres"
 
 volumes:
   postgres_data:

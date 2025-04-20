@@ -23,7 +23,7 @@ class GameRegistry {
 
     getCurrentContext() {
         if (!this.currentContextId) {
-            throw new Error('No current context set');
+            return null
         }
         return this.contexts.get(this.currentContextId);
     }

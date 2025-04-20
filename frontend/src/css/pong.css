@@ -5,6 +5,7 @@
 	border: none;
 	background: transparent;
 	color: inherit;
+	line-height: normal;
 }
 
 p {
@@ -62,7 +63,7 @@ button {
 
 #settings-title-container {
 	width: 100%;
-	height: 10%;
+	height: 15%;
 	background: rgba(69, 37, 71, .78);
 	border: 5px solid #CB89C8;
 	display: flex;
@@ -70,29 +71,41 @@ button {
 	align-items: center;
 }
 
-#settings-title-container h2 {
-	font-size: 55px;
+#settings-title-container p {
+	font-size: 50px;
 	color: #CB89C8;
 	text-align: center;
+	line-height: normal;
 }
 
+
 #settings-list-container, #mods-list-container {
-	height: 75%;
+	height: 70%;
 	width: 100%;
 	position: absolute;
-	top: 10%;
+	top: 15%;
 	left: 0;
 	overflow-y: auto;
-	-ms-overflow-style: none;  /* IE and Edge */
-  	scrollbar-width: none;  /* Firefox */
+	-ms-overflow-style: none;
+	  scrollbar-width: none;
 	padding-bottom: 20px;
 }
 
-#mods-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2vh;
-  padding: 2vh 0;
+/* #mods-list-container {
+	display: flex;
+	flex-direction: column;
+	gap: 2vh;
+	padding: 2vh 0;
+} */
+
+#mods-list-container h3 {
+	font-size: 50px;
+	color: #452547;
+	/* border: 5px solid #452547; */
+	background: rgba(203, 137, 200, .78);
+	text-align: center;
+	margin-bottom: 2vh;
+	margin-top: 4vh;
 }
 
 #mods-list-container .mod-btn {
@@ -108,25 +121,13 @@ button {
 }
 
 #mods-list-container .mod-btn:hover {
-  background: rgba(69, 37, 71, .9);
+  background: rgba(69, 37, 71, 1);
 }
 
 #mods-list-container .mod-btn p {
   font-size: 40px;
   color: #CB89C8;
   text-align: center;
-}
-
-#mods-list-container .camera-preset {
-  border-left-color: #80e5ff;
-}
-
-#mods-list-container .controls-preset {
-  border-left-color: #ffcc66;
-}
-
-#mods-list-container .default-preset {
-  border-left-color: #CB89C8;
 }
 
 #pong-setup #center-container {
@@ -178,9 +179,20 @@ button {
 	position: relative;
 }
 
-.setting-container .value-container p {
+.setting-container .value-container p, .keybind-btn {
 	font-size: 45px;
 	color: #CB89C8;
+	text-align: center;
+}
+
+.keybind-btn {
+	height: 80%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(69, 37, 71, .78);
+	border: 2px solid #CB89C8;
 }
 
 .btn-bar {
@@ -216,13 +228,18 @@ footer #switch-menu-btn {
 	align-items: center;
 	cursor: pointer;
 }
+
+#switch-menu-btn:hover {
+	background: rgba(69, 37, 71, 1);
+}
+
 #settings-container footer p {
 	font-size: 50px;
 	color: #CB89C8;
 	text-align: center;
 }
 
-#mods-container {
+/* #mods-container {
 	height: 13%;
 	width: 100%;
 	display: flex;
@@ -237,16 +254,17 @@ footer #switch-menu-btn {
 	width: 30%;
 	background: rgba(69, 37, 71, .78);
 	border: 5px solid #CB89C8;
+	cursor: pointer
 }
 
 #mods-container .mod-btn:hover {
-	background: rgba(69, 37, 71, .9);
+	background: rgba(69, 37, 71, 1);
 }
 
 #mods-container .mod-btn p {
 	font-size: 50px;
 	color: #CB89C8;
-}
+} */
 
 #game-preview {
 	height: 65%;
@@ -256,13 +274,11 @@ footer #switch-menu-btn {
 
 #start-btn {
 	width: 100%;
-	height: 20%;
+	cursor: pointer;
+	height: 9%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-#start-btn {
 	background: #CB89C8;
 }
 
@@ -279,4 +295,63 @@ footer #switch-menu-btn {
 
 #start-btn:hover p {
 	color: #CB89C8;
+}
+
+#tournament-btn {
+	width: 100%;
+	cursor: pointer;
+	height: 9%;
+	margin-top: 1%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #CB89C8;
+}
+
+#tournament-btn p {
+	font-size: 50px;
+	color: black;
+	vertical-align: middle;
+}
+
+#tournament-btn:hover {
+	background: #452547;
+	border: 5px solid #CB89C8;
+}
+
+#tournament-btn:hover p {
+	color: #CB89C8;
+}
+
+
+#game-container {
+	width: 80vw;
+	height: 70vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	margin: auto;
+}
+
+#pong-game {
+	border: 5px solid #CB89C8;
+	height: 85%;
+	width: 100%;
+	display: flex;
+}
+
+#score-container {
+	height: 10%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#score-text {
+	width: 100%;
+	text-align: center;
+	font-size: 55px;
+	color: #452547;
 }

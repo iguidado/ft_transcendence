@@ -9,14 +9,29 @@ then
 	python -m venv /app/venv
 fi
 
-python -m pip install --no-cache-dir -r /root/requirements.txt 2> /dev/null
+. /app/venv/bin/activate
+pip install whitenoise
+# pip install daphne
+python -m pip install --no-cache-dir -r /root/requirements.txt #2> /dev/null
 
 if ! [ -d /app/ft_transcendence ]
 then
 	mkdir -p /app/ft_transcendence
 	django-admin startproject billpong /app/ft_transcendence
 fi
-	
+
+if ! [ -d /app/ft_transcendence/media/avatars ]
+then
+    mkdir -p /app/ft_transcendence/media/avatars
+    chmod -R 755 /app/ft_transcendence/media
+fi
+
+if ! [ -d /app/ft_transcendence/media/avatars/default1.png ]
+then
+    cp /app/ft_transcendence/api/static/api/images/default1.png /app/ft_transcendence/media/avatars/
+fi
+
+
 if ! [ -d /app/ft_transcendence/api ]
 then
 	cd /app/ft_transcendence
@@ -29,30 +44,6 @@ python /app/ft_transcendence/manage.py migrate
 
 # sleep 5
 
-python /app/ft_transcendence/manage.py loaddata mock_users
-
-python /app/ft_transcendence/manage.py shell <<EOF
-from api.models import User
-from django.contrib.auth.hashers import make_password
-
-user_passwords = {
-    "spongebob": ("krabby123", "spongebob@email.com"),
-    "patrick": ("starfish!", "patrick@email.com"),
-    "squidward": ("clarinet42", "squidward@email.com"),
-}
-
-for username, (password, email) in user_passwords.items():
-    try:
-        user = User.objects.get(username=username, email=email)
-        user.password = make_password(password)
-        user.save()
-        print(f"Password updated for {username}")
-    except User.DoesNotExist:
-        print(f"User {username} ({email}) not found, skipping.")
-
-print("Passwords updated successfully.")
-EOF
-
 python /app/ft_transcendence/manage.py shell <<EOF
 import os
 import django
@@ -62,15 +53,18 @@ django.setup()
 
 from api.models import User
 
-USERNAME = os.getenv('DB_USER')
-PASSWORD = os.getenv('DB_PASSWORD')
-EMAIL = os.getenv('DB_USER_EMAIL')
+USERNAME = os.getenv('ADMIN_USER')
+PASSWORD = os.getenv('ADMIN_PASSWORD')
 
 if not User.objects.filter(username=USERNAME).exists():
-	User.objects.create_superuser(username=USERNAME, email=EMAIL,password=PASSWORD)
+	User.objects.create_superuser(username=USERNAME, password=PASSWORD)
 EOF
 
+ASGI_FILE=$(find /app/ft_transcendence -name "asgi.py" -type f | grep -v "site-packages")   
 
+cd /app/ft_transcendence
 
-python /app/ft_transcendence/manage.py runserver 0.0.0.0:8000
+find . -type f -name "*.py" | grep -v "__pycache__" | sort
 
+export DJANGO_SETTINGS_MODULE=billpong.settings
+exec daphne -b 0.0.0.0 -p 8000 --verbosity 2 billpong.asgi:application

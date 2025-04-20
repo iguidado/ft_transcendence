@@ -1,9 +1,13 @@
-import { load_page } from "./router.js";
+import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestStore.js"
+import { load_page, getCurrentPageFromURL } from "./router.js"
+import { getProfileData, pullProfile } from "./utils/profileUtils.js"
 
+document.body.classList.add("themePink")
 
-document.body.classList.add("themePink");
-
-// === Au f5, on revient sur la meme page parce que flemme de cliquer ===
 window.addEventListener("DOMContentLoaded", () => {
-    load_page('login');
-  });
+	clearGuestStore()
+	pullProfile().then(() => {
+		const currentPage = getCurrentPageFromURL()
+		load_page(currentPage, undefined, false)
+	})
+})

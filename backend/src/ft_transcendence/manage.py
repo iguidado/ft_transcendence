@@ -3,6 +3,12 @@
 import os
 import sys
 
+try:
+    import legacy_cgi as cgi
+    sys.modules['cgi'] = cgi
+except ImportError:
+    pass
+
 
 def main():
     """Run administrative tasks."""

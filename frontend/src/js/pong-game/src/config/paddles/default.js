@@ -11,15 +11,12 @@ export default {
 		keys: {
 			leftUp: 'w',
 			leftDown: 's',
-			rightUp: 'ArrowRight',
-			rightDown: 'ArrowLeft'
+			rightUp: 'ArrowUp',
+			rightDown: 'ArrowDown'
 		},
 		bots: {
-			reactionDelay: 0,  // Délai de réaction (secondes)
+			reactionDelay: 1000,  // Délai de réaction (secondes)
 			predictionError: 0, // Erreur de prédiction (0-1)
-			randomness: 1,     // Facteur d'aléatoire dans les mouvements (0-1)
-			anticipation: 1,    // Capacité à anticiper (0-1)
-			aggressive: 0       // Tendance à être agressif (0-1)
 		}
 	}
 }

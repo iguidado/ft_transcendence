@@ -1,12 +1,14 @@
-#buildContainer {
+.build-container {
     position: fixed;
     bottom: 0; right: 0;
     height: 90vh;
+    max-width: 260px;
     aspect-ratio: 400/600;
-    margin: 0 auto;    
+    margin: 0 auto;
+    z-index: 0;
 }
 
-.layer {
+.build-container__layer {
   position: absolute;
   top: 0; left: 0;
   width: 100%;
@@ -18,102 +20,107 @@
   pointer-events: none;
 }
 
-#layerBack{
+.build-container__layer--back {
   background-image: url("../rsc/back.png");
   z-index: 1;
 }
 
-#layerGameOn{
+.build-container__layer--pong-on{
   background-image: url("../rsc/game1.png");
   z-index: 3;
   display: none;
 }
 
-#layerGameOff{
+.build-container__layer--pong-off{
   background-image: url("../rsc/game2.png");
   z-index: 2;
   display: block;
 }
 
-#layerProfileOn{
+.build-container__layer--profile-on{
   background-image: url("../rsc/profile1.png");
   z-index: 3;
   display: none;
 }
 
-#layerProfileOff{
+.build-container__layer--profile-off{
   background-image: url("../rsc/profile2.png");
   z-index: 2;
   display: block;
 }
 
-#layerDashOn{
+.build-container__layer--dash-on{
   background-image: url("../rsc/dash1.png");
   z-index: 3;
   display: none;
 }
 
-#layerDashOff{
+.build-container__layer--dash-off{
   background-image: url("../rsc/dash2.png");
   z-index: 2;
   display: block;
 }
 
-#layerLogOn {
+.build-container__layer--log-on{
   background-image: url("../rsc/log1.png");
   z-index: 3;
   display: none;
 }
 
-#layerLogOff {
+.build-container__layer--log-off {
   background-image: url("../rsc/log2.png");
   z-index: 2;
   display: block;
 }
 
-#layerBuild {
+.build-container__layer--build {
   background-image: url("../rsc/build.png");
   z-index: 10;
 }
 
-.hotspot {
+.build-container__hotspot {
   position: absolute;
   cursor: pointer;
-  /* border: 1px solid; */
+  /* border: 1px solid red; */
   background: transparent;
   pointer-events: auto;
 }
 
-#btnGame {
+.build-container__hotspot--pong {
   top: 6%;
   right: 1%;
-  width: 15%;
+  width: 35%;
   height: 5%;
   z-index: 999;
 }
 
-#btnProfile {
+.build-container__hotspot--profile {
   top: 17%;
   right: 5%;
-  width: 15%;
+  width: 38%;
   height: 4%;
   z-index: 999;
 
 }
 
-#btnDash {
+.build-container__hotspot--dashboard {
   top: 31%;
   right: 1%;
-  width: 20%;
+  width: 45%;
   height: 8%;
   z-index: 999;
 }
 
 
-#btnLog {
+.build-container__hotspot--log {
   top: 48%;
   right: 2%;
-  width: 20%;
+  width: 45%;
   height: 7%;
   z-index: 999;
 }
+.build-container__group {}
+.build-container__group--pong {}
+.build-container__group--profile {}
+.build-container__group--dashboard {}
+.build-container__group--log {}

@@ -12,7 +12,7 @@ export class BoardManager {
         this.context.scene.add(this.boardGroup)
 		this.wallTop = new Wall({
 			height: this.config.board.wallWidth,
-			width: this.config.board.width + this.config.board.wallWidth,
+			width: this.config.board.width,
 			depth: this.config.board.depth,
 			y: this.config.board.height/2,
 			texturePath: "../../../../rsc/pongTextures/wallTex.png"
@@ -20,7 +20,7 @@ export class BoardManager {
 	
 		this.wallBottom = new Wall({
 			height: this.config.board.wallWidth,
-			width: this.config.board.width + this.config.board.wallWidth,
+			width: this.config.board.width,
 			depth: this.config.board.depth,
 			y: -this.config.board.height/2,
 			texturePath: "../../../../rsc/pongTextures/wallTex.png"

@@ -1,73 +1,134 @@
+<div class="container d-flex justify-content-center align-items-center">
+
+  <div class="card profile-card p-4 text-center">
+    <div class="mb-3 position-relative">
+      <button class="btn position-absolute" id="backButton" style="
+        top: 0;
+        left: 0;
+        background-image: url('/rsc/arrow.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;">
+      </button>
+      <img id="userAvatar" alt="User avatar" width="150" height="150" />
+      <button class="btn position-absolute gear-btn" id="openSettings" data-bs-toggle="modal"
+        data-bs-target="#settingsModal" style="background-image: url('./rsc/param.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;">
+      </button>
+    </div>
+
+    <h1 class="card-title">
+      <span id="usernameDisplay"></span>'s Profile
+    </h1>
+    <h2 class="card-subtitle mb-2 text-muted">
+      <span id="realUsername"></span>
+    </h2>
+
+    <div class="text-start card-text my-3 position-relative">
+      <h3>Friends List</h3>
+      <button class="btn position-absolute" id="addFriendBtn" data-bs-toggle="modal" data-bs-target="#addFriendModal"
+        style="top: 0; right: 0; background-color: transparent; border: none; font-size: 1.5rem; color: #fd9b5d;">
+        EDIT
+      </button>
+      <ul id="friendsList" class="list-group">
+      </ul>
+    </div>
+
+    <div class="text-center card-text my-3">
+      <h3 class="card-title">Statistics</h3>
+      <p>Games played: <span id="gamesPlayed">0</span></p>
+      <p>Games won: <span id="gamesWon">0</span></p>
+      <div id="matchHistory" class="match-history" style="margin : 0 auto; width: 80%;">
+        <h3>Match History</h3>
+        <ul id="matchHistoryList" class="list-group">
+        </ul>
+      </div>
+    </div>
 
 
-<div class="container d-flex flex-column justify-content-start align-items-center" style="height:100vh; padding-top: 50px;">
-    <h2 class="mb-4" style="font-size: 2.5rem;">My Profile</h2>
+    <div class="modal fade" id="addFriendModal" tabindex="-1" aria-labelledby="addFriendModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addFriendModalLabel">Add a Friend</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3"></div>
+            <label for="friendUsername" class="form-label">All usernames:</label>
+            <select id="friendUsername" class="form-select" style="background-color: rgba(255, 186, 106, 0.5)">
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button id="addFriendConfirmBtn" class="btn btn-primary">Add Friend</button>
+            <button id="deleteFriendBtn" class="btn btn-danger">Delete Friend</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Carte principale -->
-    <div class="card mt-4 semi-transparent-card" style="width: 90%;">
-      <div class="card-body">
+    <button id="disconnect" class="btn btn-danger">Disconnect</button>
+  </div>
+</div>
 
-        <!-- Partie haute du profil : pseudo/avatar-->
-          <div class="row">
-          <!-- Colonne gauche -->
-          <div class="col-md-6 text-center">
-          <h4 id="displayName">POIRE</h4>
-          <button class="btn my-button btn-sm" id="editNameBtn">
-          Edit Name
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="settingsModalLabel">Profile Settings</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="newDisplayName" class="form-label">Change displayname:</label>
+          <input type="text" id="newDisplayName" class="form-control" placeholder="Enter new displayname"
+            style="background-color: rgba(255, 186, 106, 0.5)" />
+        </div>
+
+        <div class="mb-3 avatar-upload-section">
+          <label for="avatarUpload" class="form-label">Upload your avatar:</label>
+          <input type="file" class="form-control" id="avatarUpload" accept="image/*" 
+            style="background-color: rgba(255, 186, 106, 0.5)">
+          <div class="mt-2 d-flex justify-content-center">
+            <img id="avatarPreview" style="width: 50px; height: 50px; display: none; border-radius: 50%;" alt="Avatar preview">
+          </div>
+        </div>
+
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="enable2FA"
+            style="background-color: rgba(255, 186, 106, 0.5)" />
+          <label class="form-check-label" for="enable2FA">Enable 2FA</label>
+        </div>
+
+
+        <div id="email2FASection" style="display: none;" class="mb-3">
+          <input type="email" id="email2FAInput" class="form-control mb-2" placeholder="Enter your email"
+            style="background-color: rgba(255, 186, 106, 0.5)" />
+          <button id="send2FAEmailBtn" class="btn btn-primary">
+            Send code
           </button>
-          <img src="rsc/pear.png" alt="Avatar" 
-              class="img-fluid rounded-circle mb-3" style="max-width:150px;" />
-          <button class="btn my-button btn-sm" id="changeAvatarBtn">
-          Change Avatar
+        </div>
+        <div id="verify2FAModal" style="display: none;">
+          <input type="text" id="code2FAInput" class="form-control mb-2" placeholder="Enter code"
+            style="background-color: rgba(255, 186, 106, 0.5)" />
+          <button id="confirm2FABtn" class="btn btn-success">
+            Confirm
           </button>
-          <hr/>
-          </div>
-
-          <!-- Colonne droite -->
-          <div class="col-md-6">
-              <h5>Friends</h5>
-              <ul id="friendsList">
-              <li>Leon (online)</li>
-              <li>Lauryn (offline)</li>
-              <li>Barbara (online)</li>
-              <li>Ismael (offline)</li>
-              </ul>
-          </div>
-          </div>
-
-
-        <hr/>
-
-        <!-- Stats personnelles -->
-        <h5>Stats</h5>
-        <p id="statsInfo">Wins: 10 | Losses: 3</p>
-        
-        <!-- Historique de match -->
-        <h5 class="mt-4">Match History</h5>
-        <table class="table semi-transparent-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Opponent</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody id="matchHistoryTable">
-            <tr>
-              <td>2025-03-01</td>
-              <td>Player2</td>
-              <td>10-7</td>
-            </tr>
-            <tr>
-              <td>2025-03-02</td>
-              <td>Player3</td>
-              <td>5-10</td>
-            </tr>
-            <!-- etc. -->
-          </tbody>
-        </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveSettings" class="btn btn-primary">
+          Save changes
+        </button>
       </div>
     </div>
   </div>
-
-
+</div>

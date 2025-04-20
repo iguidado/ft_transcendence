@@ -2,220 +2,271 @@ import * as THREE from 'three'
 import { gameRegistry } from './GameRegistry.js'
 
 export class CameraManager {
-    constructor(game, container, customConfig = {}) {
-        this.game = game;
-        this.container = container;
-        this.context = gameRegistry.getCurrentContext();
-        
-        // Make sure we always use the game's board and paddles configuration,
-        // even when a custom camera config is provided
-        this.config = {
-            ...this.context.config.camera,
-            ...customConfig,
-            // Ensure we always have access to these critical game dimensions
-            board: this.context.config.board,
-            paddles: this.context.config.paddles
-        };
-        this.camera = new THREE.PerspectiveCamera(
-            this.config.fov,
-            this.container.clientWidth / this.container.clientHeight,
-            0.1,
-            1000
-        );
+	constructor(game, container, customConfig = {}) {
+		this.game = game;
+		this.container = container;
+		this.context = gameRegistry.getCurrentContext();
 
-        this.rotationSpeed = this.config.controls.rotationSpeed;
-        this.phiSpeed = this.config.controls.phiSpeed;
-        this.thetaSpeed = this.config.controls.thetaSpeed;
-        this.radiusSpeed = this.config.controls.radiusSpeed;
-        this.marginSpeed = this.config.controls.marginSpeed;
-    }
+		// Merge the camera configuration
+		this.config = {
+			...this.context.config.camera,
+			...customConfig,
+			board: this.context.config.board,
+			paddles: this.context.config.paddles
+		};
 
-    init() {
-        this.updateAspectRatio();
-        const radius = this.calculateRadius();
-        this.positionCamera(radius);
-        this.orientCamera();
-    }
+		// Use the FOV from the configuration
+		this.camera = new THREE.PerspectiveCamera(
+			this.config.fov || 75, // Default FOV is 75
+			this.container.clientWidth / this.container.clientHeight,
+			0.1,
+			1000
+		);
 
-    updateAspectRatio() {
-        const width = this.container.clientWidth;
-        const height = this.container.clientHeight;
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
-    }
+		this.rotationSpeed = this.config.controls.rotationSpeed;
+		this.phiSpeed = this.config.controls.phiSpeed;
+		this.thetaSpeed = this.config.controls.thetaSpeed;
+		this.radiusSpeed = this.config.controls.radiusSpeed;
+		this.marginSpeed = this.config.controls.marginSpeed;
+	}
 
-    calculateRadius() {
-        if (!this.config.polar.useCalculatedRadius) {
-            return this.config.polar.radius;
-        }
-        const box = this.createGameBoundingBox();
-        const rotatedBox = this.getRotatedBoundingBox(box);
-        return this.calculateOptimalRadius(rotatedBox);
-    }
+	init() {
+		this.updateAspectRatio();
+		const radius = this.calculateRadius();
+		this.positionCamera(radius);
+		this.orientCamera();
+	}
 
-    createGameBoundingBox() {
-        const boxGeometry = new THREE.BoxGeometry(
-            this.config.board.width + 2 * this.config.paddles.width,
-            this.config.board.height + 2 * this.config.board.wallWidth,
-            this.config.board.depth
-        );
-        return new THREE.Box3().setFromObject(new THREE.Mesh(boxGeometry));
-    }
+	updateAspectRatio() {
+		const width = this.container.clientWidth;
+		const height = this.container.clientHeight;
+		this.camera.aspect = width / height;
+		this.camera.updateProjectionMatrix();
+	}
 
-    getRotatedBoundingBox(box) {
-        const rotationMatrix = new THREE.Matrix4().makeRotationFromEuler(
-            new THREE.Euler(
-                this.config.polar.rotateX,
-                this.config.polar.rotateY,
-                this.config.polar.rotateZ,
-                'XYZ'
-            )
-        );
+	calculateRadius() {
+		if (!this.config.polar.useCalculatedRadius) {
+			return this.config.polar.radius;
+		}
+		const box = this.createGameBoundingBox();
+		// this.debugRotatedBox(box);
+		return this.calculateOptimalRadius(box);
+	}
 
-        const corners = [
-            new THREE.Vector3(box.min.x, box.min.y, box.min.z),
-            new THREE.Vector3(box.min.x, box.min.y, box.max.z),
-            new THREE.Vector3(box.min.x, box.max.y, box.min.z),
-            new THREE.Vector3(box.min.x, box.max.y, box.max.z),
-            new THREE.Vector3(box.max.x, box.min.y, box.min.z),
-            new THREE.Vector3(box.max.x, box.min.y, box.max.z),
-            new THREE.Vector3(box.max.x, box.max.y, box.min.z),
-            new THREE.Vector3(box.max.x, box.max.y, box.max.z),
-        ];
+	createGameBoundingBox() {
+		const boardGroup = this.game.boardManager.boardGroup;
+		const box = new THREE.Box3().setFromObject(boardGroup);
+		const margin = this.config.boundingBoxMargin || 0;
+		const expandVector = new THREE.Vector3(margin, margin, margin);
+		box.expandByVector(expandVector);
+		return box;
+	}
 
-        corners.forEach(corner => corner.applyMatrix4(rotationMatrix));
-        const rotatedBox = new THREE.Box3();
-        corners.forEach(corner => rotatedBox.expandByPoint(corner));
-        return rotatedBox;
-    }
+	// getRotatedBoundingBox(box) {
+	//     const rotationMatrix = new THREE.Matrix4().makeRotationFromEuler(
+	//         new THREE.Euler(
+	//             this.config.polar.rotateX,
+	//             this.config.polar.rotateY,
+	//             this.config.polar.rotateZ,
+	//             'XYZ'
+	//         )
+	//     );
 
-    calculateOptimalRadius(rotatedBox) {
-        const size = new THREE.Vector3();
-        rotatedBox.getSize(size);
+	//     const corners = [
+	//         new THREE.Vector3(box.min.x, box.min.y, box.min.z),
+	//         new THREE.Vector3(box.min.x, box.min.y, box.max.z),
+	//         new THREE.Vector3(box.min.x, box.max.y, box.min.z),
+	//         new THREE.Vector3(box.min.x, box.max.y, box.max.z),
+	//         new THREE.Vector3(box.max.x, box.min.y, box.min.z),
+	//         new THREE.Vector3(box.max.x, box.min.y, box.max.z),
+	//         new THREE.Vector3(box.max.x, box.max.y, box.min.z),
+	//         new THREE.Vector3(box.max.x, box.max.y, box.max.z),
+	//     ];
 
-        const vFov = this.config.fov * Math.PI / 180;
-        const aspect = this.camera.aspect;
-        const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
+	//     corners.forEach(corner => corner.applyMatrix4(rotationMatrix));
+	//     const rotatedBox = new THREE.Box3();
+	//     corners.forEach(corner => rotatedBox.expandByPoint(corner));
+	//     return rotatedBox;
+	// }
 
-        const radiusForHeight = size.y / (2 * Math.tan(vFov / 2));
-        const radiusForWidth = size.x / (2 * Math.tan(hFov / 2));
-        const radiusForDepth = size.z;
+	calculateOptimalRadius(box) {
+		// Get the corners of the box
+		const corners = [
+			new THREE.Vector3(box.min.x, box.min.y, box.min.z),
+			new THREE.Vector3(box.min.x, box.min.y, box.max.z),
+			new THREE.Vector3(box.min.x, box.max.y, box.min.z),
+			new THREE.Vector3(box.min.x, box.max.y, box.max.z),
+			new THREE.Vector3(box.max.x, box.min.y, box.min.z),
+			new THREE.Vector3(box.max.x, box.min.y, box.max.z),
+			new THREE.Vector3(box.max.x, box.max.y, box.min.z),
+			new THREE.Vector3(box.max.x, box.max.y, box.max.z),
+		];
 
-        return Math.max(radiusForHeight, radiusForWidth, radiusForDepth) * 
-               this.config.polar.calculatedRadiusMargin;
-    }
+		// Calculate FOVs
+		const vFov = this.config.fov * Math.PI / 180;
+		const aspect = this.camera.aspect;
+		const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
 
-    positionCamera(radius) {
-        const { phi, theta } = this.config.polar;
-        const position = new THREE.Vector3(
-            radius * Math.sin(theta) * Math.cos(phi),
-            radius * Math.sin(phi),
-            radius * Math.cos(theta) * Math.cos(phi)
-        );
+		let maxRadius = 0;
 
-        const rotationMatrix = this.getRotationMatrix();
-        position.applyMatrix4(rotationMatrix);
-        this.camera.position.copy(position);
-    }
+		// Check each corner
+		corners.forEach(corner => {
+			// Calculate required radius for this corner
+			const heightRadius = Math.abs(corner.y) / Math.tan(vFov / 2);
+			const widthRadius = Math.abs(corner.x) / Math.tan(hFov / 2);
+			const depthRadius = Math.abs(corner.z);
 
-    orientCamera() {
-        const up = new THREE.Vector3(0, 1, 0);
-        up.applyMatrix4(this.getRotationMatrix());
-        this.camera.up.copy(up);
-        this.camera.lookAt(this.config.lookAt);
-    }
+			// Get maximum radius needed for this corner
+			const cornerRadius = Math.max(heightRadius, widthRadius, depthRadius);
+			maxRadius = Math.max(maxRadius, cornerRadius);
+		});
 
-    getRotationMatrix() {
-        return new THREE.Matrix4().makeRotationFromEuler(
-            new THREE.Euler(
-                this.config.polar.rotateX,
-                this.config.polar.rotateY,
-                this.config.polar.rotateZ,
-                'XYZ'
-            )
-        );
-    }
+		// Apply margin
+		return maxRadius * this.config.polar.calculatedRadiusMargin;
+	}
 
-    rotateUpX() {
-        this.config.polar.rotateX += this.rotationSpeed
-        this.init()
-    }
+	positionCamera(radius) {
+		const { phi, theta } = this.config.polar;
+		const position = new THREE.Vector3(
+			radius * Math.sin(theta) * Math.cos(phi),
+			radius * Math.sin(phi),
+			radius * Math.cos(theta) * Math.cos(phi)
+		);
 
-    rotateDownX() {
-        this.config.polar.rotateX -= this.rotationSpeed
-        this.init()
-    }
+		const rotationMatrix = this.getRotationMatrix();
+		position.applyMatrix4(rotationMatrix);
+		this.camera.position.copy(position);
+	}
 
-    rotateUpY() {
-        this.config.polar.rotateY += this.rotationSpeed
-        this.init()
-    }
+	orientCamera() {
+		const up = new THREE.Vector3(0, 1, 0);
+		up.applyMatrix4(this.getRotationMatrix());
+		this.camera.up.copy(up);
+		this.camera.lookAt(this.config.lookAt);
+	}
 
-    rotateDownY() {
-        this.config.polar.rotateY -= this.rotationSpeed
-        this.init()
-    }
+	getRotationMatrix() {
+		return new THREE.Matrix4().makeRotationFromEuler(
+			new THREE.Euler(
+				this.config.polar.rotateX,
+				this.config.polar.rotateY,
+				this.config.polar.rotateZ,
+				'XYZ'
+			)
+		);
+	}
 
-    rotateUpZ() {
-        this.config.polar.rotateZ += this.rotationSpeed
-        this.init()
-    }
+	rotateUpX() {
+		this.config.polar.rotateX += this.rotationSpeed
+		this.init()
+		return this
+	}
 
-    rotateDownZ() {
-        this.config.polar.rotateZ -= this.rotationSpeed
-        this.init()
-    }
+	rotateDownX() {
+		this.config.polar.rotateX -= this.rotationSpeed
+		this.init()
+		return this
+	}
 
-    phiUp() {
-        this.config.polar.phi = 
-        (this.config.polar.phi + this.phiSpeed) % (2 * Math.PI)
-        this.init()
-    }
+	rotateUpY() {
+		this.config.polar.rotateY += this.rotationSpeed
+		this.init()
+		return this
+	}
 
-    phiDown() {
-        this.config.polar.phi =
-            (this.config.polar.phi - this.phiSpeed) % (2 * Math.PI)
-        this.init()
-    }
+	rotateDownY() {
+		this.config.polar.rotateY -= this.rotationSpeed
+		this.init()
+		return this
+	}
 
-    thetaUp() {
-        this.config.polar.theta
-            = (this.config.polar.theta + this.thetaSpeed) % (2 * Math.PI)
-        this.init()
-    }
+	rotateUpZ() {
+		this.config.polar.rotateZ += this.rotationSpeed
+		this.init()
+		return this
+	}
 
-    thetaDown() {
-        this.config.polar.theta
-            = (this.config.polar.theta - this.thetaSpeed) % (2 * Math.PI)
-        this.init()
-    }
+	rotateDownZ() {
+		this.config.polar.rotateZ -= this.rotationSpeed
+		this.init()
+		return this
+	}
 
-    toggleCalculatedRadius() {
-        this.config.polar.useCalculatedRadius 
-            = !this.config.polar.useCalculatedRadius
-        this.init()
-    }
+	phiUp() {
+		this.config.polar.phi =
+			(this.config.polar.phi + this.phiSpeed) % (2 * Math.PI)
+		this.init()
+		return this
+	}
 
-    calculatedRadiusMarginUp() {
-        this.config.polar.calculatedRadiusMargin += this.marginSpeed
-        this.init()
-    }
+	phiDown() {
+		this.config.polar.phi =
+			(this.config.polar.phi - this.phiSpeed) % (2 * Math.PI)
+		this.init()
+		return this
+	}
 
-    calculatedRadiusMarginDown() {
-        this.config.polar.calculatedRadiusMargin -= this.marginSpeed
-        this.init()
-    }
+	thetaUp() {
+		this.config.polar.theta
+			= (this.config.polar.theta + this.thetaSpeed) % (2 * Math.PI)
+		this.init()
+		return this
+	}
 
-    logCameraConfig() {
-        console.log('Camera parameters:', {
-            rotateX: this.config.polar.rotateX,
-            rotateY: this.config.polar.rotateY,
-            rotateZ: this.config.polar.rotateZ,
-            phi: this.config.polar.phi,
-            theta: this.config.polar.theta,
-            radius: this.config.polar.radius,
-            useCalculatedRadius: this.config.polar.useCalculatedRadius,
-            calculatedRadiusMargin: this.config.polar.calculatedRadiusMargin
-        })
-    }
+	thetaDown() {
+		this.config.polar.theta
+			= (this.config.polar.theta - this.thetaSpeed) % (2 * Math.PI)
+		this.init()
+		return this
+	}
+
+	toggleCalculatedRadius() {
+		this.config.polar.useCalculatedRadius
+			= !this.config.polar.useCalculatedRadius
+		this.init()
+		return this
+	}
+
+	calculatedRadiusMarginUp() {
+		this.config.polar.calculatedRadiusMargin += this.marginSpeed
+		this.init()
+		return this
+	}
+
+	calculatedRadiusMarginDown() {
+		this.config.polar.calculatedRadiusMargin -= this.marginSpeed
+		this.init()
+		return this
+	}
+
+	logCameraConfig() {
+		console.log('Camera parameters:', {
+			rotateX: this.config.polar.rotateX,
+			rotateY: this.config.polar.rotateY,
+			rotateZ: this.config.polar.rotateZ,
+			phi: this.config.polar.phi,
+			theta: this.config.polar.theta,
+			radius: this.config.polar.radius,
+			useCalculatedRadius: this.config.polar.useCalculatedRadius,
+			calculatedRadiusMargin: this.config.polar.calculatedRadiusMargin
+		})
+	}
+
+	debugRotatedBox(rotatedBox) {
+		// Remove any existing debug box
+		const existingHelper = this.game.scene.getObjectByName('debugBox');
+		if (existingHelper) {
+			this.game.scene.remove(existingHelper);
+		}
+
+		// Create a Box3Helper to visualize the bounding box
+		const helper = new THREE.Box3Helper(rotatedBox, 0xff0000);
+		helper.name = 'debugBox';
+		helper.material.depthTest = false;
+		helper.material.transparent = true;
+		helper.material.opacity = 0.5;
+
+		// Add the helper to the scene
+		this.game.scene.add(helper);
+	}
 }
