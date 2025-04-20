@@ -129,7 +129,7 @@ fclean: down prod-down
 	@echo "Deleted every images of project"
 	-@docker volume rm $$(docker volume ls -q) 2> /dev/null
 	@echo "Deleted every volumes"
-	-rm -rf frontend/dev
+	-rm -rf frontend/dev backend/src/ft_transcendence/api/migrations
 
 # Utils : General purpose script
 # --------------------------------------------
