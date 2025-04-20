@@ -48,8 +48,6 @@ python /app/ft_transcendence/manage.py makemigrations api
 
 python /app/ft_transcendence/manage.py migrate
 
-python /app/ft_transcendence/manage.py collectstatic --noinput
-
 # sleep 5
 
 python /app/ft_transcendence/manage.py shell <<EOF
