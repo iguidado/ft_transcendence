@@ -49,11 +49,12 @@ function addPlayerToList(playerName, id) {
 	const span = document.createElement("span");
 	span.className = "tournament__playerlist__item__name";
 	span.textContent = playerName;
-
+	
 	const buttonContainer = document.createElement("div");
 	buttonContainer.className = "d-flex gap-2";
 	let localProfile = getProfileData()
-	if (!localProfile) {
+	if (!localProfile || localProfile.id !== id) {
+		console.log("ON RENTRE LA ??")
 		const removeButton = document.createElement("button");
 		removeButton.className = "btn btn-danger btn-sm";
 		removeButton.textContent = "Remove";
@@ -146,7 +147,10 @@ function setupStartBtn(ctx) {
 	btn.onclick = e => {
 		e.preventDefault()
 		if (players.length < 2) {
-			displayError("why are you solo ???")
+			displayError("why are you solo ?? (╥﹏╥)")
+			return
+		} else if (players.length == 2) {
+			displayError("You need at least 3 players to start a tournament (˶ᵔ ᵕ ᵔ˶)")
 			return
 		}
 		loadTournamentNextMatchPage(ctx, generatePlanning())

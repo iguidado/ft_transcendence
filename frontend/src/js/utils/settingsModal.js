@@ -117,8 +117,8 @@ function saveSettings() {
         // Gestion du nom d'utilisateur
         const newDisplayName = document.getElementById("newDisplayName").value.trim();        
         if (newDisplayName) {
-            if (newDisplayName.length > 15) {
-                displayError("Display name must be 15 characters or less (˶ᵔ ᵕ ᵔ˶)");
+            if (newDisplayName.length > 15 || newDisplayName.length < 2) {
+                displayError("Displayname must be between 2 and 15 characters (˶ᵔ ᵕ ᵔ˶)");
                 return;
             }
             
@@ -127,9 +127,6 @@ function saveSettings() {
                 newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
             }, (error) => {
             });
-        } else {
-            displayError("You haven't changed your username, please make your mind !");
-            return;
         }
 
         // Gestion de l'avatar
