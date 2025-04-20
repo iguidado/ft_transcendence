@@ -14,11 +14,22 @@ export function loadSettingPage() {
 		container: game_container,
 		config: initConfig(defaultConfig)
 	}
-	ctx.game = new Game(game_container, ctx.config)
+	setupGamePreview(ctx)
 	appendCustomSettings(CustomBtnsList(ctx))
 	appendPresetButtons(ctx)
 	setupSwitchMenuButton(ctx)
 	setupStartBtn(ctx)
 	setupTournamentBtn(ctx)
+}
+
+function setupGamePreview(ctx) {
+	if (ctx.game) {
+		ctx.game.cleanup()
+	}
+	ctx.game = new Game(ctx.container, ctx.config)
+	ctx.game.scoreMonitor.onEndMatch = () => {
+		console.log("TEST")
+		setupGamePreview(ctx)
+	}
 	ctx.game.start()
 }

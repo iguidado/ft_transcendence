@@ -69,7 +69,7 @@ export class Game {
 		this.updateBots();
 		if (this.boardManager && this.boardManager.ball) {
 			this.boardManager.ball.move();
-			this.scoreMonitor.update();
+			this.scoreMonitor.update()
 		} else {
 			console.warn("Ball not initialized in boardManager");
 		}
