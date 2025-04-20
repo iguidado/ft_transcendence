@@ -5,6 +5,7 @@ import { verifyEmailOTP } from "../api/routes/user/verifyEmailOTP.js"
 import { updateAvatarRequest } from "../api/routes/updateAvatar.js"
 import { load_page } from "../router.js"
 import { displayError } from "./displayError.js"
+import { loadProfilePage } from "../profile.js"
 
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
@@ -85,7 +86,7 @@ function twoFactorAuthSection(profileData) {
 				action: profileData.is_2fa_enabled ? "disable" : "enable",
 				email: emailInput
 			},
-			profileData.is_2fa_enabled ? loadProfilePage : displayCodeValidation,
+			profileData.is_2fa_enabled ? load_page('profile') : displayCodeValidation,
 			toggle2faError
 		)
 	})
