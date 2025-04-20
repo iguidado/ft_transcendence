@@ -72,16 +72,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         
 
     def UpdateUserStats(self, boolean : bool):
-        # if (isinstance(boolean, bool)==False):
-            # print("Error: boolean must be a boolean")
-        # else:
-            if(boolean==True):
-                self.wins += 1
-            # else:
-            #     self.looses += 1
-            self.game_played += 1
-            self.win_ratio = round((self.wins / (self.game_played)) * 100, 2)
-            self.save()
+        if(boolean==True):
+            self.wins += 1
+        else:  
+           self.looses += 1
+        self.game_played += 1
+        self.win_ratio = round((self.wins / (self.game_played)) * 100, 2)
+        self.save()
 
 
     class Meta:
@@ -103,7 +100,7 @@ class Match(models.Model):
         elif self.score_p2 > self.score_p1:
             self.winner = self.player_two
         else:
-            self.winner = None  # Match nul
+            self.winner = None
         self.save()
 
     class Meta:

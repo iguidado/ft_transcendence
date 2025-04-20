@@ -1,9 +1,10 @@
-import { loadTournamentSetupPage } from "../../tournamentSetupPage/loadTournamentSetupPage"
+import { load_page } from "../../../router.js"
+import { loadTournamentSetupPage } from "../../tournamentSetupPage/loadTournamentSetupPage.js"
 
 export function setupTournamentBtn(ctx) {
 	const btn = document.getElementById("tournament-btn")
 	btn.addEventListener("click", e => {
 		e.preventDefault()
-		loadTournamentSetupPage(ctx)
+		load_page("tournament", ctx)
 	})
 }

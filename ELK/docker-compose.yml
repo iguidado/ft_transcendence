@@ -36,10 +36,10 @@ services:
     labels:
       co.elastic.logs/module: elasticsearch
     volumes:
-      - certs:/usr/share/elasticsearch/config/certs
-      - esdata01:/usr/share/elasticsearch/data
+      - certs:/usr/share/elasticsearch/config/certs:rw
+      - esdata01:/usr/share/elasticsearch/data:rw
       - ./Elasticsearch/policy_scripts/:/usr/share/elasticsearch/config/policy_scripts/:rw
-      - ./Elasticsearch/snapshot/:/usr/share/elasticsearch/snapshot/:rw
+      - ./Elasticsearch/snapshot:/usr/share/elasticsearch/snapshot/archive:rw
       - ./Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - elk-network
@@ -49,6 +49,7 @@ services:
       /bin/tini -- /bin/bash -c "
         /usr/local/bin/docker-entrypoint.sh &
         export PID=\$!;
+        chown -R elasticsearch:root /usr/share/elasticsearch/snapshot/;
         /usr/share/elasticsearch/config/policy_scripts/main.sh;
         wait  \$PID;
       "
@@ -72,10 +73,6 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
     mem_limit: ${ES_MEM_LIMIT}
-      #ulimits:
-      #  memlock:
-      #    soft: -1
-      #    hard: -1
     healthcheck:
       test:
         [

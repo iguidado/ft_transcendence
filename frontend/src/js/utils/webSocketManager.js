@@ -1,3 +1,5 @@
+import { API_ADDR } from "../api/config/apiConfig.js"
+
 // Gestionnaire centralisé de connexion WebSocket
 
 // Variable globale pour stocker la connexion WebSocket
@@ -33,7 +35,7 @@ export function initializeWebSocketConnection() {
     // const backendHost = window.location.hostname + ':8000';
     
     // Option 2: Valeur codée en dur pour le développement
-    const backendHost = 'localhost:8080';
+    const backendHost = API_ADDR;
     
     // Construire l'URL correcte avec le token
     const encodedToken = encodeURIComponent(token);

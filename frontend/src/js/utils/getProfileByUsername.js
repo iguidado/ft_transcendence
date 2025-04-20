@@ -1,5 +1,5 @@
-import { profileByUsernameRoute } from "../api/routes/profileByUsernameRoute"
-import { formatProfileData } from "./profileUtils"
+import { profileByUsernameRoute } from "../api/routes/profileByUsernameRoute.js"
+import { formatProfileData } from "./profileUtils.js"
 
 export const getProfileByUsername = async (username) => {
 	let res = null
@@ -9,7 +9,6 @@ export const getProfileByUsername = async (username) => {
 			res = formatProfileData(data)
 		},
 		(err) => {
-			console.error(err)
 			res = null
 		}
 	)

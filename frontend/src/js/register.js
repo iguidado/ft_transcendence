@@ -32,9 +32,9 @@ export function handleRegistration(onloginSuccess) {
 		)
 		function registerRequestErrorCallBack(err, response) {
 			if (response?.status === 400) {
-				if (username.length < 3 || username.length > 20) {
+				if (username.length < 3 || username.length > 25) {
 					displayError(
-						"Username must be at least 3 characters long."
+						"Username must be betweem 3 and 15 characters long."
 					);
 				} else if (!/^[a-zA-Z0-9]+$/.test(username)) {
 					displayError(
@@ -63,7 +63,8 @@ export function handleRegistration(onloginSuccess) {
 	})
 	const backToLoginButton = document.getElementById("backToLoginButton");
 	if (backToLoginButton) {
-		backToLoginButton.addEventListener("click", () => {
+		backToLoginButton.addEventListener("click", (e) => {
+			e.preventDefault();
 			load_page("login", onloginSuccess);
 		});
 	}

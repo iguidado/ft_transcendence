@@ -1,11 +1,10 @@
-import { getRequest } from "../utils/getRequest"
+import { getRequest } from "../utils/getRequest.js"
 
 function usersResponseHandler(response) {
 	console.log(response)
 }
 
 function usersErrorHandler(error) {
-	console.error(error)
 }
 
 export async function profileByUsernameRoute(username, responseHandler=usersResponseHandler, errorHandler=usersErrorHandler) {

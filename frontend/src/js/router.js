@@ -5,14 +5,16 @@ import { loadLoginPage } from "./login.js";
 import { loadProfilePage } from "./profile.js";
 import { loadDashboardPage } from "./dashboard.js";
 import { gameRegistry } from "./pong-game/src/core/GameRegistry.js";
-import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestStore.js";
-// import { loadSocketTestPage } from "./socket-test";
+// import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestStore.js";
+import { loadTournamentSetupPage } from "./game_pages/tournamentSetupPage/loadTournamentSetupPage.js";
+import { pullProfile } from "./utils/profileUtils.js";
+// import { loadSocketTestPage } from "./socket-test.js";
 
 
 export async function fetchHTMLContent(url) {
 	try {
 		url = `/fragments/${url}.html`;
-		const response = await fetch(url);
+		const response = await fetch(url).catch(err => {});
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
@@ -43,14 +45,25 @@ const routeConfigs = {
 	dashboard: {
 		script: loadDashboardPage,
 		htmlFrag: "dashboard"
+	},
+	tournament: {
+		script: loadTournamentSetupPage,
+		htmlFrag: "tournament"
 	}
 };
 
+
 export async function load_page(url, props=undefined, pushHistory=true) {
-	clearGuestStore()
 	let currentGame = gameRegistry.getCurrentContext()
 	if (currentGame)
 		currentGame.cleanup()
+	if (url != "login") {
+		const data = await pullProfile()
+		if (!data) {
+			disconnect()
+			return
+		}
+	}
 	const tmp = url.split("/")
 	if (tmp.length == 2) {
 		url = tmp[0]
@@ -72,23 +85,34 @@ export async function load_page(url, props=undefined, pushHistory=true) {
 		}
 		mainContainer.innerHTML = htmlContent;
 	}
-	appendBuildingSideMenu(url)
-	if (config.script) config.script(props);
+	// On n'ajoute le menu que si ce n'est pas la page login ou si onLoginSuccess est dans les props
+	appendBuildingSideMenu(url, props)
+	if (config.script) await config.script(props);
 	if (pushHistory)
 		history.pushState({ page: tmp.join("/") }, "", `/${tmp.join("/")}`)
 }
 
-
-
-async function appendBuildingSideMenu(url) {
+async function appendBuildingSideMenu(url, props) {
 	const app = document.getElementById('app');
 	const htmlLayout = await fetchHTMLContent('layout')
 	const layout = document.createElement('div');
 	layout.innerHTML = htmlLayout;
-	const groupElement = layout.querySelector(`#${url}Group`);
-	if (groupElement) {
-		groupElement.style.display = 'none';
+	console.log("url = ", url)
+	if (url === 'login') {
+		// Cacher tous les groupes d'URL
+		const allGroups = layout.querySelectorAll('[id$="Group"]');
+		allGroups.forEach(group => {
+			group.style.display = 'none';
+		});
+
+	} else {
+		// Comportement normal pour les autres pages
+		const groupElement = layout.querySelector(`#${url}Group`);
+		if (groupElement) {
+			groupElement.style.display = 'none';
+		}
 	}
+
 	app.appendChild(layout);
 	initBuildButtons();
 }

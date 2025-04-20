@@ -10,6 +10,7 @@ import { initializeWebSocketConnection } from "./utils/webSocketManager.js";
 import { getProfileByUsername } from "./utils/getProfileByUsername.js"
 import { settingsModal } from "./utils/settingsModal.js"
 import { disconnect } from "./utils/disconnect.js"
+import { displayError } from "./utils/displayError.js"
 
 export async function loadProfilePage(username = null) {
 	await pullProfile()
@@ -18,24 +19,54 @@ export async function loadProfilePage(username = null) {
 	if (!profileData)
 		return noProfileData()
 	if (username && username != profileData.username) {
-		profileData = await getProfileByUsername(username)
-		isLocalProfile = false
+		profileData = await getProfileByUsername(username);
+		isLocalProfile = false;
 	}
 	if (isLocalProfile) {
 		settingsModal(profileData)
-		addFriendModal()
+		addFriendModal();
 	}
-	addFriendBtnSetup(isLocalProfile)
-	setupUserStatus(profileData)
-	displayInformations(profileData)
-	displayMatchHistory(profileData.match_history)
+	addBackBtnSetup(isLocalProfile);
+	addFriendBtnSetup(isLocalProfile);
+	addSettingsBtnSetup(isLocalProfile);
+	addDisconnectBtnSetup(isLocalProfile);
+	setupUserStatus(profileData);
+	displayInformations(profileData);
+	displayMatchHistory(profileData.match_history);
 }
 
+function addBackBtnSetup(isLocalProfile) {
+	console.log("isLocalProfile", isLocalProfile)
+	const backBtn = document.getElementById("backButton");
+	if (isLocalProfile) {
+		backBtn.style.display = "none";
+	} else {
+		backBtn.style.display = "block";
+		console.log(backBtn)
+		backBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			load_page("profile");
+		});
+	}
+}
+
+function addSettingsBtnSetup(isLocalProfile) {
+	const settingsBtn = document.getElementById("openSettings");
+	if (!isLocalProfile)
+		settingsBtn.style.display = "none";
+}
+
+function addDisconnectBtnSetup(isLocalProfile) {
+	const disconnectBtn = document.getElementById("disconnect");
+	if (!isLocalProfile)
+		disconnectBtn.style.display = "none";
+}
 function addFriendBtnSetup(isLocalProfile) {
 	const addFriendBtn = document.getElementById("addFriendBtn");
 	if (!isLocalProfile)
 		addFriendBtn.style.display = "none";
 }
+
 
 function setupUserStatus() {
 	window.removeEventListener('userStatusUpdate', handleUserStatusUpdate);
@@ -56,7 +87,7 @@ function updateFriendStatusInUI(username, isOnline) {
 		if (item.getAttribute('data-username') === username) {
 			const statusIndicator = item.querySelector('.status-indicator');
 			if (statusIndicator) {
-				statusIndicator.style.backgroundColor = isOnline ? "green" : "grey";
+				statusIndicator.style.backgroundColor = isOnline ? "green" : "red";
 				console.log(`Mise à jour du statut pour ${username}: ${isOnline ? 'en ligne' : 'hors ligne'}`);
 			}
 		}
@@ -82,81 +113,60 @@ function noProfileData() {
 }
 
 
-function updateAvatar(avatarCode) {
-	updateAvatarRequest(avatarCode, updateAvatarResponseHandler, error => {
-		console.error("Erreur lors de la mise à jour de l'avatar", error);
-	})
-
-}
-function loadAvailableAvatars() {
-	avatarRequest(avatarResponseHandler, error => {
-		console.error("Erreur lors de la récupération des avatars disponibles", error);
-	})
-
-
-}
-function avatarResponseHandler(data) {
-	const avatarGallery = document.getElementById("avatarGallery");
-	avatarGallery.innerHTML = ''; // Vide le conteneur
-	data.forEach(avatar => {
-		const img = document.createElement("img");
-		img.src = getApiConfigDefault().url + avatar.url;
-		img.alt = avatar.name;
-		img.style.cursor = "pointer";
-		img.style.width = "50px";
-		img.style.height = "50px";
-		img.addEventListener("click", () => {
-			updateAvatar(avatar.code)
-			document.getElementById("userAvatar")
-				.src = img.src
-		});
-		avatarGallery.appendChild(img);
-	})
-}
-
-
-
 
 
 //DONE gestion modale addfriends
 
 function addFriendModal() {
-	const addFriendModal = document.getElementById("addFriendModal");
-	// Chargez la liste des utilisateurs quand la modale s'ouvre
-	addFriendModal.addEventListener('shown.bs.modal', () => {
-		loadUsersList();
-	});
-	
-	// Gestion du bouton de confirmation d'ajout d'ami
-	const addFriendBtn = document.getElementById("addFriendConfirmBtn");
-	addFriendBtn.addEventListener("click", () => {
-		// Récupérer l'utilisateur sélectionné
+    const addFriendModal = document.getElementById("addFriendModal");
+	const profileData = getProfileData();
+    addFriendModal.addEventListener('shown.bs.modal', () => {
+        loadUsersList();
+    });
+
+    const addFriendBtn = document.getElementById("addFriendConfirmBtn");
+    addFriendBtn.addEventListener("click", (e) => {
+		e.preventDefault()
+        const friendUsernameSelect = document.getElementById("friendUsername");
+        const selectedUsername = friendUsernameSelect.value;
+
+        if (selectedUsername) {
+            const isAlreadyFriend = profileData.friends.some(friend => friend.username === selectedUsername);
+            if (isAlreadyFriend) {
+               displayError("You are already friends with this user (˶ᵔ ᵕ ᵔ˶)");
+                return;
+            }
+            addFriend(selectedUsername).then(() => {
+				const modal = bootstrap.Modal.getInstance(addFriendModal);
+				modal.hide();
+				load_page("profile");
+			});
+        } else {
+            displayError("Please select a username to add as a friend (˶ᵔ ᵕ ᵔ˶)");
+			return;
+        }
+        displayFriendsList(profileData);
+    });
+
+    const deleteFriendBtn = document.getElementById("deleteFriendBtn");
+	deleteFriendBtn.addEventListener("click", (e) => {
+		e.preventDefault()
 		const friendUsernameSelect = document.getElementById("friendUsername");
 		const selectedUsername = friendUsernameSelect.value;
-
 		if (selectedUsername) {
-			addFriend(selectedUsername);
-
-			// Fermer la modale après l'ajout
-			const modal = bootstrap.Modal.getInstance(addFriendModal);
-			modal.hide();
-			load_page("profile");
+			const isNotFriend = !profileData.friends.some(friend => friend.username === selectedUsername);
+			if (isNotFriend) {
+				displayError("You are not friends with this user ! (˶ᵔ ᵕ ᵔ˶)");
+				return;
+			}
+			deleteFriend(selectedUsername).then(() => {
+				const modal = bootstrap.Modal.getInstance(addFriendModal);
+				modal.hide();
+				load_page("profile");
+			});
 		} else {
-			console.error("Aucun utilisateur sélectionné");
-		}
-		displayFriendsList(profileData);
-	});
-	const deleteFriendBtn = document.getElementById("deleteFriendBtn");
-	deleteFriendBtn.addEventListener("click", () => {
-		const friendUsernameSelect = document.getElementById("friendUsername");
-		const selectedUsername = friendUsernameSelect.value;
-		if (selectedUsername) {
-			deleteFriend(selectedUsername);
-			const modal = bootstrap.Modal.getInstance(addFriendModal);
-			modal.hide();
-			load_page("profile");
-		} else {
-			console.error("Aucun utilisateur sélectionné pour suppression");
+			displayError("Please select a username to delete from your friends list (˶ᵔ ᵕ ᵔ˶)");
+			return;
 		}
 		displayFriendsList(profileData);
 	});
@@ -176,17 +186,15 @@ function loadUsersList() {
 			option.textContent = user.username;
 			friendUsernameElement.appendChild(option);
 		});
-	}, (error) => {
-		console.error("Erreur lors de la récupération de la liste des utilisateurs :", error);
 	});
 }
 
-function addFriend(username) {
-	addFriendRequest({ username })
+async function addFriend(username) {
+	return addFriendRequest({ username })
 }
 
-function deleteFriend(username) {
-	deleteFriendRequest({ username });
+async function deleteFriend(username) {
+	return deleteFriendRequest({ username });
 }
 
 function displayFriendsList(profileData) {
@@ -228,6 +236,9 @@ function displayFriendsList(profileData) {
 }
 
 function displayMatchHistory(matchHistory) {
+    const profileData = getProfileData();
+    let currentProfileUsername = window.location.pathname.split('/').pop() || profileData.username;
+	currentProfileUsername = currentProfileUsername == "" ? profileData.username : currentProfileUsername;
     const matchHistoryContainer = document.getElementById("matchHistory");
     matchHistoryContainer.innerHTML = ''; // Réinitialiser le conteneur
 
@@ -240,15 +251,51 @@ function displayMatchHistory(matchHistory) {
         const matchItem = document.createElement("div");
         matchItem.className = "match-item";
 
-        const date = new Date(match.date).toLocaleString();
-        const result = match.winner === match.player_one ? "Victory" : "Defeat";
+        const date = document.createElement("p");
+        date.textContent = `Date : ${new Date(match.date).toLocaleString()}`;
 
-        matchItem.innerHTML = `
-            <p>Date : ${date}</p>
-            <p>Player 1 : ${match.player_one} - Score : ${match.score_p1}</p>
-            <p>Player 2 : ${match.player_two} - Score : ${match.score_p2}</p>
-            <p>Result : ${result}</p>
-        `;
+        const player1Container = document.createElement("p");
+        const player1Link = document.createElement("span");
+        player1Link.textContent = match.player_one;
+        player1Link.className = "player-link";
+        player1Link.style.cursor = "pointer";
+        player1Link.onclick = (e) => {
+            e.preventDefault();
+			if (match.player_one != currentProfileUsername){
+				if (match.player_one == profileData.username)
+					load_page("profile");
+				else
+					load_page("profile/" + match.player_one);
+			}
+        };
+        player1Container.append("Player 1 : ", player1Link, ` - Score : ${match.score_p1}`);
+
+        const player2Container = document.createElement("p");
+        const player2Link = document.createElement("span");
+        player2Link.textContent = match.player_two;
+        player2Link.className = "player-link";
+        player2Link.style.cursor = "pointer";
+        player2Link.onclick = (e) => {
+            e.preventDefault();
+			if (match.player_two != currentProfileUsername){
+				if (match.player_two == profileData.username)
+					load_page("profile");
+				else
+					load_page("profile/" + match.player_two);
+			}
+        };
+        player2Container.append("Player 2 : ", player2Link, ` - Score : ${match.score_p2}`);
+
+        const result = document.createElement("p");
+        // Determine if the current profile user is player one or two
+        const isPlayerOne = match.player_one === currentProfileUsername;
+        const hasWon = isPlayerOne ? match.winner === match.player_one : match.winner === match.player_two;
+        result.textContent = `Result : ${hasWon ? "Victory" : "Defeat"}`;
+
+        matchItem.appendChild(date);
+        matchItem.appendChild(player1Container);
+        matchItem.appendChild(player2Container);
+        matchItem.appendChild(result);
 
         matchHistoryContainer.appendChild(matchItem);
     });

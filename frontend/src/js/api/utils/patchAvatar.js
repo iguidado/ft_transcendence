@@ -5,7 +5,6 @@ function responseHandlerDefault(res) {
 }
 
 function errorHandlerDefault(err) {
-    console.error(err)
 }
 
 export async function patchAvatar({
@@ -34,7 +33,7 @@ export async function patchAvatar({
             body: formData,
         }
         
-        const response = await fetch(config.url+UrlPath, requestOptions)
+        const response = await fetch(config.url+UrlPath, requestOptions).catch(err => {})
         
         if (!response.ok) {
             const errorText = await response.text();

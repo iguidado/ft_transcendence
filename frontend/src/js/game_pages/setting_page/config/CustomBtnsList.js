@@ -3,8 +3,8 @@ import { createKeyCaptureOverlay } from '../util/createKeyCaptureOverlay.js';
 
 // Global min and max values
 const MIN_BOARD_HEIGHT = 30;
-const MAX_BOARD_HEIGHT = 90;
-const MIN_BOARD_WIDTH = 100;
+const MAX_BOARD_HEIGHT = 70;
+const MIN_BOARD_WIDTH = 120;
 const MAX_BOARD_WIDTH = 150;
 const MIN_SCORE = 1;
 const MAX_SCORE = 100;

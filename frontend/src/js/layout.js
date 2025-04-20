@@ -25,7 +25,8 @@ export function initBuildButtons() {
 		btn.addEventListener("mouseout", toggleLayerPair);
 		const loaddest = btn.getAttribute("data-load");
 		if (loaddest) {
-			btn.addEventListener("click", () => {
+			btn.addEventListener("click", (e) => {
+				e.preventDefault();
 				if (loaddest === "login") {
 					disconnect();
 					return;

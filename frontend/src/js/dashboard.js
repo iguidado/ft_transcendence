@@ -1,5 +1,6 @@
-import { leaderboardRequest } from "./api/routes/leaderboard";
-// import { displayError } from "./utils/displayError";
+import { leaderboardRequest } from "./api/routes/leaderboard.js";
+import { load_page } from "./router.js";
+// import { displayError } from "./utils/displayError.js";
 
 
 export function loadDashboardPage() {
@@ -35,9 +36,17 @@ function displayInformation(data) {
 		rankCell.textContent = index + 1;
 		row.appendChild(rankCell);
 		
-		// Add username cell
+		// Add username cell with clickable link
 		const usernameCell = document.createElement('td');
-		usernameCell.textContent = player.username || 'Unknown';
+		const usernameLink = document.createElement('span');
+		usernameLink.textContent = player.username || 'Unknown';
+		usernameLink.className = 'player-link';
+		usernameLink.style.cursor = 'pointer';
+		usernameLink.onclick = (e) => {
+			e.preventDefault();
+			load_page("profile/" + player.username);
+		};
+		usernameCell.appendChild(usernameLink);
 		row.appendChild(usernameCell);
 		
 		// Add win ratio cell

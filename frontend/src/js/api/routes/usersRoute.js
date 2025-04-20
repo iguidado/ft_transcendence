@@ -1,4 +1,4 @@
-import { getRequest } from "../utils/getRequest"
+import { getRequest } from "../utils/getRequest.js"
 
 function usersResponseHandler(response) {
 	console.log(response)

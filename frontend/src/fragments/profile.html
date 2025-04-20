@@ -2,9 +2,20 @@
 
   <div class="card profile-card p-4 text-center">
     <div class="mb-3 position-relative">
+      <button class="btn position-absolute" id="backButton" style="
+        top: 0;
+        left: 0;
+        background-image: url('/rsc/arrow.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;">
+      </button>
       <img id="userAvatar" alt="User avatar" width="150" height="150" />
       <button class="btn position-absolute gear-btn" id="openSettings" data-bs-toggle="modal"
-        data-bs-target="#settingsModal" style="background-image: url('./rsc/param.png');
+        data-bs-target="#settingsModal" style="background-image: url('/rsc/param.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
@@ -21,6 +32,15 @@
       <span id="realUsername"></span>
     </h2>
 
+    <div class="text-start card-text my-3 position-relative">
+      <h3>Friends List</h3>
+      <button class="btn position-absolute" id="addFriendBtn" data-bs-toggle="modal" data-bs-target="#addFriendModal"
+        style="top: 0; right: 0; background-color: transparent; border: none; font-size: 1.5rem; color: #fd9b5d;">
+        EDIT
+      </button>
+      <ul id="friendsList" class="list-group">
+      </ul>
+    </div>
 
     <div class="text-center card-text my-3">
       <h3 class="card-title">Statistics</h3>
@@ -33,15 +53,6 @@
       </div>
     </div>
 
-    <div class="text-start card-text my-3 position-relative">
-      <h3>Friends List</h3>
-      <button class="btn position-absolute" id="addFriendBtn" data-bs-toggle="modal" data-bs-target="#addFriendModal"
-        style="top: 0; right: 0; background-color: transparent; border: none; font-size: 1.5rem; color: #fd9b5d;">
-        EDIT
-      </button>
-      <ul id="friendsList" class="list-group">
-      </ul>
-    </div>
 
     <div class="modal fade" id="addFriendModal" tabindex="-1" aria-labelledby="addFriendModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -77,8 +88,8 @@
       </div>
       <div class="modal-body">
         <div class="mb-3">
-          <label for="newDisplayName" class="form-label">Change username:</label>
-          <input type="text" id="newDisplayName" class="form-control" placeholder="Enter new username"
+          <label for="newDisplayName" class="form-label">Change displayname:</label>
+          <input type="text" id="newDisplayName" class="form-control" placeholder="Enter new displayname"
             style="background-color: rgba(255, 186, 106, 0.5)" />
         </div>
 

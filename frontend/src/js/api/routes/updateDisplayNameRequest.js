@@ -5,7 +5,6 @@ function updateDisplayNameResponseHandler(response) {
 }
 
 function updateDisplayNameErrorHandler(error) {
-    console.error(error)
 }
 
 export function updateDisplayNameRequest(newDisplayName, responseHandler=updateDisplayNameResponseHandler, errorHandler=updateDisplayNameErrorHandler) {

@@ -1,18 +1,24 @@
-import { loadLoginPage, showLogin } from "../../login";
-import { fetchHTMLContent } from "../../router";
-import { displayError } from "../../utils/displayError";
-import { getAccessToken } from "../../utils/getAccessToken";
-import { getProfileData } from "../../utils/profileUtils";
-import { updateLocalProfile } from "../../utils/updateLocalProfile";
-import { addGuestProfileToStore } from "../loginGuestPage/utils/addGuestProfileToStore";
-import { getGuestList } from "../loginGuestPage/utils/getGuestList";
-import { getProfileFromToken } from "../loginGuestPage/utils/getProfileFromToken";
-import { rmGuest } from "../loginGuestPage/utils/rmGuest";
-import { loadTournamentNextMatchPage } from "../tournamentNextMatch/tournamentNextMatch";
+import { loadLoginPage, showLogin } from "../../login.js";
+import { fetchHTMLContent, load_page } from "../../router.js";
+import { displayError } from "../../utils/displayError.js";
+import { getAccessToken } from "../../utils/getAccessToken.js";
+import { getProfileData } from "../../utils/profileUtils.js";
+import { updateLocalProfile } from "../../utils/updateLocalProfile.js";
+import { addGuestProfileToStore } from "../loginGuestPage/utils/addGuestProfileToStore.js";
+import { getGuestList } from "../loginGuestPage/utils/getGuestList.js";
+import { getProfileFromToken } from "../loginGuestPage/utils/getProfileFromToken.js";
+import { rmGuest } from "../loginGuestPage/utils/rmGuest.js";
+import { updateGuest } from "../loginGuestPage/utils/updateGuest.js";
+import { loadTournamentNextMatchPage } from "../tournamentNextMatch/tournamentNextMatch.js";
 
 var players = []
-
+var ctx_save = null
+var saveLocalProfileTDN = null
 export async function loadTournamentSetupPage(ctx) {
+	if (!ctx)
+		ctx = ctx_save
+	else
+		ctx_save = ctx
 	const app = document.getElementById("main_container");
 	const torunamentHtml = await fetchHTMLContent("tournament")
 	app.innerHTML = torunamentHtml
@@ -26,6 +32,8 @@ export async function loadTournamentSetupPage(ctx) {
 function setupProfiles() {
 	players = getGuestList() || []
 	const localProfile = getProfileData()
+	if (saveLocalProfileTDN)
+		localProfile.displayName = saveLocalProfileTDN
 	if (localProfile) {
 		localProfile.access_token = getAccessToken()
 		players = [localProfile, ...players]
@@ -35,7 +43,6 @@ function setupProfiles() {
 function addPlayerToList(playerName, id) {
 	const container = document.getElementById("tournament__playerlist");
 	if (!container) {
-		console.error(`Container with id "tournament__playerlist" not found.`);
 		return;
 	}
 
@@ -50,7 +57,7 @@ function addPlayerToList(playerName, id) {
 	const buttonContainer = document.createElement("div");
 	buttonContainer.className = "d-flex gap-2";
 	let localProfile = getProfileData()
-	if (!localProfile) {
+	if (!localProfile || localProfile.id !== id) {
 		const removeButton = document.createElement("button");
 		removeButton.className = "btn btn-danger btn-sm";
 		removeButton.textContent = "Remove";
@@ -66,7 +73,7 @@ function addPlayerToList(playerName, id) {
 	paramButton.className = "btn gear-btn";
 	paramButton.setAttribute("data-bs-toggle", "modal");
 	paramButton.setAttribute("data-bs-target", "#TDNsettingsModal");
-	paramButton.style.backgroundImage = "url('./rsc/param.png')";
+	paramButton.style.backgroundImage = "url('/rsc/param.png')";
 	paramButton.style.backgroundSize = "contain";
 	paramButton.style.backgroundRepeat = "no-repeat";
 	paramButton.style.backgroundPosition = "center";
@@ -96,20 +103,26 @@ function setupAddPlayerBtn(ctx) {
 	const btn = document.getElementById("tournament__addplayerbtn")
 	btn.onclick = e => {
 		e.preventDefault()
-		fetchHTMLContent("login").then(htmlContent => {
-			const app = document.getElementById('main_container')
-			app.innerHTML = htmlContent
-			loadLoginPage(res => {
-				if (!getProfileData()) {
-					updateLocalProfile(res)
-				} else {
-					getProfileFromToken(res.access_token).then(profile => {
-						profile.access_token = res.access_token
-						addGuestProfileToStore(profile, console.error)
-						loadTournamentSetupPage(ctx)
-					})
-				}
-			})
+		load_page("login", res => {
+			if (!getProfileData()) {
+				updateLocalProfile(res)
+			} else {
+				getProfileFromToken(res.access_token).then(profile => {
+					profile.access_token = res.access_token
+					addGuestProfileToStore(profile, (error) => { })
+					load_page("tournament", ctx)
+				})
+			}
+		}, true).then(() => {
+			const backBtn = document.getElementById("backBtn");
+			if (backBtn) {
+				backBtn.style.display = "block";
+				backBtn.addEventListener("click", (e) => {
+					e.preventDefault()
+					app.innerHTML = "";
+					load_page("tournament", ctx);
+				});
+			}
 		})
 	}
 }
@@ -135,9 +148,10 @@ function setupStartBtn(ctx) {
 	btn.onclick = e => {
 		e.preventDefault()
 		if (players.length < 2) {
-			displayError("why are you solo ???")
+			displayError("why are you solo ?? (╥﹏╥)")
 			return
 		}
+		saveLocalProfileTDN = null
 		loadTournamentNextMatchPage(ctx, generatePlanning())
 	}
 }
@@ -147,15 +161,12 @@ function openTDNSettingsModal(modal, playerName, id) {
 	const modalTitle = modal.querySelector(".modal-title");
 	const newTDNInput = modal.querySelector("#newTDN");
 
-	// Mettre à jour le titre de la modale et le placeholder
 	modalTitle.textContent = `Edit Display Name for ${playerName}`;
 	newTDNInput.value = playerName;
 
-	// Afficher la modale
 	const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
 	modalInstance.show();
 
-	// Ajouter un gestionnaire pour le bouton "Save"
 	saveTDNbtn(modal, id, newTDNInput);
 }
 
@@ -167,8 +178,15 @@ function saveTDNbtn(modal, id, newTDNInput) {
 			// Mettre à jour le display name du joueur
 			const player = players.find(p => p.id === id);
 			if (player) {
+				if (newDisplayName.length > 15) {
+					displayError("Display name must be 15 characters or less (˶ᵔ ᵕ ᵔ˶)");
+					return;
+				}
 				player.displayName = newDisplayName;
-				console.log(`Display name updated for player ${id}: ${newDisplayName}`);
+				updateGuest(id, newTDNInput.value)
+				if (getProfileData() && getProfileData().id === id) {
+					saveLocalProfileTDN = newDisplayName
+				}
 
 				// Mettre à jour l'affichage dans la liste
 				const playerListItem = document.querySelector(`#tournament__playerlist li[data-id="${id}"]`);
@@ -176,13 +194,9 @@ function saveTDNbtn(modal, id, newTDNInput) {
 					const nameSpan = playerListItem.querySelector(".tournament__playerlist__item__name");
 					nameSpan.textContent = newDisplayName;
 				}
-			} else {
-				console.error(`Player with ID ${id} not found.`);
-			}
-		} else {
-			console.error("Display name cannot be empty.");
-		}
 
+			}
+		}
 		// Fermer la modale
 		const modalInstance = bootstrap.Modal.getInstance(modal);
 		modalInstance.hide();
