@@ -107,12 +107,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-PORT = os.getenv("FRONT_PORT")
+PROD_PORT = os.getenv("HTTPS_PORT")
+DEV_PORT = os.getenv("FRONT_PORT")
 CORS_ALLOWED_ORIGINS = [
-    f"http://localhost:{PORT}",
-    f"http://127.0.0.1:{PORT}",
-    f"https://localhost:{PORT}",
-    f"https://127.0.0.1:{PORT}",
+    f"http://localhost:{DEV_PORT}",
+    f"http://127.0.0.1:{DEV_PORT}",
+    f"https://localhost:{PROD_PORT}",
+    f"https://127.0.0.1:{PROD_PORT}",
 ]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
@@ -213,12 +214,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-# STATIC_URL = 'static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
-# ]
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+  # STATIC_URL = 'static/'
+  # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+  # STATICFILES_DIRS = [
+  #     os.path.join(BASE_DIR, 'static'),
+  # ]
+  # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

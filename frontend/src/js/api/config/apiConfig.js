@@ -1,5 +1,6 @@
 import { getAccessToken } from "../../utils/getAccessToken.js"
 
+
 export const API_ADDR = "127.0.0.1:8080"
 
 export const getApiConfigDefault = (token=null) => {

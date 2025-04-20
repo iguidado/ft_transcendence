@@ -28,22 +28,23 @@ export function initializeWebSocketConnection() {
     }
     
     // Utiliser le même hôte que l'application actuelle
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const wssProtocol = 'wss://';
     
     // Déterminer l'hôte et le port corrects pour la connexion WebSocket
     // Option 1: Utiliser directement l'hôte actuel avec un port spécifique
     // const backendHost = window.location.hostname + ':8000';
     
     // Option 2: Valeur codée en dur pour le développement
-    const backendHost = API_ADDR;
+//	const backendHost = API_ADDR;
+    const backendHost = "localhost:4343";
     
     // Construire l'URL correcte avec le token
     const encodedToken = encodeURIComponent(token);
-    const wsUrl = `${wsProtocol}${backendHost}/ws/status/?token=${encodedToken}`;
+    const wssUrl = `${wssProtocol}${backendHost}/wss/status/?token=${encodedToken}`;
     
-    console.log("Connexion au WebSocket avec l'URL:", wsUrl);
+    console.log("Connexion au WebSocket avec l'URL:", wssUrl);
     
-    userStatusSocket = new WebSocket(wsUrl);
+    userStatusSocket = new WebSocket(wssUrl);
     
     userStatusSocket.onopen = function(event) {
         console.log("WebSocket connection established");

@@ -31,7 +31,7 @@ application = ProtocolTypeRouter({
     "websocket": AllowedHostsOriginValidator(
         JWTAuthMiddlewareStack(
             URLRouter([
-                path("ws/status/", UserStatusConsumer.as_asgi()),
+                path("wss/status/", UserStatusConsumer.as_asgi()),
             ])
         )
     ),
