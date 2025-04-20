@@ -11,14 +11,15 @@ export const setupStartBtn = (ctx) => {
 	const startBtn = document.getElementById("start-btn")
 	if (!startBtn)
 		consople.error("setupStartBtn : can't find #start-btn")
-	startBtn.addEventListener("click", () => {
+	startBtn.addEventListener("click", (e) => {
+		e.preventDefault()
 		if (ctx.game)
 			ctx.game.cleanup();
 		let playerCount = playersCount(ctx.config)
 		const localProfile = getProfileData()
 		console.log(playerCount)
 		if (!playerCount || (playerCount == 1 && localProfile)) {
-			loadGamePage({...ctx, players: [localProfile]})
+			loadGamePage({ ...ctx, players: [localProfile] })
 			return
 		}
 		clearGuestStore()
@@ -33,12 +34,12 @@ export const setupStartBtn = (ctx) => {
 			}
 			localProfile.access_token = getAccessToken()
 			const guestList = getGuestList()
-			if (!guestList || guestList.length+1 != playerCount) {
+			if (!guestList || guestList.length + 1 != playerCount) {
 				load_page("pong")
 				return
 			}
 			const players = [localProfile, ...guestList]
-			loadGamePage({...ctx, players})
+			loadGamePage({ ...ctx, players })
 		})
 	})
 }

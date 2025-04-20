@@ -5,7 +5,8 @@ export function loadLoginPage(onloginSuccess) {
 	loginForm(onloginSuccess);
 	const registerBtn = document.getElementById("registerButton");
 	if (registerBtn) {
-		registerBtn.addEventListener("click", () => {
+		registerBtn.addEventListener("click", (e) => {
+			e.preventDefault();
 			showRegister(onloginSuccess);
 		});
 	}

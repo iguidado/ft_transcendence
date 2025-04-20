@@ -63,7 +63,8 @@ export function handleRegistration(onloginSuccess) {
 	})
 	const backToLoginButton = document.getElementById("backToLoginButton");
 	if (backToLoginButton) {
-		backToLoginButton.addEventListener("click", () => {
+		backToLoginButton.addEventListener("click", (e) => {
+			e.preventDefault();
 			load_page("login", onloginSuccess);
 		});
 	}

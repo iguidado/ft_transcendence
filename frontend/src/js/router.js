@@ -48,7 +48,6 @@ const routeConfigs = {
 
 
 export async function load_page(url, props=undefined, pushHistory=true) {
-	clearGuestStore()
 	let currentGame = gameRegistry.getCurrentContext()
 	if (currentGame)
 		currentGame.cleanup()

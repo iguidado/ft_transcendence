@@ -45,7 +45,8 @@ function addBackBtnSetup(isLocalProfile) {
 	} else {
 		backBtn.style.display = "block";
 		console.log(backBtn)
-		backBtn.addEventListener("click", () => {
+		backBtn.addEventListener("click", (e) => {
+			e.preventDefault();
 			load_page("profile");
 		});
 	}
@@ -126,7 +127,8 @@ function addFriendModal() {
     });
 
     const addFriendBtn = document.getElementById("addFriendConfirmBtn");
-    addFriendBtn.addEventListener("click", () => {
+    addFriendBtn.addEventListener("click", (e) => {
+		e.preventDefault()
         const friendUsernameSelect = document.getElementById("friendUsername");
         const selectedUsername = friendUsernameSelect.value;
 
@@ -148,7 +150,8 @@ function addFriendModal() {
     });
 
     const deleteFriendBtn = document.getElementById("deleteFriendBtn");
-	deleteFriendBtn.addEventListener("click", () => {
+	deleteFriendBtn.addEventListener("click", (e) => {
+		e.preventDefault()
 		const friendUsernameSelect = document.getElementById("friendUsername");
 		const selectedUsername = friendUsernameSelect.value;
 		if (selectedUsername) {
