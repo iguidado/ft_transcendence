@@ -10,7 +10,7 @@ then
 fi
 
 . /app/venv/bin/activate
-pip install whitenoise
+# pip install whitenoise
 # pip install daphne
 python -m pip install --no-cache-dir -r /root/requirements.txt #2> /dev/null
 
@@ -30,7 +30,6 @@ if ! [ -d /app/ft_transcendence/media/avatars/default1.png ]
 then
     cp /app/ft_transcendence/api/static/api/images/default1.png /app/ft_transcendence/media/avatars/
 fi
-
 
 if ! [ -d /app/ft_transcendence/api ]
 then
