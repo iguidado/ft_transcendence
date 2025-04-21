@@ -38,9 +38,9 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs:rw
       - esdata01:/usr/share/elasticsearch/data:rw
-      - ./Elasticsearch/policy_scripts/:/usr/share/elasticsearch/config/policy_scripts/:rw
-      - ./Elasticsearch/snapshot:/usr/share/elasticsearch/snapshot/archive:rw
-      - ./Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./Elasticsearch/policy_scripts/:/usr/share/elasticsearch/config/policy_scripts/:rw,z
+      - ./Elasticsearch/snapshot:/usr/share/elasticsearch/snapshot/archive:rw,z
+      - ./Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:rw,z
     networks:
       - elk-network
     ports:
@@ -130,10 +130,10 @@ services:
       co.elastic.logs/module: logstash
     user: root
     volumes:
-      - certs:/usr/share/logstash/certs
+      - certs:/usr/share/logstash/certs:rw,z
       - logstashdata01:/usr/share/logstash/data
-      - "./Logstash/logstash_ingest_data/:/usr/share/logstash/ingest_data/"
-      - "./Logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
+      - ./Logstash/logstash_ingest_data/:/usr/share/logstash/ingest_data/:rw,z
+      - ./Logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:rw,z
     environment:
       - xpack.monitoring.enabled=false
       - ELASTIC_USER=${ELASTIC_USER}
