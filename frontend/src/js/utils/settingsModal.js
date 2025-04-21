@@ -69,8 +69,6 @@ function twoFactorAuthSection(profileData) {
 	})
 	send2FAEmailBtn.addEventListener("click", (e) => {
         e.preventDefault()
-		email2FASection.style.display = "none"
-		verify2FAModal.style.display = "block"
 		const emailInput = document.getElementById("email2FAInput").value
 		toggle2faRequest(
 			{
@@ -90,7 +88,9 @@ function twoFactorAuthSection(profileData) {
 			modalInstance.hide(); 
 			modal.querySelectorAll("input").forEach(input => input.value = ""); 
 			load_page("profile");
-		});
+		}, err => {
+            displayError("Invalid OTP. Please try again.");
+        });
 	});
 }
 
@@ -100,8 +100,7 @@ function displayCodeValidation(res) {
 }
 
 function toggle2faError(err, res) {
-	console.warn("Error:", err)
-	console.warn("API Response:", res)
+    displayError("Invalid email address. Please try again.");
 }
 
 function saveSettings() {
@@ -166,7 +165,7 @@ function saveSettings() {
             } catch (error) {
                 displayError("Error updating avatar:", error);
             }
-        } else if (avatarInput) {
+        } else if (avatarInput && avatarInput.files.length > 0 && !avatarInput.files[0].type.startsWith("image/")) {
             displayError("Please select an image to upload.");
         }
         if (displayNameUpdated || avatarUpdated) {
