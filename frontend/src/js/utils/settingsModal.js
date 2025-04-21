@@ -5,6 +5,7 @@ import { verifyEmailOTP } from "../api/routes/user/verifyEmailOTP.js"
 import { updateAvatarRequest } from "../api/routes/updateAvatar.js"
 import { load_page } from "../router.js"
 import { displayError } from "./displayError.js"
+import { loadProfilePage } from "../profile.js"
 
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
@@ -85,7 +86,7 @@ function twoFactorAuthSection(profileData) {
 				action: profileData.is_2fa_enabled ? "disable" : "enable",
 				email: emailInput
 			},
-			profileData.is_2fa_enabled ? loadProfilePage : displayCodeValidation,
+			profileData.is_2fa_enabled ? load_page('profile') : displayCodeValidation,
 			toggle2faError
 		)
 	})
@@ -118,7 +119,8 @@ function saveSettings() {
     saveButton.addEventListener("click", (e) => {
         e.preventDefault()
         // Gestion du nom d'utilisateur
-        const newDisplayName = document.getElementById("newDisplayName").value.trim();        
+        const newDisplayName = document.getElementById("newDisplayName").value.trim(); 
+		console.log("newDisplayName", newDisplayName)
         if (newDisplayName) {
             if (newDisplayName.length > 15 || newDisplayName.length < 2) {
                 displayError("Displayname must be between 2 and 15 characters (˶ᵔ ᵕ ᵔ˶)");

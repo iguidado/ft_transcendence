@@ -56,25 +56,59 @@ export class Paddle {
 	}
 
 	updateBot(ball, botConfig) {
-		const ballDirection = ball.direction;
+		const ballDirection = ball.direction.clone();
 		const ballSpeed = ball.speed;
 		const paddleSpeed = ballSpeed * this.config.paddles.controls.speed;
 		const reactionDelay = botConfig.reactionDelay;
 
-		// Introduire un délai de réaction pour la mise à jour de la direction
 		if (!this.lastReactionTime) {
 			this.lastReactionTime = performance.now();
 		}
 
 		const currentTime = performance.now();
 		if (currentTime - this.lastReactionTime >= reactionDelay) {
-			// Mettre à jour la direction prédite uniquement après le délai
 			this.lastReactionTime = currentTime;
 
-			const distanceX = this.isLeft
-				? this.mesh.position.x - ball.mesh.position.x
-				: ball.mesh.position.x - this.mesh.position.x;
-			const timeToImpact = Math.abs(distanceX / (ballSpeed * ballDirection.x));
+			let simulatedPosition = ball.mesh.position.clone();
+			let simulatedDirection = ballDirection.clone();
+			let timeToImpact = 0;
+
+			let safetyCounter = 0;
+			const maxIterations = 10;
+
+			while (true) {
+				safetyCounter++;
+				if (safetyCounter > maxIterations) {
+					this.predictedY = 0;
+					break;
+				}
+
+				const distanceToWall =
+					simulatedDirection.y > 0
+						? this.maxY - simulatedPosition.y
+						: simulatedPosition.y - this.minY;
+				const timeToWall = Math.abs(distanceToWall / simulatedDirection.y / ballSpeed);
+
+				const distanceToPaddle = this.isLeft
+					? this.mesh.position.x - simulatedPosition.x
+					: simulatedPosition.x - this.mesh.position.x;
+				const timeToPaddle = Math.abs(distanceToPaddle / (ballSpeed * simulatedDirection.x));
+
+				if ((this.isLeft && simulatedDirection.x > 0) || (!this.isLeft && simulatedDirection.x < 0)) {
+					this.predictedY = 0;
+					return;
+				}
+
+				if (timeToPaddle < timeToWall) {
+					timeToImpact += timeToPaddle;
+					simulatedPosition.add(simulatedDirection.multiplyScalar(ballSpeed * timeToPaddle));
+					break;
+				} else {
+					timeToImpact += timeToWall;
+					simulatedPosition.add(simulatedDirection.multiplyScalar(ballSpeed * timeToWall));
+					simulatedDirection.y *= -1;
+				}
+			}
 
 			if (
 				(this.isLeft && ballDirection.x < 0) ||
@@ -87,15 +121,12 @@ export class Paddle {
 					(Math.random() - 0.5) * this.config.paddles.length * 0.5;
 
 				this.predictedY =
-					ball.mesh.position.y +
-					ballDirection.y * ballSpeed * timeToImpact * (1 + predictionError) +
-					paddleRandomOffset;
+					simulatedPosition.y * (1 + predictionError) + paddleRandomOffset;
 			} else {
-				this.predictedY = 0; // Retourner au centre si la balle ne se dirige pas vers le paddle
+				this.predictedY = 0;
 			}
 		}
 
-		// Effectuer le mouvement vers la position prédite
 		const targetY = THREE.MathUtils.lerp(
 			this.mesh.position.y,
 			this.predictedY || 0,

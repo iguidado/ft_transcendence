@@ -1,5 +1,5 @@
 import { loadLoginPage, showLogin } from "../../login.js";
-import { fetchHTMLContent } from "../../router.js";
+import { fetchHTMLContent, load_page } from "../../router.js";
 import { displayError } from "../../utils/displayError.js";
 import { getAccessToken } from "../../utils/getAccessToken.js";
 import { getProfileData } from "../../utils/profileUtils.js";
@@ -53,7 +53,7 @@ function addPlayerToList(playerName, id) {
 	const span = document.createElement("span");
 	span.className = "tournament__playerlist__item__name";
 	span.textContent = playerName;
-	
+
 	const buttonContainer = document.createElement("div");
 	buttonContainer.className = "d-flex gap-2";
 	let localProfile = getProfileData()
@@ -73,7 +73,7 @@ function addPlayerToList(playerName, id) {
 	paramButton.className = "btn gear-btn";
 	paramButton.setAttribute("data-bs-toggle", "modal");
 	paramButton.setAttribute("data-bs-target", "#TDNsettingsModal");
-	paramButton.style.backgroundImage = "url('./rsc/param.png')";
+	paramButton.style.backgroundImage = "url('/rsc/param.png')";
 	paramButton.style.backgroundSize = "contain";
 	paramButton.style.backgroundRepeat = "no-repeat";
 	paramButton.style.backgroundPosition = "center";
@@ -103,29 +103,26 @@ function setupAddPlayerBtn(ctx) {
 	const btn = document.getElementById("tournament__addplayerbtn")
 	btn.onclick = e => {
 		e.preventDefault()
-		fetchHTMLContent("login").then(htmlContent => {
-			const app = document.getElementById('main_container')
-			app.innerHTML = htmlContent
+		load_page("login", res => {
+			if (!getProfileData()) {
+				updateLocalProfile(res)
+			} else {
+				getProfileFromToken(res.access_token).then(profile => {
+					profile.access_token = res.access_token
+					addGuestProfileToStore(profile, (error) => { })
+					load_page("tournament", ctx)
+				})
+			}
+		}, true).then(() => {
 			const backBtn = document.getElementById("backBtn");
 			if (backBtn) {
 				backBtn.style.display = "block";
 				backBtn.addEventListener("click", (e) => {
-	e.preventDefault()
+					e.preventDefault()
 					app.innerHTML = "";
-					loadTournamentSetupPage(ctx);
+					load_page("tournament", ctx);
 				});
 			}
-			loadLoginPage(res => {
-				if (!getProfileData()) {
-					updateLocalProfile(res)
-				} else {
-					getProfileFromToken(res.access_token).then(profile => {
-						profile.access_token = res.access_token
-						addGuestProfileToStore(profile, (error) => {})
-						loadTournamentSetupPage(ctx)
-					})
-				}
-			})
 		})
 	}
 }
@@ -153,10 +150,8 @@ function setupStartBtn(ctx) {
 		if (players.length < 2) {
 			displayError("why are you solo ?? (╥﹏╥)")
 			return
-		} else if (players.length == 2) {
-			displayError("You need at least 3 players to start a tournament (˶ᵔ ᵕ ᵔ˶)")
-			return
 		}
+		saveLocalProfileTDN = null
 		loadTournamentNextMatchPage(ctx, generatePlanning())
 	}
 }
@@ -199,7 +194,7 @@ function saveTDNbtn(modal, id, newTDNInput) {
 					const nameSpan = playerListItem.querySelector(".tournament__playerlist__item__name");
 					nameSpan.textContent = newDisplayName;
 				}
-				
+
 			}
 		}
 		// Fermer la modale

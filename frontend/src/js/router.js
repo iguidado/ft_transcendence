@@ -5,7 +5,10 @@ import { loadLoginPage } from "./login.js";
 import { loadProfilePage } from "./profile.js";
 import { loadDashboardPage } from "./dashboard.js";
 import { gameRegistry } from "./pong-game/src/core/GameRegistry.js";
-import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestStore.js";
+// import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestStore.js";
+import { loadTournamentSetupPage } from "./game_pages/tournamentSetupPage/loadTournamentSetupPage.js";
+import { pullProfile } from "./utils/profileUtils.js";
+import { disconnect } from "./utils/disconnect.js";
 // import { loadSocketTestPage } from "./socket-test.js";
 
 
@@ -43,6 +46,10 @@ const routeConfigs = {
 	dashboard: {
 		script: loadDashboardPage,
 		htmlFrag: "dashboard"
+	},
+	tournament: {
+		script: loadTournamentSetupPage,
+		htmlFrag: "tournament"
 	}
 };
 
@@ -51,6 +58,13 @@ export async function load_page(url, props=undefined, pushHistory=true) {
 	let currentGame = gameRegistry.getCurrentContext()
 	if (currentGame)
 		currentGame.cleanup()
+	if (url != "login") {
+		const data = await pullProfile()
+		if (!data) {
+			disconnect()
+			return
+		}
+	}
 	const tmp = url.split("/")
 	if (tmp.length == 2) {
 		url = tmp[0]
@@ -73,10 +87,8 @@ export async function load_page(url, props=undefined, pushHistory=true) {
 		mainContainer.innerHTML = htmlContent;
 	}
 	// On n'ajoute le menu que si ce n'est pas la page login ou si onLoginSuccess est dans les props
-	if (url !== 'login' || props?.onLoginSuccess) {
-		appendBuildingSideMenu(url, props)
-	}
-	if (config.script) config.script(props);
+	appendBuildingSideMenu(url, props)
+	if (config.script) await config.script(props);
 	if (pushHistory)
 		history.pushState({ page: tmp.join("/") }, "", `/${tmp.join("/")}`)
 }
@@ -86,8 +98,8 @@ async function appendBuildingSideMenu(url, props) {
 	const htmlLayout = await fetchHTMLContent('layout')
 	const layout = document.createElement('div');
 	layout.innerHTML = htmlLayout;
-
-	if (url === 'login' && props?.onLoginSuccess) {
+	console.log("url = ", url)
+	if (url === 'login') {
 		// Cacher tous les groupes d'URL
 		const allGroups = layout.querySelectorAll('[id$="Group"]');
 		allGroups.forEach(group => {

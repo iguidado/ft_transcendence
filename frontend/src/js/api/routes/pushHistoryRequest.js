@@ -8,8 +8,8 @@ function pushHistoryErrorHandler(error) {
 	console.log(error)
 }
 
-export function pushHistoryRequest(body, responseHandler=pushHistoryResponseHandler, errorHandler=pushHistoryErrorHandler) {
-	postRequest({
+export async function pushHistoryRequest(body, responseHandler=pushHistoryResponseHandler, errorHandler=pushHistoryErrorHandler) {
+	return postRequest({
 		UrlPath: "/api/users/create-match-history/",
 		body,
 		responseHandler,

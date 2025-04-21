@@ -12,8 +12,6 @@ import { settingsModal } from "./utils/settingsModal.js"
 import { disconnect } from "./utils/disconnect.js"
 import { displayError } from "./utils/displayError.js"
 
-
-
 export async function loadProfilePage(username = null) {
 	await pullProfile()
 	let isLocalProfile = true
@@ -138,10 +136,11 @@ function addFriendModal() {
                displayError("You are already friends with this user (˶ᵔ ᵕ ᵔ˶)");
                 return;
             }
-            addFriend(selectedUsername);
-            const modal = bootstrap.Modal.getInstance(addFriendModal);
-            modal.hide();
-            load_page("profile");
+            addFriend(selectedUsername).then(() => {
+				const modal = bootstrap.Modal.getInstance(addFriendModal);
+				modal.hide();
+				load_page("profile");
+			});
         } else {
             displayError("Please select a username to add as a friend (˶ᵔ ᵕ ᵔ˶)");
 			return;
@@ -160,10 +159,11 @@ function addFriendModal() {
 				displayError("You are not friends with this user ! (˶ᵔ ᵕ ᵔ˶)");
 				return;
 			}
-			deleteFriend(selectedUsername);
-			const modal = bootstrap.Modal.getInstance(addFriendModal);
-			modal.hide();
-			load_page("profile");
+			deleteFriend(selectedUsername).then(() => {
+				const modal = bootstrap.Modal.getInstance(addFriendModal);
+				modal.hide();
+				load_page("profile");
+			});
 		} else {
 			displayError("Please select a username to delete from your friends list (˶ᵔ ᵕ ᵔ˶)");
 			return;
@@ -189,12 +189,12 @@ function loadUsersList() {
 	});
 }
 
-function addFriend(username) {
-	addFriendRequest({ username })
+async function addFriend(username) {
+	return addFriendRequest({ username })
 }
 
-function deleteFriend(username) {
-	deleteFriendRequest({ username });
+async function deleteFriend(username) {
+	return deleteFriendRequest({ username });
 }
 
 function displayFriendsList(profileData) {

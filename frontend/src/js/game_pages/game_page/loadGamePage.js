@@ -38,23 +38,30 @@ export function loadGamePage({game, container, config, players=[], onEndMatch}) 
 	// 	console.log("scores", scores)
 	// }
 	game.scoreMonitor.onEndMatch = (winnerSide) => {
-		if (players.length > 1)
-			pushHistory()
-		game.cleanup()
-		let winner = null
-		if (winnerSide === "left")
-			winner = leftPlayer
-		else if (winnerSide === "right")
-			winner = rightPlayer
-		displayResults(resultMsg(winner));
-		if (onEndMatch)
-			onEndMatch(winner)
-		else
-			load_page("pong");
+		if (players.length > 1) {
+			pushHistory().then(() => {
+				onEndMatchNextSteps()
+			})
+		} else {
+			onEndMatchNextSteps()
+		}
+		function onEndMatchNextSteps() {
+			game.cleanup()
+			let winner = null
+			if (winnerSide === "left")
+				winner = leftPlayer
+			else if (winnerSide === "right")
+				winner = rightPlayer
+			displayResults(resultMsg(winner));
+			if (onEndMatch)
+				onEndMatch(winner)
+			else
+				load_page("pong");
+		}
 	}
 	game.start();
 
-	function pushHistory() {
+	async function pushHistory() {
 		const body = {
 			player_one: leftPlayer.username,
 			player_two: rightPlayer.username,
@@ -62,7 +69,7 @@ export function loadGamePage({game, container, config, players=[], onEndMatch}) 
 			score_p2: game.scoreMonitor.scores.right
 		}
 		console.log(body)
-		pushHistoryRequest(body)
+		return pushHistoryRequest(body)
 	}
 
 	function resultMsg(winner) {
