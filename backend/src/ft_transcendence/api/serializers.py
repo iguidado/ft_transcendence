@@ -37,20 +37,31 @@ class FriendSerializer(serializers.ModelSerializer):
 		fields = ['username', 'displayName', 'is_online', 'avatar']
 
 class UserProfileSerializer(serializers.ModelSerializer):
-	match_history = serializers.SerializerMethodField()
-	friends = serializers.SerializerMethodField()
+    match_history = serializers.SerializerMethodField()
+    friends = serializers.SerializerMethodField()
 
-	class Meta:
-		model = get_user_model()
-		fields = ['id', 'username', 'displayName', 'avatar', 'wins', 'game_played', 'match_history', 'is_2fa_enabled', 'friends', 'win_ratio']
+    class Meta:
+        model = get_user_model()
+        fields = ['id', 'username', 'displayName', 'avatar', 'wins', 'game_played', 'match_history', 'is_2fa_enabled', 'friends', 'win_ratio']
 
-	def get_match_history(seld, obj):
-		matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
-		return MatchSerializer(matchs, many=True).data
-	
-	def get_friends(self, obj):
-		friends = obj.friends.all()
-		return FriendSerializer(friends, many=True).data
+    def to_representation(self, instance):
+        # Obtenir la représentation standard
+        representation = super().to_representation(instance)
+        
+        # Forcer l'avatar à être un chemin relatif
+        if representation['avatar'] and 'http' in representation['avatar']:
+            # Extraire uniquement le chemin relatif
+            representation['avatar'] = f"/media/avatars/{representation['avatar'].split('avatars/')[-1]}"
+        
+        return representation
+
+    def get_match_history(self, obj):
+        matchs = Match.objects.filter(Q(player_one=obj) | Q(player_two=obj)).order_by('-date')
+        return MatchSerializer(matchs, many=True).data
+    
+    def get_friends(self, obj):
+        friends = obj.friends.all()
+        return FriendSerializer(friends, many=True).data
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
