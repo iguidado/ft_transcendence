@@ -1,11 +1,9 @@
 import { getApiConfigGet } from "../config/apiConfig.js"
 
 function responseHandlerDefault(res) {
-    // Logiquement, vous pouvez gérer la réponse ici si nécessaire
 }
 
 function errorHandlerDefault(err) {
-    // Ne rien afficher dans la console pour les erreurs par défaut
 }
 
 export async function getRequest({
@@ -25,7 +23,6 @@ export async function getRequest({
             },
         }
         const response = await fetch(config.url + UrlPath, requestOptions).catch(() => {
-            // Ignorer les erreurs de réseau ici
         })
 
         if (!response || !response.ok) {
@@ -40,7 +37,6 @@ export async function getRequest({
         return data
 
     } catch (error) {
-        // Appeler le gestionnaire d'erreurs sans afficher dans la console
         errorHandler(error)
         return null
     }

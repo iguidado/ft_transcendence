@@ -7,7 +7,6 @@ export class CameraManager {
 		this.container = container;
 		this.context = gameRegistry.getCurrentContext();
 
-		// Merge the camera configuration
 		this.config = {
 			...this.context.config.camera,
 			...customConfig,
@@ -15,9 +14,8 @@ export class CameraManager {
 			paddles: this.context.config.paddles
 		};
 
-		// Use the FOV from the configuration
 		this.camera = new THREE.PerspectiveCamera(
-			this.config.fov || 75, // Default FOV is 75
+			this.config.fov || 75,
 			this.container.clientWidth / this.container.clientHeight,
 			0.1,
 			1000
@@ -49,7 +47,6 @@ export class CameraManager {
 			return this.config.polar.radius;
 		}
 		const box = this.createGameBoundingBox();
-		// this.debugRotatedBox(box);
 		return this.calculateOptimalRadius(box);
 	}
 
@@ -62,35 +59,7 @@ export class CameraManager {
 		return box;
 	}
 
-	// getRotatedBoundingBox(box) {
-	//     const rotationMatrix = new THREE.Matrix4().makeRotationFromEuler(
-	//         new THREE.Euler(
-	//             this.config.polar.rotateX,
-	//             this.config.polar.rotateY,
-	//             this.config.polar.rotateZ,
-	//             'XYZ'
-	//         )
-	//     );
-
-	//     const corners = [
-	//         new THREE.Vector3(box.min.x, box.min.y, box.min.z),
-	//         new THREE.Vector3(box.min.x, box.min.y, box.max.z),
-	//         new THREE.Vector3(box.min.x, box.max.y, box.min.z),
-	//         new THREE.Vector3(box.min.x, box.max.y, box.max.z),
-	//         new THREE.Vector3(box.max.x, box.min.y, box.min.z),
-	//         new THREE.Vector3(box.max.x, box.min.y, box.max.z),
-	//         new THREE.Vector3(box.max.x, box.max.y, box.min.z),
-	//         new THREE.Vector3(box.max.x, box.max.y, box.max.z),
-	//     ];
-
-	//     corners.forEach(corner => corner.applyMatrix4(rotationMatrix));
-	//     const rotatedBox = new THREE.Box3();
-	//     corners.forEach(corner => rotatedBox.expandByPoint(corner));
-	//     return rotatedBox;
-	// }
-
 	calculateOptimalRadius(box) {
-		// Get the corners of the box
 		const corners = [
 			new THREE.Vector3(box.min.x, box.min.y, box.min.z),
 			new THREE.Vector3(box.min.x, box.min.y, box.max.z),
@@ -102,26 +71,21 @@ export class CameraManager {
 			new THREE.Vector3(box.max.x, box.max.y, box.max.z),
 		];
 
-		// Calculate FOVs
 		const vFov = this.config.fov * Math.PI / 180;
 		const aspect = this.camera.aspect;
 		const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
 
 		let maxRadius = 0;
 
-		// Check each corner
 		corners.forEach(corner => {
-			// Calculate required radius for this corner
 			const heightRadius = Math.abs(corner.y) / Math.tan(vFov / 2);
 			const widthRadius = Math.abs(corner.x) / Math.tan(hFov / 2);
 			const depthRadius = Math.abs(corner.z);
 
-			// Get maximum radius needed for this corner
 			const cornerRadius = Math.max(heightRadius, widthRadius, depthRadius);
 			maxRadius = Math.max(maxRadius, cornerRadius);
 		});
 
-		// Apply margin
 		return maxRadius * this.config.polar.calculatedRadiusMargin;
 	}
 
@@ -253,20 +217,17 @@ export class CameraManager {
 	}
 
 	debugRotatedBox(rotatedBox) {
-		// Remove any existing debug box
 		const existingHelper = this.game.scene.getObjectByName('debugBox');
 		if (existingHelper) {
 			this.game.scene.remove(existingHelper);
 		}
 
-		// Create a Box3Helper to visualize the bounding box
 		const helper = new THREE.Box3Helper(rotatedBox, 0xff0000);
 		helper.name = 'debugBox';
 		helper.material.depthTest = false;
 		helper.material.transparent = true;
 		helper.material.opacity = 0.5;
 
-		// Add the helper to the scene
 		this.game.scene.add(helper);
 	}
 }

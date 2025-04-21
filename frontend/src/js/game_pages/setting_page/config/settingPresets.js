@@ -6,7 +6,6 @@ import { horizontalPreset } from "../../../pong-game/src/config/preset/horizonta
 import { perspectivePreset } from "../../../pong-game/src/config/preset/perspective.js";
 import { horizontalControls } from "../../../pong-game/src/config/paddles/horizontalControls.js";
 import { perspectiveControls } from "../../../pong-game/src/config/paddles/perspectiveControls.js";
-// import {defaultConfig} from "../../pong-game/src/config/preset/defaultConfig.js"
 
 export const PRESET_TYPE = Object.freeze({
 	players: 'Players',

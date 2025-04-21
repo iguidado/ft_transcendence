@@ -34,7 +34,6 @@ export class InputManager {
     }
 
     setupMouseBinds() {
-        // Pour une future implémentation du contrôle à la souris
     }
 
     update() {
@@ -48,6 +47,5 @@ export class InputManager {
     cleanup() {
         document.removeEventListener('keydown', this.handleKeyDown);
         document.removeEventListener('keyup', this.handleKeyUp);
-        // Nettoyage des autres événements
     }
 }

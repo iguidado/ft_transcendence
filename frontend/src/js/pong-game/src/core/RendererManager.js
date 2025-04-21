@@ -15,20 +15,17 @@ export class RendererManager {
         
         this.renderer.setClearColor(0xF03DAA, 0);
         
-        // Get initial dimensions
-        const width = this.container.clientWidth || 1;  // Prevent zero width
-        const height = this.container.clientHeight || 1; // Prevent zero height
+        const width = this.container.clientWidth || 1;
+        const height = this.container.clientHeight || 1;
         
-        this.renderer.setSize(width, height, false); // false = don't update style
+        this.renderer.setSize(width, height, false);
         
-        // Set renderer element to fill container precisely
         this.renderer.domElement.style.display = 'block';
         this.renderer.domElement.style.width = '100%';
         this.renderer.domElement.style.height = '100%';
         
         this.container.appendChild(this.renderer.domElement);
 
-        // Debounce setup for resize
         this.resizeDebounce = this.debounce(() => this.handleResize(), 16); 
         
         window.addEventListener('resize', this.resizeDebounce);
@@ -36,12 +33,10 @@ export class RendererManager {
         this.resizeObserver.observe(this.container);
         window.addEventListener('orientationchange', this.resizeDebounce);
         
-        // Initial size setup
         this.handleResize();
     }
 
     render(scene, camera) {
-        // Safety check - only render if both scene and camera are properly initialized
         if (scene && camera && camera.matrixWorldAutoUpdate !== undefined) {
             this.renderer.render(scene, camera);
         }
@@ -58,11 +53,9 @@ export class RendererManager {
     }
 
     handleResize() {
-        // Get dimensions, ensure they're never zero
         const width = Math.max(1, this.container.clientWidth);
         const height = Math.max(1, this.container.clientHeight);
         
-        // Update renderer size with pixelRatio for proper resolution
         this.renderer.setSize(width, height, false);
     }
 

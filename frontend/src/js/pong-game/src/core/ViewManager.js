@@ -12,7 +12,6 @@ export class ViewManager {
             this.config.views = {}
         if (!this.config.views.cameraPresets || !this.config.views.cameraPresets.length)
             this.config.views.cameraPresets = [{}]
-        // Initialize containerFitting property with default value
         if (this.config.views.containerFitting === undefined)
             this.config.views.containerFitting = false
         this.init()
@@ -39,18 +38,14 @@ export class ViewManager {
             this.createDefaultContainer();
         }
         
-        // Calculate number of views from presets array
         const numViews = this.config.views.cameraPresets ? this.config.views.cameraPresets.length : 0;
         
-        // If we have no presets, don't try to create views
         if (numViews === 0) return;
         
         for (let i = 0; i < numViews; i++) {
             const viewElement = document.createElement('div');
             viewElement.classList.add("pong-view-element");
-            // viewElement.style.border = "solid 2px black";
             
-            // Set width and height based on layout
             if (this.config.views.layout === 'horizontal') {
                 viewElement.style.width = `${100 / numViews}%`;
                 viewElement.style.height = '100%';
@@ -68,11 +63,9 @@ export class ViewManager {
             
             this.game.container.appendChild(viewElement);
 
-            // Add the view with the corresponding preset
             const cameraConfig = this.config.views.cameraPresets[i] || {};
             this.createView(viewElement, cameraConfig);
 
-            // Ajuster le conteneur après son ajout au DOM
             setTimeout(() => this.fitContainerToBoard(viewElement), 0);
         }
     }
@@ -106,42 +99,35 @@ export class ViewManager {
     cleanup() {
 		for (const view of this.views) {
 			view.rendererManager.cleanup();
-			// Remove the view container from DOM if it exists
 			if (view.container && view.container.parentNode) {
 				view.container.parentNode.removeChild(view.container);
 			}
 		}
 		
-		// Clear the views array
 		this.views = [];
 	}
 
     fitContainerToBoard(container) {
         if (!this.config.views.containerFitting) return;
 
-        // Récupérer les dimensions du board depuis la configuration
         const boardWidth = this.config.board.width;
         const boardHeight = this.config.board.height;
         const boardAspectRatio = boardWidth / boardHeight;
 
-        // Récupérer les dimensions actuelles du conteneur
         const containerWidth = container.offsetWidth;
         const containerHeight = container.offsetHeight;
         const containerAspectRatio = containerWidth / containerHeight;
 
-        // Ajuster les dimensions du conteneur pour correspondre au ratio du board
         if (containerAspectRatio > boardAspectRatio) {
-            // Le conteneur est trop large, ajuster la largeur
             const newWidth = containerHeight * boardAspectRatio;
             container.style.width = `${newWidth}px`;
             container.style.height = `${containerHeight}px`;
-            container.style.margin = "0 auto"; // Centrer horizontalement
+            container.style.margin = "0 auto";
         } else {
-            // Le conteneur est trop haut, ajuster la hauteur
             const newHeight = containerWidth / boardAspectRatio;
             container.style.height = `${newHeight}px`;
             container.style.width = `${containerWidth}px`;
-            container.style.margin = "auto 0"; // Centrer verticalement
+            container.style.margin = "auto 0";
         }
     }
 }

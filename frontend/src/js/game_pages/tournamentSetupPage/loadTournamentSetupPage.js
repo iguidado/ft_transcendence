@@ -48,7 +48,7 @@ function addPlayerToList(playerName, id) {
 
 	const li = document.createElement("li");
 	li.className = "list-group-item d-flex justify-content-between align-items-center tournament__playerlist__item";
-	li.setAttribute("data-id", id); // Ajout de l'attribut data-id
+	li.setAttribute("data-id", id);
 
 	const span = document.createElement("span");
 	span.className = "tournament__playerlist__item__name";
@@ -175,7 +175,6 @@ function saveTDNbtn(modal, id, newTDNInput) {
 	saveButton.onclick = () => {
 		const newDisplayName = newTDNInput.value.trim();
 		if (newDisplayName) {
-			// Mettre à jour le display name du joueur
 			const player = players.find(p => p.id === id);
 			if (player) {
 				if (newDisplayName.length > 15) {
@@ -188,7 +187,6 @@ function saveTDNbtn(modal, id, newTDNInput) {
 					saveLocalProfileTDN = newDisplayName
 				}
 
-				// Mettre à jour l'affichage dans la liste
 				const playerListItem = document.querySelector(`#tournament__playerlist li[data-id="${id}"]`);
 				if (playerListItem) {
 					const nameSpan = playerListItem.querySelector(".tournament__playerlist__item__name");
@@ -197,7 +195,6 @@ function saveTDNbtn(modal, id, newTDNInput) {
 
 			}
 		}
-		// Fermer la modale
 		const modalInstance = bootstrap.Modal.getInstance(modal);
 		modalInstance.hide();
 	};

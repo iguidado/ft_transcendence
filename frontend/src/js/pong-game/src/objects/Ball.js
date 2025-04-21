@@ -7,24 +7,20 @@ export class Ball {
 		const context = gameRegistry.getCurrentContext();
         const config = context.config;
 		
-		// Initialize properties
-		this.direction = direction || new THREE.Vector3(1, 0, 0);  // Changed to Vector3
+		this.direction = direction || new THREE.Vector3(1, 0, 0); 
 		this.speed = speed || config.ball.speed;
 		this.radius = radius || config.ball.radius;
 		this.color = color || config.ball.color;
 		this.paddleBoncingSpeedMultiplicator = paddleBoncingSpeedMultiplicator || config.ball.paddleBoncingSpeedMultiplicator;
 
-		// Create the mesh
 		this.geometry = new THREE.SphereGeometry(this.radius);
 		this.material = new THREE.MeshBasicMaterial({ color: this.color });
 		this.mesh = new THREE.Mesh(this.geometry, this.material);
 		
-		// Set initial position
 		this.mesh.position.x = x || config.ball.x;
 		this.mesh.position.y = y || config.ball.y;
 		this.mesh.position.z = 0;
 		
-		// Store default values for reset
 		this.defaultDirection = this.direction.clone();
 		this.defaultSpeed = this.speed;
 		this.defaultPosition = this.mesh.position.clone();
@@ -56,7 +52,7 @@ export class Ball {
 				if (hitObject === paddleLeft.mesh) {
 					this.direction.x = Math.cos(bounceAngle);
 					this.direction.y = Math.sin(bounceAngle);
-				} else { // paddleRight.mesh
+				} else {
 					this.direction.x = -Math.cos(bounceAngle);
 					this.direction.y = Math.sin(bounceAngle);
 				}
@@ -70,7 +66,6 @@ export class Ball {
 					this.speed = config.ball.maxSpeed
 				}
 			} else {
-				// Handle other collisions (walls, etc.)
 				if (Math.abs(hit.face.normal.x) > Math.abs(hit.face.normal.y)) {
 					this.direction.x = -this.direction.x;
 				} else {
@@ -102,11 +97,9 @@ export class Ball {
 		const numRays = 10;
 		const arcAngle = Math.PI;
 		
-		// Récupérer et mettre à jour les meshes
 		const meshes = context.boardManager.boardGroup.children.filter(obj => 
 			obj.type === 'Mesh' && obj !== this.mesh
 		);
-		// Force update des matrices
 		meshes.forEach(mesh => {
 			mesh.updateMatrixWorld(true);
 			mesh.geometry.computeBoundingBox();
@@ -121,24 +114,21 @@ export class Ball {
 			const relativeAngle = (arcAngle / (numRays - 1)) * (i - (numRays - 1) / 2);
 			const rayAngle = directionAngle + relativeAngle;
 
-			 // Position de départ ajustée pour être exactement sur le bord de la sphère
 			const rayStart = new THREE.Vector3(
 				startPos.x + Math.cos(rayAngle) * radius,
 				startPos.y + Math.sin(rayAngle) * radius,
 				0
 			);
 
-			// Toujours utiliser la direction du mouvement (pas l'angle du rayon)
 			const rayDirection = normalizedDir;
 
 			const raycaster = new THREE.Raycaster();
-			raycaster.near = 0; // Ignorer les intersections trop proches
-			raycaster.far = config.board.width;   // Limiter la distance de détection
+			raycaster.near = 0; 
+			raycaster.far = config.board.width;
 			raycaster.set(rayStart, rayDirection);
 
 			const intersects = raycaster.intersectObjects(meshes, false);
 
-			// Filtrer les intersections valides
 			const validIntersects = intersects.filter(intersect => 
 				intersect.distance > raycaster.near && 
 				intersect.distance < raycaster.far
@@ -146,7 +136,6 @@ export class Ball {
 
 			if (validIntersects.length > 0) {
 				const hit = validIntersects[0];
-				// console.log(`Ray ${i}: angle=${(rayAngle * 180 / Math.PI).toFixed(2)}°, distance=${hit.distance.toFixed(2)}`);
 
 				const hitPoint = new THREE.Vector3().copy(hit.point);
 				if (config.ball.debugRayCaster) {
@@ -160,7 +149,7 @@ export class Ball {
 				}
 			}
 
-			if (config.ball.debugRayCaster) { // Visualisation du rayon
+			if (config.ball.debugRayCaster) {
 				const rayLength = validIntersects.length > 0 ? validIntersects[0].distance : config.board.width;
 				const rayEnd = new THREE.Vector3(
 					rayStart.x + rayDirection.x * rayLength,
@@ -171,7 +160,6 @@ export class Ball {
 				this.debugObjects.push(addLine([rayStart, rayEnd], rayColor));
 			}
 			
-			// Mise à jour de la collision la plus proche
 			if (validIntersects.length > 0 && validIntersects[0].distance < closestDistance) {
 				closestDistance = validIntersects[0].distance;
 				closestIntersection = validIntersects[0];

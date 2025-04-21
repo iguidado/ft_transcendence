@@ -10,16 +10,14 @@ import { loadProfilePage } from "../profile.js"
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
     modalElement.addEventListener('shown.bs.modal', () => {
-    //   loadAvailableAvatars();
     });
     
-    setupAvatarUpload(); // Ajout de la fonction pour l'upload d'avatar
+    setupAvatarUpload();
     twoFactorAuthSection(profileData);
     saveSettings();
     disconnectBtn();
 }
 
-// Fonction simplifiée qui ne s'occupe que du comportement
 function setupAvatarUpload() {
     const avatarInput = document.getElementById("avatarUpload");
     const avatarPreview = document.getElementById("avatarPreview");
@@ -27,31 +25,24 @@ function setupAvatarUpload() {
     avatarInput.addEventListener("change", (event) => {
         const file = event.target.files[0];
         if (file) {
-            // Vérifier si c'est une image
             if (!file.type.startsWith("image/")) {
                 return;
             }
             
-            // Créer un lecteur de fichier
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Charger l'image
                 const img = new Image();
                 img.onload = function() {
-                    // Créer un canvas pour redimensionner l'image
                     const canvas = document.createElement("canvas");
                     canvas.width = 50;
                     canvas.height = 50;
                     const ctx = canvas.getContext("2d");
                     
-                    // Dessiner l'image redimensionnée
                     ctx.drawImage(img, 0, 0, 50, 50);
                     
-                    // Mettre à jour l'aperçu
                     avatarPreview.src = canvas.toDataURL("image/jpeg");
                     avatarPreview.style.display = "block";
                     
-                    // Stocker l'image redimensionnée pour l'envoi ultérieur
                     canvas.toBlob((blob) => {
                         avatarInput.resizedBlob = blob;
                     }, "image/jpeg", 0.9);
@@ -96,8 +87,8 @@ function twoFactorAuthSection(profileData) {
 		verifyEmailOTP(otp, (res) => {
 			const modal = document.getElementById("settingsModal");
 			const modalInstance = bootstrap.Modal.getInstance(modal);
-			modalInstance.hide(); // Cacher la modale
-			modal.querySelectorAll("input").forEach(input => input.value = ""); // Nettoyer les champs de la modale
+			modalInstance.hide(); 
+			modal.querySelectorAll("input").forEach(input => input.value = ""); 
 			load_page("profile");
 		});
 	});
@@ -109,7 +100,6 @@ function displayCodeValidation(res) {
 }
 
 function toggle2faError(err, res) {
-	// TODO show errors
 	console.warn("Error:", err)
 	console.warn("API Response:", res)
 }
@@ -121,7 +111,6 @@ function saveSettings() {
         let displayNameUpdated = false;
         let avatarUpdated = false;
 
-        // Gestion du nom d'utilisateur
         const newDisplayName = document.getElementById("newDisplayName").value.trim(); 
         if (newDisplayName) {
             if (newDisplayName.length > 15 || newDisplayName.length < 2) {
@@ -143,7 +132,6 @@ function saveSettings() {
             }
         }
 
-        // Gestion de l'avatar
         const avatarInput = document.getElementById("avatarUpload");
         if (avatarInput && avatarInput.files.length > 0 && avatarInput.resizedBlob) {
             const formData = new FormData();
@@ -181,7 +169,6 @@ function saveSettings() {
         } else if (avatarInput) {
             displayError("Please select an image to upload.");
         }
-        // Only reload the page after both updates are complete
         if (displayNameUpdated || avatarUpdated) {
             load_page("profile");
         }

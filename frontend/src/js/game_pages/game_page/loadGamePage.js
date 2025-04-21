@@ -34,9 +34,7 @@ export function loadGamePage({game, container, config, players=[], onEndMatch}) 
 	container.id = "pong-game";
 	containerSetup.appendChild(container);
 	game = new Game(container, config, scoreText, leftPlayer, rightPlayer);
-	// game.scoreMonitor.onScore = (scores) => {
-	// 	console.log("scores", scores)
-	// }
+
 	game.scoreMonitor.onEndMatch = (winnerSide) => {
 		if (players.length > 1) {
 			pushHistory().then(() => {

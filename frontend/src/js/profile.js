@@ -220,14 +220,11 @@ function displayFriendsList(profileData) {
 		statusIndicator.style.marginRight = "10px";
 		statusIndicator.style.backgroundColor = friend.is_online ? "green" : "red";
 
-		// Nom de l'ami
-
 		const friendName = document.createElement("span");
 		friendName.textContent = chooseName(friend).charAt(0).toUpperCase() + chooseName(friend).slice(1);
 		friendName.className = "player-link";
 		friendName.style.cursor = "pointer";
 
-		// Ajouter l'indicateur et le nom à l'élément de liste
 		friendItem.appendChild(statusIndicator);
 		friendItem.appendChild(friendName);
 
@@ -244,7 +241,7 @@ function displayMatchHistory(matchHistory) {
     let currentProfileUsername = profileData.username;
 	currentProfileUsername = currentProfileUsername == "" ? profileData.username : currentProfileUsername;
     const matchHistoryContainer = document.getElementById("matchHistory");
-    matchHistoryContainer.innerHTML = ''; // Réinitialiser le conteneur
+    matchHistoryContainer.innerHTML = '';
 
     if (!matchHistory || matchHistory.length === 0) {
         matchHistoryContainer.innerHTML = '<p>No match historic yet</p>';

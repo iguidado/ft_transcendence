@@ -17,7 +17,6 @@ export function updateAvatarRequest(formData, responseHandler=updateAvatarRespon
         return Promise.reject(error);
     }
     
-    // Récupérer le fichier depuis formData pour l'adapter au format attendu par patchAvatar
     const avatarFile = formData.get('avatar');
     if (!avatarFile) {
         const error = new Error("Aucun fichier d'avatar trouvé dans le FormData");
@@ -28,7 +27,7 @@ export function updateAvatarRequest(formData, responseHandler=updateAvatarRespon
     return patchAvatar({
         UrlPath: "/api/user/profile/update_avatar/",
         body: {
-            file: avatarFile  // Utiliser le format attendu par patchAvatar
+            file: avatarFile 
         },
         responseHandler,
         errorHandler

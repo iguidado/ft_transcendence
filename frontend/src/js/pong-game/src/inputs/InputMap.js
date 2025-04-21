@@ -37,7 +37,6 @@ export class InputMap {
 		const { keys } = this.config.camera.controls;
 		if (!this.config.camera.controls.enabled) return;
 	
-		// Map keys to operations on all cameras
 		this.map.set(keys.phiPos, 
 			() => this.context.viewManager.views.forEach(({cameraManager}) => cameraManager.phiUp()));
 		this.map.set(keys.phiNeg, 
