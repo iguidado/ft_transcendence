@@ -1,9 +1,13 @@
-import { API_ADDR } from "../api/config/apiConfig.js"
+//import { API_ADDR } from "../api/config/apiConfig.js"
+//import { SOCKET_ADDR } from "../api/config/apiConfig.js"
 
 // Gestionnaire centralisé de connexion WebSocket
 
 // Variable globale pour stocker la connexion WebSocket
 let userStatusSocket = null;
+
+const SOCKET_ADDR = "localhost:__HTTPS_PORT__"
+
 
 /**
  * Initialise la connexion WebSocket
@@ -36,7 +40,7 @@ export function initializeWebSocketConnection() {
     
     // Option 2: Valeur codée en dur pour le développement
 //	const backendHost = API_ADDR;
-    const backendHost = "localhost:__HTTPS_PORT__";
+    const backendHost = SOCKET_ADDR;
     
     // Construire l'URL correcte avec le token
     const encodedToken = encodeURIComponent(token);
