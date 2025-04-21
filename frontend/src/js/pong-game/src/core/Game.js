@@ -13,18 +13,16 @@ export class Game {
 	constructor(container, config_custom = {}, scoreContainer, leftPlayer, rightPlayer) {
 		this.gameId = currId++;
 		this.isRunning = false;
-		this.container = container || null; // Will be created by ViewManager if needed
+		this.container = container || null;
 		gameRegistry.registerContext(this.gameId, this);
 		gameRegistry.setCurrentContext(this.gameId);
 
 		this.config = initConfig(config_custom);
 		this.scene = initScene();
-		// Initialize board and game objects
 		this.boardManager = new BoardManager();
 		this.inputManager = new InputManager();
 		this.viewManager = new ViewManager();
 
-		// Set up resize handler with bound context
 		this._handleResizeBound = this.handleResize.bind(this);
 		window.addEventListener('resize', this._handleResizeBound);
 		this.viewManager.render();
@@ -87,7 +85,6 @@ export class Game {
 			this.viewManager.cleanup();
 		}
 
-		// Remove game from registry
 		gameRegistry.contexts.delete(this.gameId);
 	}
 

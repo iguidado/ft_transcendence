@@ -69,52 +69,44 @@ export class Paddle {
 		if (currentTime - this.lastReactionTime >= reactionDelay) {
 			this.lastReactionTime = currentTime;
 
-			// Simulate ball trajectory with wall bounces
 			let simulatedPosition = ball.mesh.position.clone();
 			let simulatedDirection = ballDirection.clone();
 			let timeToImpact = 0;
 
-			// Safety counter to prevent infinite loops
 			let safetyCounter = 0;
-			const maxIterations = 10; // Maximum number of iterations allowed
+			const maxIterations = 10;
 
 			while (true) {
-				// Increment safety counter
 				safetyCounter++;
 				if (safetyCounter > maxIterations) {
-					this.predictedY = 0; // Default to center if simulation fails
+					this.predictedY = 0;
 					break;
 				}
 
-				// Calculate time to next vertical wall
 				const distanceToWall =
 					simulatedDirection.y > 0
 						? this.maxY - simulatedPosition.y
 						: simulatedPosition.y - this.minY;
 				const timeToWall = Math.abs(distanceToWall / simulatedDirection.y / ballSpeed);
 
-				// Calculate time to paddle
 				const distanceToPaddle = this.isLeft
 					? this.mesh.position.x - simulatedPosition.x
 					: simulatedPosition.x - this.mesh.position.x;
 				const timeToPaddle = Math.abs(distanceToPaddle / (ballSpeed * simulatedDirection.x));
 
-				// Check if the ball is moving away from the paddle
 				if ((this.isLeft && simulatedDirection.x > 0) || (!this.isLeft && simulatedDirection.x < 0)) {
-					this.predictedY = 0; // Default to center if ball is moving away
+					this.predictedY = 0;
 					return;
 				}
 
 				if (timeToPaddle < timeToWall) {
-					// Ball will reach the paddle before hitting a wall
 					timeToImpact += timeToPaddle;
 					simulatedPosition.add(simulatedDirection.multiplyScalar(ballSpeed * timeToPaddle));
 					break;
 				} else {
-					// Ball will hit a wall first
 					timeToImpact += timeToWall;
 					simulatedPosition.add(simulatedDirection.multiplyScalar(ballSpeed * timeToWall));
-					simulatedDirection.y *= -1; // Reverse direction on wall bounce
+					simulatedDirection.y *= -1;
 				}
 			}
 

@@ -1,7 +1,12 @@
 import { handleRegistration } from "./register.js";
 import { loginForm } from "./login_page/loginForm.js";
+import { disconnect } from "./utils/disconnect.js";
+import { getProfileData } from "./utils/profileUtils.js";
 
 export function loadLoginPage(onloginSuccess) {
+	if(!onloginSuccess && getProfileData()) {
+		disconnect()
+	}
 	loginForm(onloginSuccess);
 	const registerBtn = document.getElementById("registerButton");
 	if (registerBtn) {

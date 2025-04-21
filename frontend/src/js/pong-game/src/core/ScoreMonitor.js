@@ -29,7 +29,6 @@ export class ScoreMonitor {
 		const config = this.context.config;
 		const boundaryX = config.board.width / 2 + 20;
 
-		// Check if ball is out of bounds
 		if (ball.mesh.position.x > boundaryX || ball.mesh.position.x < -boundaryX) {
 			const scoringSide = ball.mesh.position.x > boundaryX ? "left" : "right";
 			return this.handleScore(scoringSide);
