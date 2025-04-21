@@ -8,6 +8,11 @@ class ResetExpiredCodesJob(CronJobBase):
 
     def do(self):
         User.objects.filter(
-            code_expiry_time__lt=timezone.now(),
-            otp__isnull=False
-        ).update(otp='', otp_expiry_time=None)
+            otp_email_expiry_time__lt=timezone.now(),
+            otp_email__isnull=False
+        ).update(otp_email='', otp_email_expiry_time=None)
+
+        User.objects.filter(
+            otp_2fa_expiry_time__lt=timezone.now(),
+            otp_2fa__isnull=False
+        ).update(otp_2fa='', otp_2fa_expiry_time=None)

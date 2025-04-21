@@ -114,8 +114,6 @@ class UpdateAvatarSerializer(serializers.ModelSerializer):
     def validate_avatar(self, value):
         if value is None:
             raise serializers.ValidationError("Avatar is required")
-        
-        # Vérification du format de l'image
         try:
             img = Image.open(value)
             if img.format not in ['JPEG', 'PNG']:
