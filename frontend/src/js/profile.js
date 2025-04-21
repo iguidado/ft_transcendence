@@ -224,6 +224,8 @@ function displayFriendsList(profileData) {
 
 		const friendName = document.createElement("span");
 		friendName.textContent = chooseName(friend).charAt(0).toUpperCase() + chooseName(friend).slice(1);
+		friendName.className = "player-link";
+		friendName.style.cursor = "pointer";
 
 		// Ajouter l'indicateur et le nom à l'élément de liste
 		friendItem.appendChild(statusIndicator);
@@ -251,6 +253,7 @@ function displayMatchHistory(matchHistory) {
 
     matchHistory.forEach(async match => {
 		const playerOneName = chooseName(await profileByUsernameRoute(match.player_one));
+		const playerTwoName = chooseName(await profileByUsernameRoute(match.player_two));
         const matchItem = document.createElement("div");
         matchItem.className = "match-item";
 
@@ -275,7 +278,7 @@ function displayMatchHistory(matchHistory) {
 
         const player2Container = document.createElement("p");
         const player2Link = document.createElement("span");
-        player2Link.textContent = match.player_two;
+        player2Link.textContent = playerTwoName.charAt(0).toUpperCase() + playerTwoName.slice(1);
         player2Link.className = "player-link";
         player2Link.style.cursor = "pointer";
         player2Link.onclick = (e) => {

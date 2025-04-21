@@ -116,22 +116,31 @@ function toggle2faError(err, res) {
 
 function saveSettings() {
     const saveButton = document.getElementById("saveSettings");
-    saveButton.addEventListener("click", (e) => {
-        e.preventDefault()
+    saveButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+        let displayNameUpdated = false;
+        let avatarUpdated = false;
+
         // Gestion du nom d'utilisateur
         const newDisplayName = document.getElementById("newDisplayName").value.trim(); 
-		console.log("newDisplayName", newDisplayName)
         if (newDisplayName) {
             if (newDisplayName.length > 15 || newDisplayName.length < 2) {
                 displayError("Displayname must be between 2 and 15 characters (˶ᵔ ᵕ ᵔ˶)");
                 return;
             }
             
-            updateDisplayNameRequest(newDisplayName, (response) => {
-                document.getElementById("usernameDisplay").textContent =
-                newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
-            }, (error) => {
-            });
+            try {
+                await new Promise((resolve, reject) => {
+                    updateDisplayNameRequest(newDisplayName, (response) => {
+                        document.getElementById("usernameDisplay").textContent =
+                        newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
+                        displayNameUpdated = true;
+                        resolve();
+                    }, reject);
+                });
+            } catch (error) {
+                console.error("Error updating display name:", error);
+            }
         }
 
         // Gestion de l'avatar
@@ -140,33 +149,43 @@ function saveSettings() {
             const formData = new FormData();
             formData.append("avatar", avatarInput.resizedBlob, "avatar.jpg");
             
-            updateAvatarRequest(formData, 
-                (response) => {
-                    console.log("Avatar mis à jour avec succès:", response);
-                    
-                    // Mettre à jour tous les éléments d'avatar dans l'interface
-                    const avatarElements = document.querySelectorAll('[data-user-avatar], .profile-avatar, .user-avatar, #userAvatar');
-                    const newAvatarUrl = response.avatar || response.message && `/media/avatars/${response.avatarUrl}`;
-                    
-                    if (newAvatarUrl) {
-                        avatarElements.forEach(el => {
-                            if (el) el.src = newAvatarUrl;
-                        });
-                        
-                        // Mettre à jour aussi dans le localStorage si vous stockez les données utilisateur
-                        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-                        if (userData) {
-                            userData.avatar = newAvatarUrl;
-                            localStorage.setItem('userData', JSON.stringify(userData));
-                        }
-                    }
-                    load_page("profile");
-                },
-                (error) => {
-                }
-            );
+            try {
+                await new Promise((resolve, reject) => {
+                    updateAvatarRequest(formData, 
+                        (response) => {
+                            console.log("Avatar mis à jour avec succès:", response);
+                            
+                            const avatarElements = document.querySelectorAll('[data-user-avatar], .profile-avatar, .user-avatar, #userAvatar');
+                            const newAvatarUrl = response.avatar || response.message && `/media/avatars/${response.avatarUrl}`;
+                            
+                            if (newAvatarUrl) {
+                                avatarElements.forEach(el => {
+                                    if (el) el.src = newAvatarUrl;
+                                });
+                                
+                                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                                if (userData) {
+                                    userData.avatar = newAvatarUrl;
+                                    localStorage.setItem('userData', JSON.stringify(userData));
+                                }
+                            }
+                            avatarUpdated = true;
+                            resolve();
+                        },
+                        reject
+                    );
+                });
+            } catch (error) {
+                displayError("Error updating avatar:", error);
+            }
+        } else if (avatarInput) {
+            displayError("Please select an image to upload.");
         }
-        
+        // Only reload the page after both updates are complete
+        if (displayNameUpdated || avatarUpdated) {
+            load_page("profile");
+        }
+
         const modal = document.getElementById('settingsModal');
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();

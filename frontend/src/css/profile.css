@@ -168,3 +168,8 @@ img {
 .player-link:hover {
   color: #fd9b5d;
 }
+
+#matchHistory {
+  overflow-y: auto;
+  max-height: 30vh;
+}
