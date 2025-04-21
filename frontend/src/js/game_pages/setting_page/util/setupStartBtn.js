@@ -1,4 +1,5 @@
 import { load_page } from "../../../router.js"
+import { displayError } from "../../../utils/displayError.js"
 import { getAccessToken } from "../../../utils/getAccessToken.js"
 import { getProfileData } from "../../../utils/profileUtils.js"
 import { loadGamePage } from "../../game_page/loadGamePage.js"
@@ -13,9 +14,13 @@ export const setupStartBtn = (ctx) => {
 		consople.error("setupStartBtn : can't find #start-btn")
 	startBtn.addEventListener("click", (e) => {
 		e.preventDefault()
+		let playerCount = playersCount(ctx.config)
+		if (!playerCount) {
+			displayError("Choose Mod pls")
+			return
+		}
 		if (ctx.game)
 			ctx.game.cleanup();
-		let playerCount = playersCount(ctx.config)
 		const localProfile = getProfileData()
 		console.log(playerCount)
 		if (!playerCount || (playerCount == 1 && localProfile)) {
@@ -39,6 +44,7 @@ export const setupStartBtn = (ctx) => {
 				return
 			}
 			const players = [localProfile, ...guestList]
+			clearGuestStore()
 			loadGamePage({ ...ctx, players })
 		})
 	})

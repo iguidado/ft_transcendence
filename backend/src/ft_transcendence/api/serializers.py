@@ -34,7 +34,7 @@ class MatchSerializer(serializers.ModelSerializer):
 class FriendSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ['username', 'is_online', 'avatar']
+		fields = ['username', 'displayName', 'is_online', 'avatar']
 
 class UserProfileSerializer(serializers.ModelSerializer):
 	match_history = serializers.SerializerMethodField()
@@ -156,6 +156,6 @@ class AddFriendSerializer(serializers.ModelSerializer):
 class LeaderboardSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = get_user_model()
-		fields = ['username', 'win_ratio', 'avatar', 'wins', 'looses']
+		fields = ['username', 'displayName', 'win_ratio', 'avatar', 'wins', 'looses']
 
 

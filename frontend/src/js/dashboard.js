@@ -1,5 +1,6 @@
 import { leaderboardRequest } from "./api/routes/leaderboard.js";
 import { load_page } from "./router.js";
+import { chooseName } from "./utils/profileUtils.js";
 // import { displayError } from "./utils/displayError.js";
 
 
@@ -39,7 +40,7 @@ function displayInformation(data) {
 		// Add username cell with clickable link
 		const usernameCell = document.createElement('td');
 		const usernameLink = document.createElement('span');
-		usernameLink.textContent = player.username || 'Unknown';
+		usernameLink.textContent = chooseName(player).charAt(0).toUpperCase() + chooseName(player).slice(1);
 		usernameLink.className = 'player-link';
 		usernameLink.style.cursor = 'pointer';
 		usernameLink.onclick = (e) => {
