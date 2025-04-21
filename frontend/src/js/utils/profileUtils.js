@@ -2,18 +2,18 @@ import { getApiConfigDefault } from "../api/config/apiConfig.js"
 import { profileRequest } from "../api/routes/profileRoute.js"
 
 
-export const pullProfile = () => {
-	return new Promise((resolve, reject) => {
-		profileRequest((data) => {
-				localStorage.setItem("userProfile", JSON.stringify(data))
-				resolve(data)
-			},
-			(err) => {
-				localStorage.setItem("userProfile", JSON.stringify(null))
-				resolve(null)
-			}
-		)
-	})
+export const pullProfile = async () => {
+	let profileData = null
+	await profileRequest(
+		(data) => {
+			localStorage.setItem("userProfile", JSON.stringify(data))
+			profileData = data
+		},
+		(err) => {
+			localStorage.setItem("userProfile", JSON.stringify(null))
+		}
+	)
+	return profileData
 }
 
 export const deleteProfileData = () => {

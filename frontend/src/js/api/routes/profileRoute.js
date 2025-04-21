@@ -8,12 +8,12 @@ function profileErrorHandler(error) {
 	console.log(error);
 }
 
-export function profileRequest(
+export async function profileRequest(
 	responseHandler = profileResponseHandler,
 	errorHandler = profileErrorHandler,
 	token = null
 ) {
-	getRequest({
+	return getRequest({
 		UrlPath: "/api/user/profile/",
 		responseHandler,
 		errorHandler,
