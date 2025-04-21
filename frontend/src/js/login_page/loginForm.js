@@ -1,11 +1,10 @@
 import { loginRequest } from "../api/routes/loginRoute.js";
 import { verifyLoginOTP } from "../api/routes/user/verifyLoginOTP.js";
 import { getGuestList } from "../game_pages/loginGuestPage/utils/getGuestList.js";
+import { disconnect } from "../utils/disconnect.js";
 import { displayError } from "../utils/displayError.js";
 import { getProfileData } from "../utils/profileUtils.js";
-import { saveAccessToken } from "../utils/saveAccessToken.js";
 import { updateLocalProfile } from "../utils/updateLocalProfile.js";
-import { initializeWebSocketConnection } from "../utils/webSocketManager.js"; // nouveau import
 
 function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 	console.log("API Login response : ", res);
@@ -71,7 +70,7 @@ export function loginForm(onloginSuccess) {
 		e.preventDefault();
 		const username = document.getElementById("loginInput").value;
 		const password = document.getElementById("passwordInput").value;
-		if (!onloginSuccess) saveAccessToken(null);
+		if (!onloginSuccess) disconnect();
 		if (usernameAlreadyLogin(username)) {
 			displayError("User already logged in");
 			return;

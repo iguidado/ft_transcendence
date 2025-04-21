@@ -9,7 +9,7 @@ export function handleRegistration(onloginSuccess) {
 		return
 	registerForm.addEventListener("submit", async (e) => {
 		e.preventDefault()
-		saveAccessToken(null)
+		// saveAccessToken(null)
 		const username = registerForm.querySelector(
 			'input[placeholder="Choose your login"]'
 		).value
