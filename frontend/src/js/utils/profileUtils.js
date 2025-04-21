@@ -37,3 +37,13 @@ export function formatProfileData(profile) {
 		profile.avatar = getApiConfigDefault().url + profile.avatar
 	return profile
 }
+
+
+export function chooseName(profile) {
+	if (profile?.displayName && profile?.displayName.length > 0)
+		return profile?.displayName
+	if (profile?.username && profile?.username.length > 0)
+		return profile?.username
+	console.log("ICI", profile)
+	return "Unknown"
+}

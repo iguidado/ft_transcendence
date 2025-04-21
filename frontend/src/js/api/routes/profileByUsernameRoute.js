@@ -8,7 +8,7 @@ function usersErrorHandler(error) {
 }
 
 export async function profileByUsernameRoute(username, responseHandler=usersResponseHandler, errorHandler=usersErrorHandler) {
-	await getRequest({
+	return await getRequest({
 		UrlPath: "/api/user/"+username+"/profile/",
 		responseHandler,
 		errorHandler

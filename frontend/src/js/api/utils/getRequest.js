@@ -32,14 +32,16 @@ export async function getRequest({
             const errorData = await response?.json().catch(() => ({}))
             let error = new Error(errorData.message || `Request failed with status ${response?.status}`)
             errorHandler(error, response)
-            return
+            return null
         }
 
         const data = await response.json()
         responseHandler(data)
+        return data
 
     } catch (error) {
         // Appeler le gestionnaire d'erreurs sans afficher dans la console
         errorHandler(error)
+        return null
     }
 }

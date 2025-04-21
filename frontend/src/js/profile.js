@@ -4,13 +4,14 @@ import { updateAvatarRequest, updateAvatarResponseHandler } from "./api/routes/u
 import { usersListRequest } from "./api/routes/usersRoute.js"
 import { addFriendRequest } from "./api/routes/addFriendRoute.js"
 import { load_page } from "./router.js"
-import { getProfileData, pullProfile } from "./utils/profileUtils.js"
+import { chooseName, getProfileData, pullProfile } from "./utils/profileUtils.js"
 import { deleteFriendRequest } from "./api/routes/deleteFriendRoute.js";
 import { initializeWebSocketConnection } from "./utils/webSocketManager.js";
 import { getProfileByUsername } from "./utils/getProfileByUsername.js"
 import { settingsModal } from "./utils/settingsModal.js"
 import { disconnect } from "./utils/disconnect.js"
 import { displayError } from "./utils/displayError.js"
+import { profileByUsernameRoute } from "./api/routes/profileByUsernameRoute.js"
 
 export async function loadProfilePage(username = null) {
 	await pullProfile()
@@ -183,7 +184,7 @@ function loadUsersList() {
 		users.forEach(user => {
 			const option = document.createElement("option");
 			option.value = user.username;
-			option.textContent = user.username;
+			option.textContent = chooseName(user).charAt(0).toUpperCase() + chooseName(user).slice(1);
 			friendUsernameElement.appendChild(option);
 		});
 	});
@@ -220,8 +221,9 @@ function displayFriendsList(profileData) {
 		statusIndicator.style.backgroundColor = friend.is_online ? "green" : "red";
 
 		// Nom de l'ami
+
 		const friendName = document.createElement("span");
-		friendName.textContent = friend.username;
+		friendName.textContent = chooseName(friend).charAt(0).toUpperCase() + chooseName(friend).slice(1);
 
 		// Ajouter l'indicateur et le nom à l'élément de liste
 		friendItem.appendChild(statusIndicator);
@@ -237,7 +239,7 @@ function displayFriendsList(profileData) {
 
 function displayMatchHistory(matchHistory) {
     const profileData = getProfileData();
-    let currentProfileUsername = window.location.pathname.split('/').pop() || profileData.username;
+    let currentProfileUsername = profileData.username;
 	currentProfileUsername = currentProfileUsername == "" ? profileData.username : currentProfileUsername;
     const matchHistoryContainer = document.getElementById("matchHistory");
     matchHistoryContainer.innerHTML = ''; // Réinitialiser le conteneur
@@ -247,7 +249,8 @@ function displayMatchHistory(matchHistory) {
         return;
     }
 
-    matchHistory.forEach(match => {
+    matchHistory.forEach(async match => {
+		const playerOneName = chooseName(await profileByUsernameRoute(match.player_one));
         const matchItem = document.createElement("div");
         matchItem.className = "match-item";
 
@@ -256,7 +259,7 @@ function displayMatchHistory(matchHistory) {
 
         const player1Container = document.createElement("p");
         const player1Link = document.createElement("span");
-        player1Link.textContent = match.player_one;
+        player1Link.textContent = playerOneName.charAt(0).toUpperCase() + playerOneName.slice(1);
         player1Link.className = "player-link";
         player1Link.style.cursor = "pointer";
         player1Link.onclick = (e) => {
@@ -287,8 +290,8 @@ function displayMatchHistory(matchHistory) {
         player2Container.append("Player 2 : ", player2Link, ` - Score : ${match.score_p2}`);
 
         const result = document.createElement("p");
-        // Determine if the current profile user is player one or two
         const isPlayerOne = match.player_one === currentProfileUsername;
+		console.log("isPlayerOne", isPlayerOne)
         const hasWon = isPlayerOne ? match.winner === match.player_one : match.winner === match.player_two;
         result.textContent = `Result : ${hasWon ? "Victory" : "Defeat"}`;
 
