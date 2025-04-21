@@ -49,7 +49,6 @@ services:
       /bin/tini -- /bin/bash -c "
         /usr/local/bin/docker-entrypoint.sh &
         export PID=\$!;
-        chown -R elasticsearch:root /usr/share/elasticsearch/snapshot/;
         /usr/share/elasticsearch/config/policy_scripts/main.sh;
         wait  \$PID;
       "

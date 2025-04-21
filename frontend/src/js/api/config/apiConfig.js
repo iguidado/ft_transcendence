@@ -1,11 +1,11 @@
 import { getAccessToken } from "../../utils/getAccessToken.js"
 
 
-export const API_ADDR = "127.0.0.1:8080"
+export const API_ADDR = "localhost:__HTTPS_PORT__"
 
 export const getApiConfigDefault = (token=null) => {
 	const obj = {
-		url: "http://"+API_ADDR,
+		url: "https://"+API_ADDR,
 		fetchOptions: {
 			credentials: "include",
 			headers: {

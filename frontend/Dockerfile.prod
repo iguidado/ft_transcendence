@@ -11,3 +11,4 @@ RUN echo "$HTTPS_PORT" > /tmp/ports
 
 RUN sed -i "s/__HTTPS_PORT__/$HTTPS_PORT/g" /etc/nginx/conf.d/default.conf 
 RUN sed -i "s/__HTTPS_PORT__/$HTTPS_PORT/g"  /usr/share/nginx/html/js/utils/webSocketManager.js
+RUN sed -i "s/__HTTPS_PORT__/$HTTPS_PORT/g"  /usr/share/nginx/html/js/api/config/apiConfig.js
