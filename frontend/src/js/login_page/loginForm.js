@@ -17,14 +17,13 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 		const twoFAModal = bootstrap.Modal.getOrCreateInstance(valide2FAsection);
 		twoFAModal.show();
 		if (!res.temp_token) {
-			console.warn("valide2FAsection !res.temp_token");
 			return;
 		}
 		document
 			.getElementById("validate2FAFromLogin")
 			.addEventListener("click", (e) => {
 				e.preventDefault();
-				const otp = document.getElementById("code2FAInputLogin").value;
+			const otp = document.getElementById("code2FAInputLogin").value;
 				verifyLoginOTP(
 					{ otp, temp_token: res.temp_token },
 					(res) => {
@@ -36,7 +35,7 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 						twoFAModal.hide();
 					},
 					(err) => {
-						console.warn("loginForm", err);
+						displayError("Invalid OTP. Please try again.");
 					}
 				);
 			});

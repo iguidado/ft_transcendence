@@ -69,7 +69,6 @@ export class Game {
 			this.boardManager.ball.move();
 			this.scoreMonitor.update()
 		} else {
-			console.warn("Ball not initialized in boardManager");
 		}
 	}
 

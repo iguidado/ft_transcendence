@@ -8,7 +8,7 @@ export function loadDashboardPage() {
 }
 
 function logErr(err) {
-	console.warn(err)
+	
 }
 
 function displayInformation(data) {
