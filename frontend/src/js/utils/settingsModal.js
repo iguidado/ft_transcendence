@@ -119,7 +119,8 @@ function saveSettings() {
     saveButton.addEventListener("click", (e) => {
         e.preventDefault()
         // Gestion du nom d'utilisateur
-        const newDisplayName = document.getElementById("newDisplayName").value.trim();        
+        const newDisplayName = document.getElementById("newDisplayName").value.trim(); 
+		console.log("newDisplayName", newDisplayName)
         if (newDisplayName) {
             if (newDisplayName.length > 15 || newDisplayName.length < 2) {
                 displayError("Displayname must be between 2 and 15 characters (˶ᵔ ᵕ ᵔ˶)");

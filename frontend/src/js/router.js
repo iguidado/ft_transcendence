@@ -8,6 +8,7 @@ import { gameRegistry } from "./pong-game/src/core/GameRegistry.js";
 // import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestStore.js";
 import { loadTournamentSetupPage } from "./game_pages/tournamentSetupPage/loadTournamentSetupPage.js";
 import { pullProfile } from "./utils/profileUtils.js";
+import { disconnect } from "./utils/disconnect.js";
 // import { loadSocketTestPage } from "./socket-test.js";
 
 
