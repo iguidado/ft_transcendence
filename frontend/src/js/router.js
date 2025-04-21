@@ -88,6 +88,7 @@ export async function load_page(url, props=undefined, pushHistory=true) {
 	if (config.script) await config.script(props);
 	if (pushHistory)
 		history.pushState({ page: tmp.join("/") }, "", `/${tmp.join("/")}`)
+	return
 }
 
 async function appendBuildingSideMenu(url, props) {

@@ -26,9 +26,9 @@ export class BoardManager {
 			texturePath: "../../../../rsc/pongTextures/wallTex.png"
 		})
 	
-		this.paddleLeft = new Paddle({ isLeft: true, color: 0x0000ff })
-		this.paddleRight = new Paddle({ isLeft: false })
-		this.ball = new Ball()
+		this.paddleLeft = new Paddle({ isLeft: true, color: 0x422445 })
+		this.paddleRight = new Paddle({ isLeft: false, color: 0x422445 })
+		this.ball = new Ball({color: 0x422445, radius: 1.5})
 	
 		this.boardGroup.add(this.wallTop.mesh)
 		this.boardGroup.add(this.wallBottom.mesh)
