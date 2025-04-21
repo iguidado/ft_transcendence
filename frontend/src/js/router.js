@@ -5,11 +5,9 @@ import { loadLoginPage } from "./login.js";
 import { loadProfilePage } from "./profile.js";
 import { loadDashboardPage } from "./dashboard.js";
 import { gameRegistry } from "./pong-game/src/core/GameRegistry.js";
-// import { clearGuestStore } from "./game_pages/loginGuestPage/utils/clearGuestStore.js";
 import { loadTournamentSetupPage } from "./game_pages/tournamentSetupPage/loadTournamentSetupPage.js";
 import { pullProfile } from "./utils/profileUtils.js";
 import { disconnect } from "./utils/disconnect.js";
-// import { loadSocketTestPage } from "./socket-test.js";
 
 
 export async function fetchHTMLContent(url) {
@@ -86,7 +84,6 @@ export async function load_page(url, props=undefined, pushHistory=true) {
 		}
 		mainContainer.innerHTML = htmlContent;
 	}
-	// On n'ajoute le menu que si ce n'est pas la page login ou si onLoginSuccess est dans les props
 	appendBuildingSideMenu(url, props)
 	if (config.script) await config.script(props);
 	if (pushHistory)
@@ -100,14 +97,12 @@ async function appendBuildingSideMenu(url, props) {
 	layout.innerHTML = htmlLayout;
 	console.log("url = ", url)
 	if (url === 'login') {
-		// Cacher tous les groupes d'URL
 		const allGroups = layout.querySelectorAll('[id$="Group"]');
 		allGroups.forEach(group => {
 			group.style.display = 'none';
 		});
 
 	} else {
-		// Comportement normal pour les autres pages
 		const groupElement = layout.querySelector(`#${url}Group`);
 		if (groupElement) {
 			groupElement.style.display = 'none';

@@ -10,16 +10,14 @@ import { loadProfilePage } from "../profile.js"
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
     modalElement.addEventListener('shown.bs.modal', () => {
-    //   loadAvailableAvatars();
     });
     
-    setupAvatarUpload(); // Ajout de la fonction pour l'upload d'avatar
+    setupAvatarUpload();
     twoFactorAuthSection(profileData);
     saveSettings();
     disconnectBtn();
 }
 
-// Fonction simplifiée qui ne s'occupe que du comportement
 function setupAvatarUpload() {
     const avatarInput = document.getElementById("avatarUpload");
     const avatarPreview = document.getElementById("avatarPreview");
@@ -27,31 +25,24 @@ function setupAvatarUpload() {
     avatarInput.addEventListener("change", (event) => {
         const file = event.target.files[0];
         if (file) {
-            // Vérifier si c'est une image
             if (!file.type.startsWith("image/")) {
                 return;
             }
             
-            // Créer un lecteur de fichier
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Charger l'image
                 const img = new Image();
                 img.onload = function() {
-                    // Créer un canvas pour redimensionner l'image
                     const canvas = document.createElement("canvas");
                     canvas.width = 50;
                     canvas.height = 50;
                     const ctx = canvas.getContext("2d");
                     
-                    // Dessiner l'image redimensionnée
                     ctx.drawImage(img, 0, 0, 50, 50);
                     
-                    // Mettre à jour l'aperçu
                     avatarPreview.src = canvas.toDataURL("image/jpeg");
                     avatarPreview.style.display = "block";
                     
-                    // Stocker l'image redimensionnée pour l'envoi ultérieur
                     canvas.toBlob((blob) => {
                         avatarInput.resizedBlob = blob;
                     }, "image/jpeg", 0.9);
@@ -96,8 +87,8 @@ function twoFactorAuthSection(profileData) {
 		verifyEmailOTP(otp, (res) => {
 			const modal = document.getElementById("settingsModal");
 			const modalInstance = bootstrap.Modal.getInstance(modal);
-			modalInstance.hide(); // Cacher la modale
-			modal.querySelectorAll("input").forEach(input => input.value = ""); // Nettoyer les champs de la modale
+			modalInstance.hide(); 
+			modal.querySelectorAll("input").forEach(input => input.value = ""); 
 			load_page("profile");
 		});
 	});
@@ -109,64 +100,79 @@ function displayCodeValidation(res) {
 }
 
 function toggle2faError(err, res) {
-	// TODO show errors
 	console.warn("Error:", err)
 	console.warn("API Response:", res)
 }
 
 function saveSettings() {
     const saveButton = document.getElementById("saveSettings");
-    saveButton.addEventListener("click", (e) => {
-        e.preventDefault()
-        // Gestion du nom d'utilisateur
+    saveButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+        let displayNameUpdated = false;
+        let avatarUpdated = false;
+
         const newDisplayName = document.getElementById("newDisplayName").value.trim(); 
-		console.log("newDisplayName", newDisplayName)
         if (newDisplayName) {
             if (newDisplayName.length > 15 || newDisplayName.length < 2) {
                 displayError("Displayname must be between 2 and 15 characters (˶ᵔ ᵕ ᵔ˶)");
                 return;
             }
             
-            updateDisplayNameRequest(newDisplayName, (response) => {
-                document.getElementById("usernameDisplay").textContent =
-                newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
-            }, (error) => {
-            });
+            try {
+                await new Promise((resolve, reject) => {
+                    updateDisplayNameRequest(newDisplayName, (response) => {
+                        document.getElementById("usernameDisplay").textContent =
+                        newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
+                        displayNameUpdated = true;
+                        resolve();
+                    }, reject);
+                });
+            } catch (error) {
+                console.error("Error updating display name:", error);
+            }
         }
 
-        // Gestion de l'avatar
         const avatarInput = document.getElementById("avatarUpload");
         if (avatarInput && avatarInput.files.length > 0 && avatarInput.resizedBlob) {
             const formData = new FormData();
             formData.append("avatar", avatarInput.resizedBlob, "avatar.jpg");
             
-            updateAvatarRequest(formData, 
-                (response) => {
-                    console.log("Avatar mis à jour avec succès:", response);
-                    
-                    // Mettre à jour tous les éléments d'avatar dans l'interface
-                    const avatarElements = document.querySelectorAll('[data-user-avatar], .profile-avatar, .user-avatar, #userAvatar');
-                    const newAvatarUrl = response.avatar || response.message && `/media/avatars/${response.avatarUrl}`;
-                    
-                    if (newAvatarUrl) {
-                        avatarElements.forEach(el => {
-                            if (el) el.src = newAvatarUrl;
-                        });
-                        
-                        // Mettre à jour aussi dans le localStorage si vous stockez les données utilisateur
-                        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-                        if (userData) {
-                            userData.avatar = newAvatarUrl;
-                            localStorage.setItem('userData', JSON.stringify(userData));
-                        }
-                    }
-                    load_page("profile");
-                },
-                (error) => {
-                }
-            );
+            try {
+                await new Promise((resolve, reject) => {
+                    updateAvatarRequest(formData, 
+                        (response) => {
+                            console.log("Avatar mis à jour avec succès:", response);
+                            
+                            const avatarElements = document.querySelectorAll('[data-user-avatar], .profile-avatar, .user-avatar, #userAvatar');
+                            const newAvatarUrl = response.avatar || response.message && `/media/avatars/${response.avatarUrl}`;
+                            
+                            if (newAvatarUrl) {
+                                avatarElements.forEach(el => {
+                                    if (el) el.src = newAvatarUrl;
+                                });
+                                
+                                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                                if (userData) {
+                                    userData.avatar = newAvatarUrl;
+                                    localStorage.setItem('userData', JSON.stringify(userData));
+                                }
+                            }
+                            avatarUpdated = true;
+                            resolve();
+                        },
+                        reject
+                    );
+                });
+            } catch (error) {
+                displayError("Error updating avatar:", error);
+            }
+        } else if (avatarInput) {
+            displayError("Please select an image to upload.");
         }
-        
+        if (displayNameUpdated || avatarUpdated) {
+            load_page("profile");
+        }
+
         const modal = document.getElementById('settingsModal');
         const modalInstance = bootstrap.Modal.getInstance(modal);
         modalInstance.hide();

@@ -17,18 +17,14 @@ export async function patchAvatar({
     if (!config)
         config = getApiConfigPatchAvatar()
     try {
-        // On ne veut pas créer nous-mêmes le FormData, mais utiliser celui qu'on nous passe
         const formData = new FormData();
         
-        // Ajouter le fichier avec la clé 'avatar' (comme attendu par le backend)
         formData.append('avatar', body.file);
 
         const requestOptions = {
             method: 'PATCH',
-            // IMPORTANT: Ne pas inclure de Content-Type ici - le navigateur le définira automatiquement
             headers: {
                 'Authorization': config.fetchOptions.headers.Authorization,
-                // Ne pas définir Content-Type pour un FormData
             },
             body: formData,
         }
