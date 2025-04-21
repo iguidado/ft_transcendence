@@ -36,7 +36,7 @@ export function initializeWebSocketConnection() {
     
     // Option 2: Valeur codée en dur pour le développement
 //	const backendHost = API_ADDR;
-    const backendHost = "localhost:4343";
+    const backendHost = "localhost:__HTTPS_PORT__";
     
     // Construire l'URL correcte avec le token
     const encodedToken = encodeURIComponent(token);

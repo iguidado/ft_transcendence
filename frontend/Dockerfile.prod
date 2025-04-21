@@ -5,8 +5,11 @@ ARG SOCKET_PORT
 
 COPY default.conf /etc/nginx/conf.d/default.conf
 
+COPY ./src/ /usr/share/nginx/html
+
 RUN echo "$HTTPS_PORT" > /tmp/ports
 
-RUN sed -i "s/__HTTPS_PORT__/$HTTPS_PORT/g" /etc/nginx/conf.d/default.conf
+RUN sed -i "s/__HTTPS_PORT__/$HTTPS_PORT/g" /etc/nginx/conf.d/default.conf 
+RUN sed -i "s/__HTTPS_PORT__/$HTTPS_PORT/g"  /usr/share/nginx/html/js/utils/webSocketManager.js
 
 RUN sed -i "s/__SOCKET_PORT__/$SOCKET_PORT/g" /etc/nginx/conf.d/default.conf

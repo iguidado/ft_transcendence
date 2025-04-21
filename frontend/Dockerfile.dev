@@ -6,7 +6,7 @@ WORKDIR /app
 # We don't need COPY commands for dependencies or source code
 # as they will be mounted through volumes
 
-COPY --chmod=700 setup.sh /root/setup.sh
+COPY --chmod=700 setup_dev.sh /root/setup.sh
 
 # Expose Vite dev server port
 EXPOSE 5173
