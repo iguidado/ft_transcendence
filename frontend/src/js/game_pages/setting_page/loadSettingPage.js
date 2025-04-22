@@ -28,7 +28,6 @@ function setupGamePreview(ctx) {
 	}
 	ctx.game = new Game(ctx.container, ctx.config)
 	ctx.game.scoreMonitor.onEndMatch = () => {
-		console.log("TEST")
 		setupGamePreview(ctx)
 	}
 	ctx.game.start()

@@ -1,9 +1,3 @@
-/**
- * Generates setting elements based on a list of setting objects
- * @param {Array} settingsList - Array of setting objects with properties: title, value, min, max, step, minusCallback, plusCallback
- * @param {string} containerId - ID of the container element where settings will be generated
- * @returns {Object} - Object with setting values that can be referenced later
- */
 export function appendCustomSettings(settingsList, containerId = 'settings-list-container') {
   const container = document.getElementById(containerId)
   const settingsValues = {}
@@ -36,7 +30,6 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
     valueContainer.className = 'value-container'
 
     if (isKeybind) {
-        // Pour les keybinds, créer un bouton unique
         const changeKeyBtn = document.createElement('button')
         changeKeyBtn.className = 'keybind-btn'
         changeKeyBtn.textContent = defaultValue
@@ -49,7 +42,6 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
 
         valueContainer.appendChild(changeKeyBtn)
     } else {
-        // Code existant pour les autres types de paramètres
         const minusBtn = document.createElement('div')
         minusBtn.className = 'minus-btn'
 
@@ -87,7 +79,6 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
                 const currentValue = settingsValues[title]
                 minusCallback(currentValue).then(res => {
                     settingsValues[title] = res
-                    // Format to 2 decimal places if it's a number
                     if (!isNaN(settingsValues[title])) {
                         valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
                     } else {
@@ -113,7 +104,6 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
                 const currentValue = settingsValues[title]
                 plusCallback(currentValue).then(res => {
                     settingsValues[title] = res
-                    // Format to 2 decimal places if it's a number
                     if (!isNaN(settingsValues[title])) {
                         valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
                     } else {

@@ -1,7 +1,6 @@
 import { getRequest } from "../utils/getRequest.js"
 
 function usersResponseHandler(response) {
-	console.log(response)
 }
 
 function usersErrorHandler(error) {

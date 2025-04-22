@@ -9,7 +9,6 @@ export function handleRegistration(onloginSuccess) {
 		return
 	registerForm.addEventListener("submit", async (e) => {
 		e.preventDefault()
-		// saveAccessToken(null)
 		const username = registerForm.querySelector(
 			'input[placeholder="Choose your login"]'
 		).value
@@ -65,12 +64,13 @@ export function handleRegistration(onloginSuccess) {
 	if (backToLoginButton) {
 		backToLoginButton.addEventListener("click", (e) => {
 			e.preventDefault();
-			load_page("login", onloginSuccess);
+			document.getElementById("loginSection").style.display = "block";
+			document.getElementById("registerSection").style.display = "none";
 		});
 	}
 	function registerRequestCallBack(res) {
-		console.log("Register API Response", res)
-		load_page("login", onloginSuccess)
+		document.getElementById("loginSection").style.display = "block";
+		document.getElementById("registerSection").style.display = "none";
 	}
 }
 

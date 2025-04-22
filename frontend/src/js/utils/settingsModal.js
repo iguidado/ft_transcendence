@@ -5,7 +5,6 @@ import { verifyEmailOTP } from "../api/routes/user/verifyEmailOTP.js"
 import { updateAvatarRequest } from "../api/routes/updateAvatar.js"
 import { load_page } from "../router.js"
 import { displayError } from "./displayError.js"
-import { loadProfilePage } from "../profile.js"
 
 export function settingsModal(profileData) {
     const modalElement = document.getElementById("settingsModal");
@@ -67,6 +66,8 @@ function twoFactorAuthSection(profileData) {
 		email2FASection.style.display = "block"
 		verify2FAModal.style.display = "none"
 	})
+	if (profileData.is_2fa_enabled)
+		send2FAEmailBtn.innerText = "Disable 2FA"
 	send2FAEmailBtn.addEventListener("click", (e) => {
         e.preventDefault()
 		const emailInput = document.getElementById("email2FAInput").value
@@ -131,10 +132,15 @@ function saveSettings() {
                         newDisplayName.charAt(0).toUpperCase() + newDisplayName.slice(1);
                         displayNameUpdated = true;
                         resolve();
-                    }, reject);
+                    }, (err, res) => {
+						if (!res) {
+							displayError("Something wrong with new user name")
+						} else if (res.status == 400) {
+							displayError("Invalid user name")
+						}
+					});
                 });
             } catch (error) {
-                console.error("Error updating display name:", error);
             }
         }
 
@@ -147,7 +153,6 @@ function saveSettings() {
                 await new Promise((resolve, reject) => {
                     updateAvatarRequest(formData, 
                         (response) => {
-                            console.log("Avatar mis à jour avec succès:", response);
                             
                             const avatarElements = document.querySelectorAll('[data-user-avatar], .profile-avatar, .user-avatar, #userAvatar');
                             const newAvatarUrl = response.avatar || response.message && `/media/avatars/${response.avatarUrl}`;

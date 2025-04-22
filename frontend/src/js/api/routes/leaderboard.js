@@ -1,11 +1,9 @@
 import { getRequest } from "../utils/getRequest.js"
 
 function leaderboardResponseHandler(response) {
-	console.log(response)
 }
 
 function leaderboardErrorHandler(error) {
-	console.log(error)
 }
 
 export function leaderboardRequest(responseHandler=leaderboardResponseHandler, errorHandler=leaderboardErrorHandler) {

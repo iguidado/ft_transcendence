@@ -7,10 +7,8 @@ import { getProfileData } from "../utils/profileUtils.js";
 import { updateLocalProfile } from "../utils/updateLocalProfile.js";
 
 function fetchHandler(res, onloginSuccess = updateLocalProfile) {
-	console.log("API Login response : ", res);
 	if (res.access_token) {
 		onloginSuccess(res);
-		console.log("WebSocket initialized after login");
 	} else {
 		const valide2FAsection = document.getElementById("2FALoginModal");
 		const twoFAModal = bootstrap.Modal.getOrCreateInstance(valide2FAsection);
@@ -26,7 +24,6 @@ function fetchHandler(res, onloginSuccess = updateLocalProfile) {
 				verifyLoginOTP(
 					{ otp, temp_token: res.temp_token },
 					(res) => {
-						console.log("validate2FAFromLogin", res);
 						if (res.access_token) {
 							onloginSuccess(res);
 						}
