@@ -44,7 +44,7 @@ services:
     networks:
       - elk-network
     ports:
-      - ${ES_PORT}:9200
+      - 9200
     entrypoint: >  # Command here is a quick wrapper around native entrypoint to append our script (wrapper is now PID 1)
       /bin/tini -- /bin/bash -c "
         /usr/local/bin/docker-entrypoint.sh &
