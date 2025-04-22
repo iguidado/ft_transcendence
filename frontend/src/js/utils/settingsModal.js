@@ -75,10 +75,17 @@ function twoFactorAuthSection(profileData) {
 				action: profileData.is_2fa_enabled ? "disable" : "enable",
 				email: emailInput
 			},
-			profileData.is_2fa_enabled ? load_page('profile') : displayCodeValidation,
+			profileData.is_2fa_enabled ? returnToProfile : displayCodeValidation,
 			toggle2faError
 		)
 	})
+    function returnToProfile() {
+        const modal = document.getElementById("settingsModal");
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        modalInstance.hide();
+        modal.querySelectorAll("input").forEach(input => input.value = "");
+        load_page("profile");
+    }
 	confirm2FABtn.addEventListener("click", (e) => {
         e.preventDefault()
 		const otp = document.getElementById("code2FAInput").value;
