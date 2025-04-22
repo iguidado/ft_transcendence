@@ -1,0 +1,8 @@
+ARG STACK_VERSION
+
+FROM docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+
+COPY ./es01_setup.sh .
+
+#CMD ["/usr/share/elasticsearch/config/policy_scripts/main.sh"]
+ENTRYPOINT ["./es01_setup.sh"]

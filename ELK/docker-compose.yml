@@ -13,7 +13,11 @@ services:
       - elk-network
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
-    command: /root/setup.sh
+        #     - esdata01:/usr/share/elasticsearch/data:rw
+        #     - ./Elasticsearch/policy_scripts/:/usr/share/elasticsearch/config/policy_scripts/:rw,z
+        #     - ./Elasticsearch/snapshot:/usr/share/elasticsearch/snapshot/archive:rw,z
+        #     - ./Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:rw,z
+    command: /root/setup.sh 
     environment:
      - xpack.security.enabled=false
      - xpack.security.http.ssl.enabled=false
@@ -33,6 +37,12 @@ services:
         condition: service_healthy
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     container_name: es01
+    pull_policy: never
+    build:
+      context: ./Elasticsearch/
+      dockerfile: Dockerfile.es01
+      args:
+        - STACK_VERSION=${STACK_VERSION}
     labels:
       co.elastic.logs/module: elasticsearch
     volumes:
@@ -44,15 +54,7 @@ services:
     networks:
       - elk-network
     ports:
-      - 9200
-    entrypoint: >  # Command here is a quick wrapper around native entrypoint to append our script (wrapper is now PID 1)
-      /bin/tini -- /bin/bash -c "
-        /usr/local/bin/docker-entrypoint.sh &
-        export PID=\$!;
-        /usr/share/elasticsearch/config/policy_scripts/main.sh;
-        wait  \$PID;
-      "
-    # Command here is a quick wrapper around native entrypoint to append our script (wrapper is now PID 1)
+      - ${ES_PORT}:9200
     environment:
       - node.name=es01
       - cluster.name=${CLUSTER_NAME}
@@ -72,6 +74,9 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
     mem_limit: ${ES_MEM_LIMIT}
+      #    command: /usr/share/elasticsearch/config/policy_scripts/main.sh
+      #entrypoint: es_01_setup.sh
+      #     /bin/tini -- /bin/bash -c "
     healthcheck:
       test:
         [
@@ -141,7 +146,7 @@ services:
       - LOGSTASH_LOG_LEVEL=debug
     ports:
       - "12201:12201/udp"
-      - "9600"
+      - "9600:9600"
     networks:
       - elk-network
       - web-network
