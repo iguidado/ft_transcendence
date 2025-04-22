@@ -41,9 +41,7 @@ export function initBuildButtons() {
 
 export function displayResults(message) {
     const messageElement = document.getElementById("winMsg");
-    messageElement.textContent = message;
-	console.log("WinMsg = " + message);
-  
+    messageElement.textContent = message;  
     const modalElement = document.getElementById("resultModal");
     const modal = new bootstrap.Modal(modalElement);
     modal.show();

@@ -40,6 +40,10 @@ img {
     border-radius: 0;
 }
 
+.modal-error{
+	background-color: rgba(255, 58, 107, 0.856) !important;
+
+}
 
 
 .card-title{

@@ -5,7 +5,7 @@ import { updateLocalProfile } from "../../utils/updateLocalProfile.js"
 import { addGuestProfileToStore } from "./utils/addGuestProfileToStore.js"
 import { getProfileFromToken } from "./utils/getProfileFromToken.js"
 
-export const loginGuestPage = async (successHandler = console.log, errorHandler = (error) => {}) => {
+export const loginGuestPage = async (successHandler = () => {}, errorHandler = (error) => {}) => {
 	return new Promise((resolve) => {
 		const onLoginSuccess = res => {
 			if (!getProfileData()) {

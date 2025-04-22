@@ -1,7 +1,6 @@
 import { patchRequest } from "../utils/patchRequest.js"
 
 function updateDisplayNameResponseHandler(response) {
-    console.log(response)
 }
 
 function updateDisplayNameErrorHandler(error) {

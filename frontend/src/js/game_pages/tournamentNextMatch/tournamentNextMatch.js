@@ -3,7 +3,6 @@ import { loadGamePage } from "../game_page/loadGamePage.js";
 import { clearGuestStore } from "../loginGuestPage/utils/clearGuestStore.js";
 
 export async function loadTournamentNextMatchPage(ctx, planning) {
-	console.log(planning)
 	const player1 = planning[0][0]
 	const player2 = planning[0][1]
 	const app = document.getElementById("main_container");
@@ -21,7 +20,6 @@ export async function loadTournamentNextMatchPage(ctx, planning) {
 	function onEndMatch(winner) {
 		const newPlanning = planning.slice(1);
 		if (!newPlanning.length) {
-			console.log(winner.displayName + " Won !")
 			load_page("pong")
 			return
 		}
@@ -29,7 +27,6 @@ export async function loadTournamentNextMatchPage(ctx, planning) {
 			newPlanning[newPlanning.length-1].push(winner)
 		else
 			newPlanning.push([winner])
-		console.log("newPlanning", newPlanning)
 		loadTournamentNextMatchPage(ctx, newPlanning)
 	}
 }

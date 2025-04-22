@@ -28,7 +28,6 @@ export const getProfileData = () => {
 
 
 export function formatProfileData(profile) {
-	console.log(profile)
 	if (!profile)
 		return null
 	if (!profile.displayName)
@@ -44,6 +43,5 @@ export function chooseName(profile) {
 		return profile?.displayName
 	if (profile?.username && profile?.username.length > 0)
 		return profile?.username
-	console.log("ICI", profile)
 	return "Unknown"
 }

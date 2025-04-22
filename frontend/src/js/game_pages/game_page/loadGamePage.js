@@ -5,7 +5,6 @@ import { load_page } from "../../router.js";
 import { playersCount } from "../setting_page/util/playersCount.js";
 
 export function loadGamePage({game, container, config, players=[], onEndMatch}) {
-	console.log("Players : ", players)
 	let leftPlayer = null
 	let rightPlayer = null
 	if (players.length)
@@ -66,7 +65,6 @@ export function loadGamePage({game, container, config, players=[], onEndMatch}) 
 			score_p1: game.scoreMonitor.scores.left,
 			score_p2: game.scoreMonitor.scores.right
 		}
-		console.log(body)
 		return pushHistoryRequest(body)
 	}
 

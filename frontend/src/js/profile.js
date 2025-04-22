@@ -37,13 +37,11 @@ export async function loadProfilePage(username = null) {
 }
 
 function addBackBtnSetup(isLocalProfile) {
-	console.log("isLocalProfile", isLocalProfile)
 	const backBtn = document.getElementById("backButton");
 	if (isLocalProfile) {
 		backBtn.style.display = "none";
 	} else {
 		backBtn.style.display = "block";
-		console.log(backBtn)
 		backBtn.addEventListener("click", (e) => {
 			e.preventDefault();
 			load_page("profile");
@@ -78,7 +76,6 @@ function setupUserStatus() {
 
 function handleUserStatusUpdate(event) {
 	const { username, isOnline } = event.detail;
-	console.log(`Status update received: ${username} is ${isOnline ? 'online' : 'offline'}`);
 	updateFriendStatusInUI(username, isOnline);
 }
 
@@ -89,7 +86,6 @@ function updateFriendStatusInUI(username, isOnline) {
 			const statusIndicator = item.querySelector('.status-indicator');
 			if (statusIndicator) {
 				statusIndicator.style.backgroundColor = isOnline ? "green" : "red";
-				console.log(`Mise à jour du statut pour ${username}: ${isOnline ? 'en ligne' : 'hors ligne'}`);
 			}
 		}
 	});
@@ -290,7 +286,6 @@ function displayMatchHistory(matchHistory) {
 
         const result = document.createElement("p");
         const isPlayerOne = match.player_one === currentProfileUsername;
-		console.log("isPlayerOne", isPlayerOne)
         const hasWon = isPlayerOne ? match.winner === match.player_one : match.winner === match.player_two;
         result.textContent = `Result : ${hasWon ? "Victory" : "Defeat"}`;
 

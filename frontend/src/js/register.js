@@ -69,7 +69,6 @@ export function handleRegistration(onloginSuccess) {
 		});
 	}
 	function registerRequestCallBack(res) {
-		console.log("Register API Response", res)
 		document.getElementById("loginSection").style.display = "block";
 		document.getElementById("registerSection").style.display = "none";
 	}

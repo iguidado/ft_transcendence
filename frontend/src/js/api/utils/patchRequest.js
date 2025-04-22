@@ -1,7 +1,6 @@
 import { getApiConfigPatch } from "../config/apiConfig.js"
 
 function responseHandlerDefault(res) {
-	console.log(res)
 }
 
 function errorHandlerDefault(err) {

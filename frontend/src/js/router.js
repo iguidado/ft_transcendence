@@ -109,7 +109,6 @@ async function appendBuildingSideMenu(url, props) {
 	const htmlLayout = await fetchHTMLContent('layout')
 	const layout = document.createElement('div');
 	layout.innerHTML = htmlLayout;
-	console.log("url = ", url)
 	if (url === 'login') {
 		const allGroups = layout.querySelectorAll('[id$="Group"]');
 		allGroups.forEach(group => {

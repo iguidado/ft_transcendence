@@ -1,9 +1,3 @@
-/**
- * Generates setting elements based on a list of setting objects
- * @param {Array} settingsList - Array of setting objects with properties: title, value, min, max, step, minusCallback, plusCallback
- * @param {string} containerId - ID of the container element where settings will be generated
- * @returns {Object} - Object with setting values that can be referenced later
- */
 export function appendCustomSettings(settingsList, containerId = 'settings-list-container') {
   const container = document.getElementById(containerId)
   const settingsValues = {}

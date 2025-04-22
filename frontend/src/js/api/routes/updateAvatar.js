@@ -2,7 +2,6 @@ import { patchAvatar } from "../utils/patchAvatar.js"
 
 export function updateAvatarResponseHandler(response) {
     return response.json().then(data => {
-        console.log("Avatar mis à jour avec succès:", data);
         return data;
     });
 }

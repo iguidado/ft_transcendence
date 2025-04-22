@@ -1,7 +1,6 @@
 import { postRequest } from "../utils/postRequest.js";
 
 function deleteFriendResponseHandler(response) {
-    console.log("Friend deleted successfully:", response);
 }
 
 function deleteFriendErrorHandler(error) {
