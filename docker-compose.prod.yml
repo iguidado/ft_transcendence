@@ -58,7 +58,7 @@ services:
     networks:
       - web-network
     ports:
-      - "${BACK_PORT}:8000"
+      - "8000"
     environment:
         #     - DEBUG=1
         #     - DJANGO_SETTINGS_MODULE=project.settings.development

@@ -141,7 +141,7 @@ services:
       - LOGSTASH_LOG_LEVEL=debug
     ports:
       - "12201:12201/udp"
-      - "9600:9600"
+      - "9600"
     networks:
       - elk-network
       - web-network
