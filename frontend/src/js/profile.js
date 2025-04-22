@@ -116,7 +116,6 @@ function noProfileData() {
 
 
 
-//DONE gestion modale addfriends
 
 function addFriendModal() {
     const addFriendModal = document.getElementById("addFriendModal");

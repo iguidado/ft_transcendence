@@ -36,7 +36,6 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
     valueContainer.className = 'value-container'
 
     if (isKeybind) {
-        // Pour les keybinds, créer un bouton unique
         const changeKeyBtn = document.createElement('button')
         changeKeyBtn.className = 'keybind-btn'
         changeKeyBtn.textContent = defaultValue
@@ -49,7 +48,6 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
 
         valueContainer.appendChild(changeKeyBtn)
     } else {
-        // Code existant pour les autres types de paramètres
         const minusBtn = document.createElement('div')
         minusBtn.className = 'minus-btn'
 
@@ -87,7 +85,6 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
                 const currentValue = settingsValues[title]
                 minusCallback(currentValue).then(res => {
                     settingsValues[title] = res
-                    // Format to 2 decimal places if it's a number
                     if (!isNaN(settingsValues[title])) {
                         valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
                     } else {
@@ -113,7 +110,6 @@ export function appendCustomSettings(settingsList, containerId = 'settings-list-
                 const currentValue = settingsValues[title]
                 plusCallback(currentValue).then(res => {
                     settingsValues[title] = res
-                    // Format to 2 decimal places if it's a number
                     if (!isNaN(settingsValues[title])) {
                         valueDisplay.textContent = Math.round(settingsValues[title] * 100) / 100
                     } else {
