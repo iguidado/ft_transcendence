@@ -99,6 +99,36 @@ function displayPlayerList() {
 	}
 }
 
+function appendBackBtn(ctx) {
+	const app = document.getElementById("main_container");
+	const backBtn = document.createElement("div");
+	backBtn.addEventListener("click", (e) => {
+		e.preventDefault();
+		app.innerHTML = "";
+		load_page("tournament", ctx);
+	});
+	backBtn.className = "btn position-absolute";
+	backBtn.id = "backBtn";
+	backBtn.style.top = "0";
+	backBtn.style.left = "0";
+	backBtn.style.backgroundImage = "url('/rsc/arrow.png')";
+	backBtn.style.backgroundSize = "contain";
+	backBtn.style.backgroundRepeat = "no-repeat";
+	backBtn.style.backgroundPosition = "center";
+	backBtn.style.width = "40px";
+	backBtn.style.height = "40px";
+	backBtn.style.padding = "0";
+	backBtn.style.display = "none";
+
+	app.appendChild(backBtn);
+	backBtn.style.display = "block";
+	backBtn.addEventListener("click", (e) => {
+		e.preventDefault()
+		app.innerHTML = "";
+		load_page("tournament", ctx);
+	});
+}
+
 function setupAddPlayerBtn(ctx) {
 	const btn = document.getElementById("tournament__addplayerbtn")
 	btn.onclick = e => {
@@ -113,16 +143,8 @@ function setupAddPlayerBtn(ctx) {
 					load_page("tournament", ctx)
 				})
 			}
-		}, true).then(() => {
-			const backBtn = document.getElementById("backBtn");
-			if (backBtn) {
-				backBtn.style.display = "block";
-				backBtn.addEventListener("click", (e) => {
-					e.preventDefault()
-					app.innerHTML = "";
-					load_page("tournament", ctx);
-				});
-			}
+		}).then(() => {
+			appendBackBtn(ctx)
 		})
 	}
 }

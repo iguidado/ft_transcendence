@@ -9,11 +9,26 @@ import { loadTournamentSetupPage } from "./game_pages/tournamentSetupPage/loadTo
 import { pullProfile } from "./utils/profileUtils.js";
 import { disconnect } from "./utils/disconnect.js";
 
+function cleanupModals() {
+  // Remove any open modals and backdrops
+  const modals = document.querySelectorAll('.modal');
+  modals.forEach(modal => {
+    const modalInstance = bootstrap.Modal.getInstance(modal);
+    if (modalInstance) {
+      modalInstance.hide();
+    }
+  });
+  // Remove any remaining backdrops
+  const backdrops = document.querySelectorAll('.modal-backdrop');
+  backdrops.forEach(backdrop => backdrop.remove());
+  // Remove modal-open class from body
+  document.body.classList.remove('modal-open');
+}
 
 export async function fetchHTMLContent(url) {
 	try {
 		url = `/fragments/${url}.html`;
-		const response = await fetch(url).catch(err => {});
+		const response = await fetch(url).catch(err => { });
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
@@ -52,7 +67,8 @@ const routeConfigs = {
 };
 
 
-export async function load_page(url, props=undefined, pushHistory=true) {
+export async function load_page(url, props = undefined, pushHistory = true) {
+	cleanupModals();
 	let currentGame = gameRegistry.getCurrentContext()
 	if (currentGame)
 		currentGame.cleanup()
@@ -115,8 +131,9 @@ async function appendBuildingSideMenu(url, props) {
 }
 
 window.addEventListener('popstate', (event) => {
-    const path = window.location.pathname.substring(1);
-    load_page(path, undefined, false);
+	cleanupModals();
+	const path = window.location.pathname.substring(1);
+	load_page(path, undefined, false);
 });
 
 export function getCurrentPageFromURL() {
