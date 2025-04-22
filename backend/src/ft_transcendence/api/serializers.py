@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from PIL import Image
 from django.core.exceptions import ValidationError
+import re
 
 class LoginSerializer(serializers.Serializer):
 	username = serializers.CharField(max_length=150, required=True)
@@ -45,12 +46,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'displayName', 'avatar', 'wins', 'game_played', 'match_history', 'is_2fa_enabled', 'friends', 'win_ratio']
 
     def to_representation(self, instance):
-        # Obtenir la représentation standard
         representation = super().to_representation(instance)
-        
-        # Forcer l'avatar à être un chemin relatif
+
         if representation['avatar'] and 'http' in representation['avatar']:
-            # Extraire uniquement le chemin relatif
             representation['avatar'] = f"/media/avatars/{representation['avatar'].split('avatars/')[-1]}"
         
         return representation
@@ -91,11 +89,13 @@ class UpdateDisplayNameSerializer(serializers.ModelSerializer):
 		model = get_user_model()
 		fields = ['displayName']
 
-	def validate_diplayName(self, value):
+	def validate_displayName(self, value):
 		if len(value) < 3:
 			raise serializers.ValidationError("Displayname must at least have 3 characters")
 		if len(value) > 15:
 			raise serializers.ValidationError("Displayname must at most have 15 characters")
+		if not re.match(r'^[a-zA-Z0-9]+$', value):
+			raise serializers.ValidationError("Displayname must contain only letters and numbers")
 		return value
 	
 class TwoFAUpdateSerializer(serializers.ModelSerializer):
